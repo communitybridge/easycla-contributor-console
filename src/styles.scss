@@ -1,4 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
+
+@font-face {
+  font-family: "SourceSansPro-Regular";
+  src: url(/src/assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf) format("truetype");
+  font-weight: 300;
+}
+
+body {
+  font-family: "SourceSansPro-Regular", sans-serif;
+}
