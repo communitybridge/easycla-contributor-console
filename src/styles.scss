@@ -5,10 +5,12 @@
 
 @font-face {
   font-family: "SourceSansPro-Regular";
-  src: url(/src/assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf) format("truetype");
+  src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf) format("truetype");
   font-weight: 300;
 }
 
 body {
   font-family: "SourceSansPro-Regular", sans-serif;
+  font-size: 14px;
+  color: #333333;
 }

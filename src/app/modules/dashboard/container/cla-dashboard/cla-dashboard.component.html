@@ -1,0 +1,31 @@
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 project-name">
+            Project 1
+        </div>
+    </div>
+
+    <div class="contributor-type-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 header">
+                    What type of contributor are you?
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightlights">
+                    </app-dashboard-contributor-card>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightlights">
+                    </app-dashboard-contributor-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

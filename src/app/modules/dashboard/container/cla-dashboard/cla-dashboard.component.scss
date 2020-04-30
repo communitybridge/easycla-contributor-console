@@ -1,0 +1,30 @@
+.dashboard-container {
+  background-color: #f5f5f5;
+
+  .project-name {
+    background-color: #fff;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .contributor-type-container {
+    padding: 15px;
+    .header {
+      font-size: 26px;
+      text-align: center;
+      font-weight: bolder;
+      padding: 15px 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  /* For mobile phones: */
+  .contributor-type-container {
+    .header {
+      font-size: 20px !important;
+    }
+  }
+}

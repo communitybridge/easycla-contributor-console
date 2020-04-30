@@ -1,0 +1,21 @@
+.sub-header {
+  font-size: 18px;
+  text-align: center;
+  font-weight: bolder;
+  margin-bottom: 10px;
+}
+
+.hightlight {
+  p {
+    font-size: 16px;
+    overflow-wrap: break-word;
+    margin-bottom: 20px;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  /* For mobile phones: */
+  .sub-header {
+    font-size: 15px !important;
+  }
+}
