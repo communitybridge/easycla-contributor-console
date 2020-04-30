@@ -25,7 +25,20 @@
                     </app-dashboard-contributor-card>
                 </div>
             </div>
+
+            <div class="deskop-view">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <app-dashboard-contributor-buttons [type]="corporateContributor">
+                        </app-dashboard-contributor-buttons>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <app-dashboard-contributor-buttons [type]="individualContributor">
+                        </app-dashboard-contributor-buttons>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
-
 </div>

@@ -10,12 +10,16 @@
   }
 
   .contributor-type-container {
-    padding: 15px;
+    padding: 6%;
     .header {
       font-size: 26px;
       text-align: center;
       font-weight: bolder;
       padding: 15px 0;
+    }
+
+    .deskop-view {
+      display: block;
     }
   }
 }
@@ -25,6 +29,10 @@
   .contributor-type-container {
     .header {
       font-size: 20px !important;
+    }
+
+    .deskop-view {
+      display: none !important;
     }
   }
 }
