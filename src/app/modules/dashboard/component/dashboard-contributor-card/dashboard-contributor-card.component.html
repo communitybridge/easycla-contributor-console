@@ -1,25 +1,31 @@
-<div class="container-fluid">
-    <div class="row justify-content-center align-items-center">
-        <div *ngIf="type==='Corporate Contributor'" class="col-auto">
-            <app-corporate-icon></app-corporate-icon>
-        </div>
-        <div *ngIf="type==='Individual Contributor'" class="col-auto">
-            <app-individual-icon></app-individual-icon>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 sub-header">{{type}}</div>
-    </div>
-
-    <div class="row hightlight">
-        <ng-container *ngFor="let highlight of highlights;">
-            <div class="col-1">
-                <i class="fa fa-check-square" aria-hidden="true"></i>
+<div class="dashboard-contributor-card">
+    <div class="container-fluid">
+        <div class="row justify-content-center align-items-center">
+            <div *ngIf="type==='Corporate Contributor'" class="col-auto">
+                <app-corporate-icon></app-corporate-icon>
             </div>
-            <p class="col-11">{{highlight}}</p>
-        </ng-container>
+            <div *ngIf="type==='Individual Contributor'" class="col-auto">
+                <app-individual-icon></app-individual-icon>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 sub-header">{{type}}</div>
+        </div>
+
+        <div class="row hightlight">
+            <ng-container *ngFor="let highlight of highlights;">
+                <div class="col-1 pdl-0">
+                    <i class="fa fa-check-square" aria-hidden="true"></i>
+                </div>
+                <p class="col-11">{{highlight}}</p>
+            </ng-container>
+        </div>
+
+        <div class="desktop-view">
+            <app-dashboard-contributor-buttons [type]="type">
+            </app-dashboard-contributor-buttons>
+        </div>
+
     </div>
-
-
 </div>
