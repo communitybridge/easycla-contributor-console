@@ -1,16 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-contributor-buttons',
   templateUrl: './dashboard-contributor-buttons.component.html',
   styleUrls: ['./dashboard-contributor-buttons.component.scss']
 })
-export class DashboardContributorButtonsComponent implements OnInit {
+export class DashboardContributorButtonsComponent {
   @Input() type: string = '';
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }
