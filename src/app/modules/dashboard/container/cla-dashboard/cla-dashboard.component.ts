@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
 
+import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -26,5 +28,5 @@ export class ClaDashboardComponent implements OnInit {
       'If you are in doubt whether your contribution is owned by you or your employer, you should check with your employer or an attorney.'
     ];
   }
-
 }
+

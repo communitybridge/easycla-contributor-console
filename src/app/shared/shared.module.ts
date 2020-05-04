@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { NgModule } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { CorporateIconComponent } from './svg/corporate-icon/corporate-icon.component';

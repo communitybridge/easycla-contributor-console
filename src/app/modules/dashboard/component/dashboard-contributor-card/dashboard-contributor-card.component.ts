@@ -1,5 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
 
+import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-dashboard-contributor-card',
   templateUrl: './dashboard-contributor-card.component.html',
