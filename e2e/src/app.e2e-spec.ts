@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
 

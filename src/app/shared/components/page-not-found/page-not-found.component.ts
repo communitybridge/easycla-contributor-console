@@ -4,11 +4,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-corporate-icon',
-  templateUrl: './corporate-icon.component.html',
-  styleUrls: ['./corporate-icon.component.scss']
+  selector: 'app-page-not-found',
+  templateUrl: './page-not-found.component.html',
+  styleUrls: ['./page-not-found.component.scss']
 })
-export class CorporateIconComponent implements OnInit {
+export class PageNotFoundComponent implements OnInit {
 
   constructor() { }
 

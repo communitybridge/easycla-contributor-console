@@ -1,3 +1,6 @@
+# Copyright The Linux Foundation and each contributor to CommunityBridge.
+# SPDX-License-Identifier: MIT
+
 # This file is used by the build system to adjust CSS and JS output to support the specified browsers below.
 # For additional information regarding the format and rule options, please see:
 # https://github.com/browserslist/browserslist#queries

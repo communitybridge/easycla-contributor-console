@@ -2,6 +2,9 @@
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 const { SpecReporter } = require('jasmine-spec-reporter');
 
 /**

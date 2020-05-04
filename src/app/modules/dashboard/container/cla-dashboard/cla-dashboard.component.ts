@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
 
+import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
   styleUrls: ['./cla-dashboard.component.scss']
 })
 export class ClaDashboardComponent implements OnInit {
-  corporateHightlights: string[] = [];
-  individualHightlights: string[] = [];
-  corporateContributor: string = 'Corporate Contributor';
-  individualContributor: string = 'Individual Contributor';
+  corporateHightlights: string[];
+  individualHightlights: string[];
+  corporateContributor = 'Corporate Contributor';
+  individualContributor = 'Individual Contributor';
 
   constructor() { }
 
@@ -27,4 +29,12 @@ export class ClaDashboardComponent implements OnInit {
     ];
   }
 
+  onClickCorporateProceed() {
+    // TODO
+  }
+
+  onClickIndividualProceed() {
+    // TODO
+  }
 }
+

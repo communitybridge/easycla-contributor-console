@@ -1,4 +1,7 @@
-import { Component, Input } from '@angular/core';
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard-contributor-buttons',
@@ -6,8 +9,13 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./dashboard-contributor-buttons.component.scss']
 })
 export class DashboardContributorButtonsComponent {
-  @Input() type: string = '';
+  @Input() type: string;
+  @Output() proceedBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
+
+  onClickProceed() {
+    this.proceedBtnEmitter.emit();
+  }
 
 }
