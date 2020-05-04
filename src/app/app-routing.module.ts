@@ -4,6 +4,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ClaDashboardComponent } from './modules/dashboard/container/cla-dashboard/cla-dashboard.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: ClaDashboardComponent
+    component: PageNotFoundComponent
   }
 ];
 
