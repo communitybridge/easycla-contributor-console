@@ -1,0 +1,14 @@
+/* Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT */
+
+.button {
+  width: 100%;
+  padding: 5px;
+  border-radius: 25px;
+  color: #fff;
+  background-color: #0099cc;
+
+  &.green {
+    background-color: #a1d683 !important;
+  }
+}

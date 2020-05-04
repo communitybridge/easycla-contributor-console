@@ -1,0 +1,49 @@
+<!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT -->
+
+<div class="container-fluid dashboard-container">
+    <div class="row">
+        <div class="col-12 project-name">
+            Project 1
+        </div>
+    </div>
+
+    <div class="contributor-type-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 header">
+                    What type of contributor are you?
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightlights">
+                    </app-dashboard-contributor-card>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightlights">
+                    </app-dashboard-contributor-card>
+                </div>
+            </div>
+
+            <div class="deskop-view">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <app-dashboard-contributor-buttons [type]="corporateContributor"
+                            (proceedBtnEmitter)="onClickCorporateProceed()">
+                        </app-dashboard-contributor-buttons>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <app-dashboard-contributor-buttons [type]="individualContributor"
+                            (proceedBtnEmitter)="onClickIndividualProceed()">
+                        </app-dashboard-contributor-buttons>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

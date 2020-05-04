@@ -1,0 +1,19 @@
+/* Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT */
+
+/* You can add global styles to this file, and also import other style files */
+/* Importing Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
+@import 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
+
+@font-face {
+  font-family: "SourceSansPro-Regular";
+  src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf) format("truetype");
+  font-weight: 300;
+}
+
+body {
+  font-family: "SourceSansPro-Regular", sans-serif;
+  font-size: 14px;
+  color: #333333;
+}
