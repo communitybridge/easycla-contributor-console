@@ -26,6 +26,10 @@ Run Angular Project
 
 `ng s` or `ng serve`
 
+Run ES Lint 
+
+`npm run eslint`
+
 
 Create a new module
 
