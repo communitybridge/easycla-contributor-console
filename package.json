@@ -57,7 +57,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm eslint --quiet"
+      "pre-push": "npm run eslint --quiet"
     }
   }
 }
