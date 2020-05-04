@@ -13,6 +13,7 @@ export class IndividualIconComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    const error = '';
   }
 
 }
