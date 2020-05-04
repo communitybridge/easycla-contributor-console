@@ -4,7 +4,11 @@
 .header-container {
   background-color: #003366;
   height: 50px;
-
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  
   .logo-container {
     width: 170px;
     height: 25px;

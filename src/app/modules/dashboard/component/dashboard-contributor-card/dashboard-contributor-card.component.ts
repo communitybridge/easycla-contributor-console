@@ -8,8 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./dashboard-contributor-card.component.scss']
 })
 export class DashboardContributorCardComponent implements OnInit {
-  @Input() type: string = '';
-  @Input() highlights: string[] = [];
+  @Input() type: string;
+  @Input() highlights: string[];
 
   constructor() { }
 

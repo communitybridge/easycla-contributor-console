@@ -4,8 +4,8 @@
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center">
         <div class="col-10">
-            <button type="button" [ngClass]="{'green':type === 'Individual Contributor'}"
-                class="btn sky-blue button">Procced As a
+            <button type="button" [ngClass]="{'green':type === 'Individual Contributor'}" class="btn sky-blue button"
+                (click)="onClickProceed()">Proceed As a
                 {{type}}</button>
         </div>
     </div>

@@ -8,10 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cla-dashboard.component.scss']
 })
 export class ClaDashboardComponent implements OnInit {
-  corporateHightlights: string[] = [];
-  individualHightlights: string[] = [];
-  corporateContributor: string = 'Corporate Contributor';
-  individualContributor: string = 'Individual Contributor';
+  corporateHightlights: string[];
+  individualHightlights: string[];
+  corporateContributor = 'Corporate Contributor';
+  individualContributor = 'Individual Contributor';
 
   constructor() { }
 
@@ -27,6 +27,14 @@ export class ClaDashboardComponent implements OnInit {
       'If you are making a contribution of content that you own, and not content owned by your employer, you should proceed as an individual contributor.',
       'If you are in doubt whether your contribution is owned by you or your employer, you should check with your employer or an attorney.'
     ];
+  }
+
+  onClickCorporateProceed() {
+    // TODO
+  }
+
+  onClickIndividualProceed() {
+    // TODO
   }
 }
 
