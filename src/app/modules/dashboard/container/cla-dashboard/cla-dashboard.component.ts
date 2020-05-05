@@ -2,18 +2,28 @@
 // SPDX-License-Identifier: MIT
 
 import { Component, OnInit } from '@angular/core';
+import { ClaContributorService } from 'src/app/services/cla-contributor.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
   styleUrls: ['./cla-dashboard.component.scss']
 })
 export class ClaDashboardComponent implements OnInit {
+  projectId: string;
+  userId: string;
   corporateHightlights: string[];
   individualHightlights: string[];
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private claContributorService: ClaContributorService
+  ) {
+    this.projectId = this.route.snapshot.queryParamMap.get("projectId");
+    this.userId = this.route.snapshot.queryParamMap.get("userId");
+  }
 
   ngOnInit(): void {
     this.corporateHightlights = [
@@ -27,10 +37,17 @@ export class ClaDashboardComponent implements OnInit {
       'If you are making a contribution of content that you own, and not content owned by your employer, you should proceed as an individual contributor.',
       'If you are in doubt whether your contribution is owned by you or your employer, you should check with your employer or an attorney.'
     ];
+    this.getProject(this.projectId);
+  }
+
+  getProject(projectId) {
+    this.claContributorService.getProject(projectId).subscribe((response) => {
+      console.log(response);
+    });
   }
 
   onClickCorporateProceed() {
-    // TODO
+    this.getProject(this.projectId);
   }
 
   onClickIndividualProceed() {

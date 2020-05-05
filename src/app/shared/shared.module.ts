@@ -7,6 +7,7 @@ import { CorporateIconComponent } from './svg/corporate-icon/corporate-icon.comp
 import { IndividualIconComponent } from './svg/individual-icon/individual-icon.component';
 import { ClaIconComponent } from './svg/cla-icon/cla-icon.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
     declarations: [
@@ -14,7 +15,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
         CorporateIconComponent,
         IndividualIconComponent,
         ClaIconComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        LoaderComponent
     ],
     imports: [
 
@@ -24,7 +26,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
         CorporateIconComponent,
         IndividualIconComponent,
         ClaIconComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        LoaderComponent
     ],
     providers: []
 })
