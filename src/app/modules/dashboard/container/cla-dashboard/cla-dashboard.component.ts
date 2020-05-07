@@ -4,6 +4,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaContributorService } from 'src/app/services/cla-contributor.service';
 import { ActivatedRoute } from '@angular/router';
+import { Project } from 'src/app/core/models/project';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -16,6 +18,8 @@ export class ClaDashboardComponent implements OnInit {
   individualHightlights: string[];
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
+  project = new Project();
+  error: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,6 +27,11 @@ export class ClaDashboardComponent implements OnInit {
   ) {
     this.projectId = this.route.snapshot.queryParamMap.get("projectId");
     this.userId = this.route.snapshot.queryParamMap.get("userId");
+    if (this.projectId === null) {
+      this.error = 'Project id is missing in URL';
+    } else if (this.userId === null) {
+      this.error = 'User id is missing in URL';
+    }
   }
 
   ngOnInit(): void {
@@ -41,9 +50,16 @@ export class ClaDashboardComponent implements OnInit {
   }
 
   getProject(projectId) {
-    this.claContributorService.getProject(projectId).subscribe((response) => {
-      console.log(response);
-    });
+    if (!this.error) {
+      this.claContributorService.getProject(projectId).subscribe(
+        (response) => {
+          this.project = response;
+        },
+        (exception) => {
+          this.error = exception.error.errors.project_id;
+        }
+      );
+    }
   }
 
   onClickCorporateProceed() {
