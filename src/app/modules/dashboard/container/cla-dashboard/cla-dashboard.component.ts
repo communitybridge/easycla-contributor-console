@@ -63,7 +63,7 @@ export class ClaDashboardComponent implements OnInit {
   }
 
   onClickCorporateProceed() {
-    this.getProject(this.projectId);
+    // TODO
   }
 
   onClickIndividualProceed() {
