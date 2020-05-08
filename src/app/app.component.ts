@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Component } from '@angular/core';
+import { AppSettings } from './config/app-settings';
 
 @Component({
   selector: 'app-root',

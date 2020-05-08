@@ -13,6 +13,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoaderInterceptorService } from './shared/services/loader-interceptor.service';
 import { AlertService } from './shared/services/alert.service';
 import { AlertComponent } from './shared/components/alert/alert.component';
+import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
+import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { AlertComponent } from './shared/components/alert/alert.component';
     AppRoutingModule,
     NgbModule,
     SharedModule,
-    DashboardModule
+    DashboardModule,
+    IndividualContributorModule,
+    CorporateContributorModule
   ],
   providers: [
     {

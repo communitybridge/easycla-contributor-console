@@ -2,12 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 import { Component, OnInit } from '@angular/core';
-import { ClaContributorService } from 'src/app/services/cla-contributor.service';
-import { ActivatedRoute } from '@angular/router';
-import { Project } from 'src/app/core/models/project';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { AppSettings } from 'src/app/config/app-settings';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -20,21 +16,15 @@ export class ClaDashboardComponent implements OnInit {
   individualHightlights: string[];
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
-  project = new Project();
 
   constructor(
     private route: ActivatedRoute,
-    private claContributorService: ClaContributorService,
     private alertService: AlertService,
-    private storageService: StorageService
+    private router: Router
   ) {
     this.projectId = this.route.snapshot.queryParamMap.get('projectId');
     this.userId = this.route.snapshot.queryParamMap.get('userId');
-    if (this.projectId === null) {
-      this.alertService.error('Project id is missing in URL');
-    } else if (this.userId === null) {
-      this.alertService.error('User id is missing in URL');
-    }
+    this.hasErrorPresent();
   }
 
   ngOnInit(): void {
@@ -49,31 +39,32 @@ export class ClaDashboardComponent implements OnInit {
       'If you are making a contribution of content that you own, and not content owned by your employer, you should proceed as an individual contributor.',
       'If you are in doubt whether your contribution is owned by you or your employer, you should check with your employer or an attorney.'
     ];
-    this.getProject();
   }
 
-  getProject() {
-    if (this.projectId && this.userId) {
-      this.claContributorService.getProject(this.projectId).subscribe(
-        (response) => {
-          this.project = response;
-          this.storageService.setItem(AppSettings.PROJECTID, this.projectId);
-          this.storageService.setItem(AppSettings.USERID, this.userId);
-        },
-        (exception) => {
-          const error = exception.error.errors.project_id;
-          this.alertService.error(error, 2000);
-        }
-      );
+
+  onClickCorporateProceed() {
+    if (!this.hasErrorPresent()) {
+      const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
+      this.router.navigate([url]);
     }
   }
 
-  onClickCorporateProceed() {
-    // TODO
+  onClickIndividualProceed() {
+    if (!this.hasErrorPresent()) {
+      const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
+      this.router.navigate([url]);
+    }
   }
 
-  onClickIndividualProceed() {
-    // TODO
+  hasErrorPresent() {
+    if (this.projectId === null) {
+      this.alertService.error('Project id is missing in URL');
+      return true;
+    }
+    if (this.userId === null) {
+      this.alertService.error('User id is missing in URL');
+      return true;
+    }
+    return false;
   }
 }
-
