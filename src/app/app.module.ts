@@ -11,10 +11,13 @@ import { SharedModule } from './shared/shared.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoaderInterceptorService } from './shared/services/loader-interceptor.service';
+import { AlertService } from './shared/services/alert.service';
+import { AlertComponent } from './shared/components/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    AlertComponent
   ],
   imports: [
     HttpClientModule,
@@ -29,7 +32,8 @@ import { LoaderInterceptorService } from './shared/services/loader-interceptor.s
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptorService,
       multi: true
-    }
+    },
+    AlertService
   ],
   bootstrap: [AppComponent]
 })
