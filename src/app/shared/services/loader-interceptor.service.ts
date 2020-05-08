@@ -21,7 +21,7 @@ export class LoaderInterceptorService implements HttpInterceptor {
         this.onEnd();
       }
     },
-      (err: any) => {
+      () => {
         this.onEnd();
       }));
   }

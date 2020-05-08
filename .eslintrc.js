@@ -29,7 +29,7 @@ module.exports = {
         '@typescript-eslint/array-type': 'off',
         '@typescript-eslint/ban-types': 'error',
         '@typescript-eslint/class-name-casing': 'error',
-        '@typescript-eslint/consistent-type-assertions': 'error',
+        '@typescript-eslint/consistent-type-assertions': 'off',
         '@typescript-eslint/consistent-type-definitions': 'error',
         '@typescript-eslint/no-misused-promises': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',

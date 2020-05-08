@@ -5,7 +5,6 @@ import { Component, OnInit } from '@angular/core';
 import { ClaContributorService } from 'src/app/services/cla-contributor.service';
 import { ActivatedRoute } from '@angular/router';
 import { Project } from 'src/app/core/models/project';
-import { Observable } from 'rxjs';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -25,8 +24,8 @@ export class ClaDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private claContributorService: ClaContributorService
   ) {
-    this.projectId = this.route.snapshot.queryParamMap.get("projectId");
-    this.userId = this.route.snapshot.queryParamMap.get("userId");
+    this.projectId = this.route.snapshot.queryParamMap.get('projectId');
+    this.userId = this.route.snapshot.queryParamMap.get('userId');
     if (this.projectId === null) {
       this.error = 'Project id is missing in URL';
     } else if (this.userId === null) {
