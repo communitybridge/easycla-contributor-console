@@ -1,1 +1,44 @@
-<p>docusign-signature-model works!</p>
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-8 docusign-signature-model">
+            <div class="col-12 header" [ngClass]="{'green':status==='Completed'}">
+                {{status === 'Pending'?' Preparing CLA...':'CLA Ready For Signature'}}
+            </div>
+            <div class="col-12 body">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-6">
+                        <div class="row justify-content-end">
+                            <i class="col-auto fas fa-file-alt file" [ngClass]="{'green':status==='Completed'}"></i>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="col-12 checkItem" *ngFor="let item of checkedItems">
+                            <div class="row align-items-center">
+                                <div class="col-auto pr-0">
+                                    <i class="far fa-check-square checkbox"
+                                        [ngClass]="{'green':status==='Completed'}"></i>
+                                </div>
+                                <label class="col-10 pr-0">{{item}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row buttons justify-content-center align-items-center">
+                    <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+                        <button type="button" class="btn" (click)="onClickBack()">
+                            GO BACK
+                        </button>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+                        <button type="button" [ngClass]="{'blue':status==='Completed'}" class="btn gray"
+                            (click)="onClickSignCLA()">
+                            SIGN CLA</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

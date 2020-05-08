@@ -27,7 +27,7 @@
 
         <div class="desktop-view">
             <app-dashboard-contributor-buttons [type]="type">
-            </app-dashboard-contributor-buttons>
+            </app-dashboard-contributor-buttons (proceedBtnEmitter)="onClickBtn()">
         </div>
 
     </div>
