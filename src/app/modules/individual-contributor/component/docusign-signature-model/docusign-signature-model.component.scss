@@ -3,7 +3,7 @@
 
 .docusign-signature-model {
   .header {
-    font-size: 18px;
+    font-size: 20px;
     color: #fff;
     font-weight: bold;
     font-family: "OpenSans";
@@ -11,7 +11,6 @@
     border-top-left-radius: 15px;
     background-color: #8492a6;
     padding: 10px 15px;
-    font-weight: bold;
     text-align: center;
     &.green {
       background-color: #a1d683;
@@ -34,14 +33,18 @@
     }
 
     .checkItem {
-      font-family: "Poppins";
-      font-size: 14px;
       padding: 12px 0;
       .checkbox {
-        font-size: 30px;
+        font-size: 35px;
         &.green {
           color: #a1d683;
         }
+      }
+      label {
+        font-family: "Poppins";
+        font-size: 14px;
+        padding-top: 5px;
+        line-height: 1px;
       }
     }
     .buttons {
@@ -51,10 +54,10 @@
         font-weight: bold;
         font-size: 14px;
         width: 100%;
-        border: 1px solid #8492a6;
-        border-radius: 25px;
+        border: 1px solid #8492A6;
+        border-radius: 50px;
         padding: 5px 0;
-        color: #444444;
+        color: #8492A6;
         &.gray {
           color: #fff;
           background-color: #8492a6;

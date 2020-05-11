@@ -1,7 +1,8 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<app-project-title [projectId]="projectId"></app-project-title>
+<app-project-title [projectId]="projectId" [userId]="userId"></app-project-title>
 <div class="col-12 individual-dashboard">
-    <app-docusign-signature-model [status]="status" (backBtnEmitter)="onBackClick()"></app-docusign-signature-model>
+    <app-docusign-signature-model [status]="status" (signCLAEmitter)="onClickSignCLA()"
+        (backBtnEmitter)="onBackClick()"></app-docusign-signature-model>
 </div>

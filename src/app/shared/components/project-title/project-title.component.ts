@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { Project } from 'src/app/core/models/project';
+import { ProjectModel } from 'src/app/core/models/project';
+import { UserModel } from 'src/app/core/models/user';
+import { StorageService } from '../../services/storage.service';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-project-title',
@@ -10,15 +13,20 @@ import { Project } from 'src/app/core/models/project';
 })
 export class ProjectTitleComponent implements OnInit {
   @Input() projectId: string;
-  project = new Project();
+  @Input() userId: string;
+
+  project = new ProjectModel();
+  user = new UserModel();
 
   constructor(
     private alertService: AlertService,
+    private storageService: StorageService,
     private claContributorService: ClaContributorService
   ) { }
 
   ngOnInit(): void {
     this.getProject();
+    this.getUser();
   }
 
   getProject() {
@@ -28,13 +36,31 @@ export class ProjectTitleComponent implements OnInit {
           this.project = response;
         },
         (exception) => {
-          const error = exception.error.errors.project_id;
-          this.alertService.error(error, 2000);
+          this.claContributorService.handleError(exception);
         }
       );
     } else {
       this.alertService.error('Invalid project id in URL');
     }
   }
+
+
+  getUser() {
+    if (this.userId) {
+      this.claContributorService.getUser(this.userId).subscribe(
+        (response) => {
+          this.storageService.setItem(AppSettings.CLA_USER, response);
+        },
+        (exception) => {
+          this.claContributorService.handleError(exception);
+        }
+      );
+    } else {
+      this.alertService.error('Invalid user id in URL');
+    }
+  }
+
+
+
 
 }

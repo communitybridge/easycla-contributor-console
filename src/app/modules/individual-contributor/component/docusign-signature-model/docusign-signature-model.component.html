@@ -1,9 +1,12 @@
 <div class="container">
     <div class="row justify-content-center align-items-center">
         <div class="col-8 docusign-signature-model">
-            <div class="col-12 header" [ngClass]="{'green':status==='Completed'}">
-                {{status === 'Pending'?' Preparing CLA...':'CLA Ready For Signature'}}
+            <div class="col-12 header" [ngSwitch]="status" [ngClass]="{'green':status==='Completed'}">
+                <ng-container *ngSwitchCase="'Pending'">Preparing CLA...</ng-container>
+                <ng-container *ngSwitchCase="'Completed'">CLA Ready For Signature</ng-container>
+                <ng-container *ngSwitchCase="'Failed'">Failed To Load Signature</ng-container>
             </div>
+            
             <div class="col-12 body">
                 <div class="row justify-content-center align-items-center">
                     <div class="col-6">
@@ -15,7 +18,7 @@
                         <div class="col-12 checkItem" *ngFor="let item of checkedItems">
                             <div class="row align-items-center">
                                 <div class="col-auto pr-0">
-                                    <i class="far fa-check-square checkbox"
+                                    <i class="fa fa-check-square checkbox"
                                         [ngClass]="{'green':status==='Completed'}"></i>
                                 </div>
                                 <label class="col-10 pr-0">{{item}}</label>
@@ -31,7 +34,7 @@
                         </button>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-                        <button type="button" [ngClass]="{'blue':status==='Completed'}" class="btn gray"
+                        <button type="button" [disabled]="status!=='Completed'" [ngClass]="{'blue':status==='Completed'}" class="btn gray"
                             (click)="onClickSignCLA()">
                             SIGN CLA</button>
                     </div>

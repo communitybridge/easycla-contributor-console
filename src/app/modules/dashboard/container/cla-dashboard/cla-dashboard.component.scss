@@ -5,12 +5,14 @@
   background-color: #f5f5f5;
 
   .contributor-type-container {
-    padding: 6%;
+    padding: 30px 5%;
     .header {
+      font-family: "SourceSansPro";
       font-size: 26px;
       text-align: center;
-      font-weight: bolder;
-      padding: 15px 0;
+      font-weight: bold;
+      padding: 5px 0;
+      line-height: 1px;
     }
 
     .deskop-view {
