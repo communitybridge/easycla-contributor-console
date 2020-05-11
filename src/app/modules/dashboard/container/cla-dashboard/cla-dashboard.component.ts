@@ -3,7 +3,6 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertService } from 'src/app/shared/services/alert.service';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -16,10 +15,10 @@ export class ClaDashboardComponent implements OnInit {
   individualHightlights: string[];
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
+  hasError: boolean;
 
   constructor(
     private route: ActivatedRoute,
-    private alertService: AlertService,
     private router: Router
   ) {
     this.projectId = this.route.snapshot.queryParamMap.get('projectId');
@@ -43,27 +42,22 @@ export class ClaDashboardComponent implements OnInit {
 
 
   onClickCorporateProceed() {
-    if (!this.hasErrorPresent()) {
+    if (!this.hasError) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
     }
   }
 
   onClickIndividualProceed() {
-    if (!this.hasErrorPresent()) {
+    if (!this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
     }
   }
 
-  hasErrorPresent() {
-    if (this.projectId === null) {
-      this.alertService.error('Project id is missing in URL');
-      return true;
-    }
-    if (this.userId === null) {
-      this.alertService.error('User id is missing in URL');
-      return true;
+  hasErrorPresent(error?) {
+    if (error) {
+      this.hasError = true;
     }
     return false;
   }

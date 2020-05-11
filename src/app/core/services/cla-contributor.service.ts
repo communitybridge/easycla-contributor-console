@@ -44,9 +44,11 @@ export class ClaContributorService {
   handleError(errorObj: any) {
     const errors = errorObj.error.errors;
     if (errors) {
-      for (const property of errors) {
-        const errorMsg = property + ': ' + errors[property];
-        this.alertService.error(errorMsg);
+      for (const property in errors) {
+        if (property) {
+          const errorMsg = property + ': ' + errors[property];
+          this.alertService.error(errorMsg);
+        }
       }
     }
   }

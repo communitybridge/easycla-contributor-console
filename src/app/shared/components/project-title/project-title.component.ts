@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectModel } from 'src/app/core/models/project';
@@ -14,6 +14,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 export class ProjectTitleComponent implements OnInit {
   @Input() projectId: string;
   @Input() userId: string;
+  @Output() errorEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   project = new ProjectModel();
   user = new UserModel();
@@ -25,8 +26,12 @@ export class ProjectTitleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getProject();
-    this.getUser();
+    if (this.projectId && this.userId) {
+      this.getProject();
+      this.getUser();
+    } else {
+      this.alertService.error('Invalid project id and user id in URL');
+    }
   }
 
   getProject() {
@@ -36,10 +41,12 @@ export class ProjectTitleComponent implements OnInit {
           this.project = response;
         },
         (exception) => {
+          this.errorEmitter.emit(true);
           this.claContributorService.handleError(exception);
         }
       );
     } else {
+      this.errorEmitter.emit(true);
       this.alertService.error('Invalid project id in URL');
     }
   }
@@ -52,10 +59,12 @@ export class ProjectTitleComponent implements OnInit {
           this.storageService.setItem(AppSettings.CLA_USER, response);
         },
         (exception) => {
+          this.errorEmitter.emit(true);
           this.claContributorService.handleError(exception);
         }
       );
     } else {
+      this.errorEmitter.emit(true);
       this.alertService.error('Invalid user id in URL');
     }
   }
