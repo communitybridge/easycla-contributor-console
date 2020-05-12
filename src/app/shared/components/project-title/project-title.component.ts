@@ -30,6 +30,7 @@ export class ProjectTitleComponent implements OnInit {
       this.getProject();
       this.getUser();
     } else {
+      this.errorEmitter.emit(true);
       this.alertService.error('Invalid project id and user id in URL');
     }
   }

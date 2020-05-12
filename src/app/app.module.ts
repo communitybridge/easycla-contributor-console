@@ -15,6 +15,7 @@ import { AlertService } from './shared/services/alert.service';
 import { AlertComponent } from './shared/components/alert/alert.component';
 import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
 import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CorporateContributorModule } from './modules/corporate-contributor/corp
     SharedModule,
     DashboardModule,
     IndividualContributorModule,
-    CorporateContributorModule
+    CorporateContributorModule,
+    FormsModule
   ],
   providers: [
     {

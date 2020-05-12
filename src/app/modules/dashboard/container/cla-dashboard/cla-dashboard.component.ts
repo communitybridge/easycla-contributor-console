@@ -42,6 +42,7 @@ export class ClaDashboardComponent implements OnInit {
 
 
   onClickCorporateProceed() {
+    console.log(this.hasError);
     if (!this.hasError) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
@@ -56,9 +57,9 @@ export class ClaDashboardComponent implements OnInit {
   }
 
   hasErrorPresent(error?) {
+    this.hasError = false;
     if (error) {
       this.hasError = true;
     }
-    return false;
   }
 }
