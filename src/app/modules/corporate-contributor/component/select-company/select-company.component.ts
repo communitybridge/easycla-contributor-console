@@ -3,7 +3,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-select-company',
@@ -15,12 +15,17 @@ export class SelectCompanyComponent implements OnInit {
   companies: any[];
   showcompaniesList: boolean;
   searchTimeout = null;
+  projectId: string;
+  userId: string;
 
   constructor(
+    private route: ActivatedRoute,
     private claContributorService: ClaContributorService,
-    private modalService: NgbModal
-
-  ) { }
+    private router: Router
+  ) {
+    this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.userId = this.route.snapshot.paramMap.get('userId');
+  }
 
   ngOnInit(): void {
     this.companies = [
@@ -37,18 +42,17 @@ export class SelectCompanyComponent implements OnInit {
   }
 
   onCompanyKeypress(event) {
-    const value = event.target.value;
+     const value = event.target.value;
     if (this.searchTimeout !== null) {
       clearTimeout(this.searchTimeout);
     }
     this.searchTimeout = setTimeout(() => {
-      // this.searchOrganization(value);
+       this.searchOrganization(value);
     }, 300);
   }
 
 
   searchOrganization(searchText: string) {
-    console.log(searchText);
     this.claContributorService.searchOrganization(searchText).subscribe(
       (response) => {
         console.log(response);
@@ -64,7 +68,8 @@ export class SelectCompanyComponent implements OnInit {
   }
 
   onClickBack() {
-
+    this.router.navigate(['/dashboard'],
+      { queryParams: { projectId: this.projectId, userId: this.userId } });
   }
 
 }

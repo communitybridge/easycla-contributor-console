@@ -42,7 +42,6 @@ export class ClaDashboardComponent implements OnInit {
 
 
   onClickCorporateProceed() {
-    console.log(this.hasError);
     if (!this.hasError) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);

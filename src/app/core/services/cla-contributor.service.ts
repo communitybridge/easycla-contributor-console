@@ -38,7 +38,7 @@ export class ClaContributorService {
   }
 
   searchOrganization(searchText: string): Observable<any> {
-    const url = 'https://api-gw.dev.platform.linuxfoundation.org/v1/orgs/search';
+    const url = 'https://api-gw.dev.platform.linuxfoundation.org/v1/orgs/search?name=' + searchText;
     return this.httpClient.get<any>(url);
   }
 

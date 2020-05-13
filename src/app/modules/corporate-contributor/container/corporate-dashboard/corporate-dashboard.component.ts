@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -9,10 +9,9 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './corporate-dashboard.component.html',
   styleUrls: ['./corporate-dashboard.component.scss']
 })
-export class CorporateDashboardComponent implements OnInit {
+export class CorporateDashboardComponent {
   projectId: string;
   userId: string;
-  isShowAddCompanyDialog:boolean;
 
   constructor(
     private route: ActivatedRoute
@@ -20,9 +19,4 @@ export class CorporateDashboardComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
   }
-
-  ngOnInit(): void {
-    this.isShowAddCompanyDialog = true;
-  }
-
 }

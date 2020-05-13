@@ -29,7 +29,7 @@
                                 </div>
                                 <div class="footer col-12">
                                     <span>Company not listed? </span>
-                                    <span class="click-here" (click)="open(mymodal)">+ Click Here</span>
+                                    <span class="click-here">+ Click Here</span>
                                 </div>
                             </div>
                         </div>
@@ -56,13 +56,3 @@
         </div>
     </div>
 </div>
-
-
-<ng-template #mymodal let-modal>
-    <div class="modal-body">
-        This is example from ItSolutionStuff.com
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Ok</button>
-    </div>
-</ng-template>
