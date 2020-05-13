@@ -12,6 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class CorporateDashboardComponent implements OnInit {
   projectId: string;
   userId: string;
+  isShowAddCompanyDialog:boolean;
 
   constructor(
     private route: ActivatedRoute
@@ -21,6 +22,7 @@ export class CorporateDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isShowAddCompanyDialog = true;
   }
 
 }

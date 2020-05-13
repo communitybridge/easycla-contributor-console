@@ -9,6 +9,7 @@ import { ProjectModel } from '../models/project';
 import { UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
+import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +37,14 @@ export class ClaContributorService {
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
-  postIndividualSignatureRequest(data: any): Observable<any> {
+  searchOrganization(searchText: string): Observable<any> {
+    const url = 'https://api-gw.dev.platform.linuxfoundation.org/v1/orgs/search';
+    return this.httpClient.get<any>(url);
+  }
+
+  postIndividualSignatureRequest(data: any): Observable<IndividualRequestSignatureModel> {
     const url = this.baseURL + 'v2/request-individual-signature';
-    return this.httpClient.post<any>(url, data);
+    return this.httpClient.post<IndividualRequestSignatureModel>(url, data);
   }
 
   handleError(errorObj: any) {
