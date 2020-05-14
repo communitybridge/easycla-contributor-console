@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-8 docusign-signature-model">
+            <div class="col-12 header" [ngSwitch]="status" [ngClass]="{'green':status==='Completed'}">
+                <ng-container *ngSwitchCase="'Pending'">Preparing CLA...</ng-container>
+                <ng-container *ngSwitchCase="'Completed'">CLA Ready For Signature</ng-container>
+                <ng-container *ngSwitchCase="'Failed'">Failed To Load Signature</ng-container>
+            </div>
+
+            <div class="col-12 body">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="row justify-content-end">
+                            <i *ngIf="status !=='Completed'" class="col-auto fas fa-file file"></i>
+                            <i *ngIf="status ==='Completed'" class="col-auto fas fa-file-alt file green"></i>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <div class="col-12 checkItem" *ngFor="let item of checkedItems">
+                            <div class="row align-items-center">
+                                <div class="col-auto pr-0">
+                                    <i class="fas fa-check-circle checkbox green"
+                                        [ngClass]="{'green':status==='Completed'}"></i>
+                                </div>
+                                <label class="col pr-0">{{item}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row buttons justify-content-center align-items-center">
+                    <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+                        <button type="button" class="btn" (click)="onClickBack()">
+                            GO BACK
+                        </button>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+                        <button type="button" [disabled]="status!=='Completed'"
+                            [ngClass]="{'blue':status==='Completed'}" class="btn gray" (click)="onClickSignCLA()">
+                            SIGN CLA</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

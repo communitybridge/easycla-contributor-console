@@ -8,6 +8,9 @@ import { IndividualIconComponent } from './svg/individual-icon/individual-icon.c
 import { ClaIconComponent } from './svg/cla-icon/cla-icon.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { StorageService } from './services/storage.service';
+import { ProjectTitleComponent } from './components/project-title/project-title.component';
+import { TrimCharactersPipe } from './pipes/trim-characters';
 
 @NgModule({
     declarations: [
@@ -16,7 +19,9 @@ import { LoaderComponent } from './components/loader/loader.component';
         IndividualIconComponent,
         ClaIconComponent,
         PageNotFoundComponent,
-        LoaderComponent
+        LoaderComponent,
+        ProjectTitleComponent,
+        TrimCharactersPipe
     ],
     imports: [
 
@@ -27,8 +32,10 @@ import { LoaderComponent } from './components/loader/loader.component';
         IndividualIconComponent,
         ClaIconComponent,
         PageNotFoundComponent,
-        LoaderComponent
+        LoaderComponent,
+        ProjectTitleComponent,
+        TrimCharactersPipe
     ],
-    providers: []
+    providers: [StorageService]
 })
 export class SharedModule { }

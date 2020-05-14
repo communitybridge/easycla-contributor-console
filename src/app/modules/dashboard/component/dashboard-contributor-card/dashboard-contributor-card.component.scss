@@ -15,7 +15,7 @@
       font-size: 16px;
       overflow-wrap: break-word;
       margin-bottom: 20px;
-      padding: 3px;
+      padding: 5px;
     }
 
     i {
@@ -45,7 +45,7 @@
   }
 }
 
-@media only screen and (max-width: 415px) {
+@media only screen and (max-width: 765px) {
   /* For mobile phones: */
   .sub-header {
     font-size: 15px !important;

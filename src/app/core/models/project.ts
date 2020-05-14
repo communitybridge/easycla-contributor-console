@@ -4,7 +4,7 @@
 import { ProjectCorporateDocument } from './project-corporate-document';
 import { ProjectIndividualDocument } from './project-individual-document';
 
-export class Project {
+export class ProjectModel {
     date_created: Date;
     date_modified: Date;
     project_acl: string[];

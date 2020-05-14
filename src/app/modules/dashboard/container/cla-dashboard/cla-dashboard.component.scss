@@ -4,21 +4,15 @@
 .dashboard-container {
   background-color: #f5f5f5;
 
-  .project-name {
-    background-color: #fff;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-  }
-
   .contributor-type-container {
-    padding: 6%;
+    padding: 30px 5%;
     .header {
+      font-family: "SourceSansPro";
       font-size: 26px;
       text-align: center;
-      font-weight: bolder;
-      padding: 15px 0;
+      font-weight: bold;
+      padding: 5px 0;
+      line-height: 1px;
     }
 
     .deskop-view {
@@ -27,7 +21,7 @@
   }
 }
 
-@media only screen and (max-width: 420px) {
+@media only screen and (max-width: 765px) {
   /* For mobile phones: */
   .contributor-type-container {
     .header {

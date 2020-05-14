@@ -1,18 +1,9 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
- <div *ngIf="error">
-    <div class="alert alert-danger" role="alert">
-       {{error}}
-      </div>
- </div>
+<app-project-title [projectId]="projectId" [userId]="userId" (errorEmitter)="hasErrorPresent($event)"></app-project-title>
 
 <div class="container-fluid dashboard-container">
-    <div class="row">
-        <div class="col-12 project-name">
-            {{project.project_name}}
-        </div>
-    </div>
 
     <div class="contributor-type-container">
         <div class="container">
@@ -26,11 +17,13 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightlights">
+                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightlights"
+                        (btnEmitter)="onClickCorporateProceed()">
                     </app-dashboard-contributor-card>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightlights">
+                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightlights"
+                        (btnEmitter)="onClickIndividualProceed()">
                     </app-dashboard-contributor-card>
                 </div>
             </div>
