@@ -11,6 +11,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { StorageService } from './services/storage.service';
 import { ProjectTitleComponent } from './components/project-title/project-title.component';
 import { TrimCharactersPipe } from './pipes/trim-characters';
+import { CheckboxComponent } from './components/checkbox/checkbox.component';
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { TrimCharactersPipe } from './pipes/trim-characters';
         PageNotFoundComponent,
         LoaderComponent,
         ProjectTitleComponent,
-        TrimCharactersPipe
+        TrimCharactersPipe,
+        CheckboxComponent
     ],
     imports: [
 
@@ -34,7 +36,8 @@ import { TrimCharactersPipe } from './pipes/trim-characters';
         PageNotFoundComponent,
         LoaderComponent,
         ProjectTitleComponent,
-        TrimCharactersPipe
+        TrimCharactersPipe,
+        CheckboxComponent
     ],
     providers: [StorageService]
 })

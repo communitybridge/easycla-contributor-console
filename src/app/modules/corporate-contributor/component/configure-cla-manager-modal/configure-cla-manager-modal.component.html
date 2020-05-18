@@ -1,0 +1,25 @@
+<!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT -->
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-auto pr-0 icon mt-20">
+            <i *ngIf="!isProcessed" class="fas fa-spinner"></i>
+            <i *ngIf="isProcessed" class="fas fa-check-circle green"></i>
+        </div>
+        <div *ngIf="!isProcessed" class="col-10 mt-20 message">
+            Please wait while we configure the initial CLA Manager settings for this CLA.
+        </div>
+        <div *ngIf="isProcessed" class="col-10 mt-20 message">
+            When this CLA is signed, you will be the initial CLA Manager. Please click below to proceed.
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-20">
+        <div class="col-5">
+            <button type="button" class="btn" [ngClass]="{'active':isProcessed}" (click)="onClickProceedBtn()">
+                Procced
+            </button>
+        </div>
+    </div>
+</div>

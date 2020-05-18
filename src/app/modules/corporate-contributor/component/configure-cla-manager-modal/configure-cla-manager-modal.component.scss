@@ -1,0 +1,39 @@
+/* Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT */
+
+.icon {
+  color: #000;
+  font-size: 30px;
+
+  .green {
+    color: #a1d683 !important;
+  }
+}
+
+.mt-20 {
+  margin-top: 25px;
+}
+
+.pr-0 {
+    padding-right: 0;
+}
+
+.message {
+  color: #333333;
+  font-size: 14px;
+}
+
+.btn {
+  padding: 4px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "SourceSansPro-bold";
+  text-align: center;
+  background: #8492a6;
+  border-radius: 50px;
+  width: 100%;
+  &.active {
+    background: #0099cc;
+  }
+}
