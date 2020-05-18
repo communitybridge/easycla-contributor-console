@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AppSettings {
+    /* eslint-disable */
     public static COOKIE_EXPIRY = (30 * 24 * 60 * 60 * 1000);
     public static CLA_USER = 'cla-user';
     public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';
