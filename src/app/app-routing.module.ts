@@ -27,8 +27,10 @@ const routes: Routes = [
   },
   {
     path: 'corporate-dashboard/:projectId/:userId',
-    pathMatch: 'full',
-    component: CorporateDashboardComponent
+    component: CorporateDashboardComponent,
+    children: [
+
+    ]
   },
   {
     path: '**',

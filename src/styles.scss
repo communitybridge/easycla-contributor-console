@@ -3,12 +3,19 @@
 
 /* You can add global styles to this file, and also import other style files */
 /* Importing Bootstrap SCSS file. */
+
 @import "~bootstrap/scss/bootstrap";
-@import 'https://use.fontawesome.com/releases/v5.7.0/css/all.css';
+@import "https://use.fontawesome.com/releases/v5.7.0/css/all.css";
 
 @font-face {
   font-family: "SourceSansPro";
   src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf) format("truetype");
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "SourceSansPro-bold";
+  src: url(./assets/fonts/Source_Sans_Pro/SourceSansPro-Bold.ttf) format("truetype");
   font-weight: 300;
 }
 
@@ -28,4 +35,55 @@ body {
   font-family: "SourceSansPro", sans-serif;
   font-size: 14px;
   color: #333333;
+}
+
+.success-dialog {
+  .logo {
+    font-size: 133px;
+    &.green {
+      color: #a1d683;
+    }
+    &.red {
+      color: #ff595a;
+    }
+  }
+
+  .title {
+    color: #8492a6;
+    font-family: "Poppins";
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .success-message {
+    color: #333333;
+    font-size: 13px;
+    text-align: center;
+    padding: 5px;
+    font-weight: bold;
+  }
+
+  .success-btn {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    background: #0099cc;
+    font-family: "SourceSansPro-bold";
+    border: 0px solid #000000;
+    border-radius: 20px;
+    width: 100%;
+    padding: 8px;
+    color: #ffffff;
+    margin-top: 5px;
+  }
+}
+
+.modal-dialog {
+  font-size: 14px;
+
+  .modal-content {
+    border-radius: 10px !important;
+  }
 }
