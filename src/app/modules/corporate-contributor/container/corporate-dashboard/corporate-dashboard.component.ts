@@ -66,7 +66,7 @@ export class CorporateDashboardComponent {
     );
   }
 
-  onClickProceed(content) {
+  onClickProceed() {
     const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
     this.router.navigate([url]);
   }
