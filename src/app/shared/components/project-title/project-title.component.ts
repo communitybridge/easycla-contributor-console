@@ -22,7 +22,7 @@ export class ProjectTitleComponent implements OnInit {
   constructor(
     private alertService: AlertService,
     private storageService: StorageService,
-    private claContributorService: ClaContributorService
+    private claContributorService: ClaContributorService,
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +40,8 @@ export class ProjectTitleComponent implements OnInit {
       this.claContributorService.getProject(this.projectId).subscribe(
         (response) => {
           this.project = response;
+          this.storageService.setItem('claProjectName', this.project.project_name);
+
         },
         (exception) => {
           this.errorEmitter.emit(true);

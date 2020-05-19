@@ -9,10 +9,11 @@ import { ClaNotSignedModalComponent } from './component/cla-not-signed-modal/cla
 import { AddCompanyModalComponent } from './component/add-company-modal/add-company-modal.component';
 import { IdentifyClaManagerModalComponent } from './component/identify-cla-manager-modal/identify-cla-manager-modal.component';
 import { ConfigureClaManagerModalComponent } from './component/configure-cla-manager-modal/configure-cla-manager-modal.component';
-import { ModalHeaderComponent } from './component/modal-header/modal-header.component'
+import { ModalHeaderComponent } from './component/modal-header/modal-header.component';
+import { ClaRequestAuthorizationComponent } from './container/cla-request-authorization/cla-request-authorization.component'
 
 @NgModule({
-  declarations: [CorporateDashboardComponent, ClaNotSignedModalComponent, AddCompanyModalComponent, IdentifyClaManagerModalComponent, ConfigureClaManagerModalComponent, ModalHeaderComponent],
+  declarations: [CorporateDashboardComponent, ClaNotSignedModalComponent, AddCompanyModalComponent, IdentifyClaManagerModalComponent, ConfigureClaManagerModalComponent, ModalHeaderComponent, ClaRequestAuthorizationComponent],
   imports: [
     CommonModule,
     SharedModule,
