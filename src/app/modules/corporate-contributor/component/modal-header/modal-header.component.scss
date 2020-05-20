@@ -1,0 +1,15 @@
+/* Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT */
+
+.dialog-header {
+  color: #8492a6;
+  font-family: "Poppins";
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+
+  .close-btn {
+    cursor: pointer;
+    color: #000 !important;
+  }
+}

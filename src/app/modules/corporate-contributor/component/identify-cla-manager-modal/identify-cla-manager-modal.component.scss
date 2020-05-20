@@ -1,0 +1,74 @@
+/* Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT */
+
+.message {
+  color: #333333;
+  font-size: 14px;
+  text-align: center;
+  padding: 5px;
+  margin: 20px 0;
+}
+
+input {
+  height: 28px;
+  color: #8492a6;
+  font-size: 12px;
+  text-align: left;
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #8492a6;
+  border-radius: 0px;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
+}
+.or-container {
+  margin-top: 10px;
+  .seperator {
+    border: 1px solid #e0e0e0;
+  }
+  .or {
+    color: #333333;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+  }
+}
+
+.company-admin-container {
+  margin-top: 15px;
+
+  .msg {
+    color: #333333;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px;
+  }
+
+  .contact-admin {
+    cursor: pointer;
+    margin-top: 20px;
+    color: #0099cc;
+    font-family: "SourceSansPro-bold";
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+  }
+}
+
+.btn {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "SourceSansPro-bold";
+  text-align: center;
+  background: #0099cc;
+  border: 0px solid #000000;
+  border-radius: 50px;
+  margin: 30px 0 10px 0;
+  padding: 6px 0;
+  width: 100%;
+}

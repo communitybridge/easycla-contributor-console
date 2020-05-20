@@ -2,3 +2,116 @@
  SPDX-License-Identifier: MIT -->
 
 <app-project-title [projectId]="projectId" [userId]="userId"></app-project-title>
+
+<div class="col-12 corporate-dashboard">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-8 select-company-model">
+                <div class="col-12 header">
+                    Select Company
+                </div>
+
+                <div class="col-12 body">
+                    <div class="col-12">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                <input id="msg" type="text" [(ngModel)]="selectedCompany"
+                                    placeholder="Type your Company Name" (keyup)="onCompanyKeypress($event)">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div *ngIf="selectedCompany" class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                                <div class="col-12 dropdown-container">
+                                    <div class="companies">
+                                        <div class="col-12 item" *ngFor="let company of companies;"
+                                            (click)="onSelectCompany(company)">
+                                            <div class="row">
+                                                <div class="col-6 ellipsis">{{company}}</div>
+                                                <div class="col-6 ellipsis">{{company}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="footer col-12">
+                                        <span>Company not listed? </span>
+                                        <span class="click-here" (click)="open(addCompany)">+ Click Here</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 buttons" [ngClass]="{'mt-30':selectedCompany}">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                                <button type="button" class="btn" (click)="onClickBack()">
+                                    Go Back
+                                </button>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                                <button type="button" class="btn inactive" [ngClass]="{'active':selectedCompany}"
+                                    (click)="onClickProceed()">
+                                    Proceed
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #addCompany let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="Enter Company Details" (closeDialogEmitter)="onClickClose()"></app-modal-header>
+            <app-add-company-modal
+                (ProccedCLAEmitter)="onClickAddNewCompany($event,signedCLANotFoundModal,companyDetailsModal)">
+            </app-add-company-modal>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #signedCLANotFoundModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="No Signed CLA Found" (closeDialogEmitter)="onClickClose()"></app-modal-header>
+            <app-cla-not-signed-modal (yesEmitter)="openWithDismiss(configureCLAManager)"
+                (noEmitter)="openWithDismiss(identifyCLAManager)">
+            </app-cla-not-signed-modal>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #companyDetailsModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="Company Profile" (closeDialogEmitter)="onClickClose()">
+            </app-modal-header>
+            <app-company-details-modal></app-company-details-modal>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #identifyCLAManager let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="onClickClose()"></app-modal-header>
+            <app-identify-cla-manager-modal [hasShowContactAdmin]="hasShowContactAdmin"
+                (submitEmitter)="onClickSubmitRequestToAdmin()">
+            </app-identify-cla-manager-modal>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #configureCLAManager let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="Configuring CLA Manager Settings" (closeDialogEmitter)="onClickClose()">
+            </app-modal-header>
+            <app-configure-cla-manager-modal (proceedEmitter)="onClickProceedCLAManagerSetting()">
+            </app-configure-cla-manager-modal>
+        </div>
+    </div>
+</ng-template>

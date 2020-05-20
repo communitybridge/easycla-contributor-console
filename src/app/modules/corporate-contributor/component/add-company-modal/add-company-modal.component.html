@@ -1,0 +1,64 @@
+<!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
+ SPDX-License-Identifier: MIT -->
+
+<div class="add-company-container">
+    <form [formGroup]="form">
+        <div class="container">
+            <div col="row">
+                <div class="col-12 element">
+                    <input type="text" name="companyName" placeholder="Enter Company Name" formControlName="companyName"
+                        class="form-control" />
+                    <div *ngIf="!form.controls.companyName.valid && form.controls.companyName.touched">
+                        <span class="error">Company name is required.</span>
+                    </div>
+
+                </div>
+                <div class="col-12 element">
+                    <input type="text" name="companyWebsite"
+                        placeholder="Enter Company Website (http://www.example.com)" formControlName="companyWebsite"
+                        class="form-control" />
+                    <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
+                        <span class="error">Company website is invalid.</span>
+                    </div>
+                </div>
+
+                <div class="col-12 mt-20">
+                    <app-checkbox [checked]="isChecked" [text]="checkboxText"
+                        (checkboxEmitter)="onClickCheckbox($event)">
+                    </app-checkbox>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="col-12 buttons">
+        <div class="row justify-content-end">
+            <div class="col-4">
+                <button type="button" class="btn" [disabled]="!form.valid" (click)="onClickProceed(successModal)">
+                    Next
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #successModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <div class="row justify-content-center success-dialog">
+                <div class="col-auto">
+                    <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
+                    <i *ngIf="hasError" class="fas fa-exclamation-circle logo red"></i>
+                </div>
+                <div class="col-12 title">{{title}}</div>
+                <p class="col-11 success-message">{{message}}</p>
+                <div class="col-4">
+                    <button type="button" class="success-btn" (click)="onClickDialogBtn()">
+                        {{hasError?'Go Back':'Procced'}}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</ng-template>

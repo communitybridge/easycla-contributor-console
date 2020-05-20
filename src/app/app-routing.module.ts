@@ -7,6 +7,7 @@ import { ClaDashboardComponent } from './modules/dashboard/container/cla-dashboa
 import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 import { IndividualDashboardComponent } from './modules/individual-contributor/container/individual-dashboard/individual-dashboard.component';
 import { CorporateDashboardComponent } from './modules/corporate-contributor/container/corporate-dashboard/corporate-dashboard.component';
+import { ClaRequestAuthorizationComponent } from './modules/corporate-contributor/container/cla-request-authorization/cla-request-authorization.component';
 
 
 const routes: Routes = [
@@ -28,7 +29,12 @@ const routes: Routes = [
   {
     path: 'corporate-dashboard/:projectId/:userId',
     pathMatch: 'full',
-    component: CorporateDashboardComponent
+    component: CorporateDashboardComponent,
+  },
+  {
+    path: 'corporate-dashboard/request-authorization/:projectId/:userId',
+    pathMatch: 'full',
+    component: ClaRequestAuthorizationComponent
   },
   {
     path: '**',
