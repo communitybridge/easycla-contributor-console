@@ -25,6 +25,26 @@
             </button>
         </div>
     </div>
+
+    <div *ngIf="hasShowContactAdmin">
+        <div class="or-container row justify-content-center align-items-center">
+            <div class="col-5">
+                <div class="seperator"></div>
+            </div>
+            <div class="col-auto or">OR</div>
+            <div class="col-5">
+                <div class="seperator"></div>
+            </div>
+        </div>
+        <div class="row justify-content-center company-admin-container">
+            <div class="col-12 msg">
+                Contact your organization's CommunityBridge Company Admin if you do not know who will be the CLA
+                Manager. 
+            </div>
+            <div class="col-auto contact-admin" (click)="onClickContactAdmin(successModal)">Contact Company Admin </div>
+        </div>
+    </div>
+
 </div>
 
 <ng-template #successModal let-modal>

@@ -19,6 +19,7 @@ export class CorporateDashboardComponent {
   projectId: string;
   userId: string;
   hasShowNoSignedCLAFoundDialog: boolean;
+  hasShowContactAdmin: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +32,7 @@ export class CorporateDashboardComponent {
   }
 
   ngOnInit(): void {
+    this.hasShowContactAdmin = true;
     this.companies = [
       'Vison',
       'Amol test company',
@@ -67,6 +69,7 @@ export class CorporateDashboardComponent {
   }
 
   onClickProceed() {
+    this.hasShowContactAdmin = true;
     const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
     this.router.navigate([url]);
   }
@@ -86,6 +89,15 @@ export class CorporateDashboardComponent {
   openWithDismiss(content) {
     this.modalService.dismissAll();
     this.open(content);
+  }
+
+  onClickAddNewCompany(hasShowCompanyDetailDialog, signedCLANotFoundModal, companyDetailModal) {
+    if (!hasShowCompanyDetailDialog) {
+      this.hasShowContactAdmin = false;
+      this.openWithDismiss(signedCLANotFoundModal);
+    } else {
+      this.openWithDismiss(companyDetailModal);
+    }
   }
 
   onClickClose() {

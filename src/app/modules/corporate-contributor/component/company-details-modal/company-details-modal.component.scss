@@ -1,0 +1,73 @@
+.company-detail-component {
+  padding: 20px 10px 0 10px;
+
+  .mt-20 {
+    margin-top: 20px;
+  }
+
+  .element {
+    margin-top: 15px;
+    .uploader {
+      font-size: 12px;
+      color: #8492a6;
+      .logo {
+        i {
+          font-size: 40px;
+          padding: 5px 10px;
+          border: 1px solid #8492a6;
+        }
+      }
+
+      .upload-btn {
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+        margin-top: 3px;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        background: #0099cc;
+        border-radius: 15px;
+        border: 1px solid #0099cc;
+        width: 80px;
+        padding: 3px;
+
+        input {
+          position: absolute;
+          font-size: 50px;
+          opacity: 0;
+          right: 0;
+          top: 0;
+        }
+      }
+    }
+
+    input {
+      border: 1px solid #8492a6;
+      border-radius: 0px;
+      padding: 5px;
+      height: 25px;
+      color: #8492a6;
+      font-size: 12px;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+    }
+  }
+
+  .buttons {
+    margin-top: 30px;
+    .btn {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      background: #0099cc;
+      border-radius: 50px;
+      width: 100%;
+    }
+  }
+}

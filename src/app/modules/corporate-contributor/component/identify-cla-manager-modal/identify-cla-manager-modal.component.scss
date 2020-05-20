@@ -24,6 +24,40 @@ input {
   font-size: 12px;
   color: red;
 }
+.or-container {
+  margin-top: 10px;
+  .seperator {
+    border: 1px solid #e0e0e0;
+  }
+  .or {
+    color: #333333;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 0;
+  }
+}
+
+.company-admin-container {
+  margin-top: 15px;
+
+  .msg {
+    color: #333333;
+    font-size: 14px;
+    text-align: center;
+    padding: 5px;
+  }
+
+  .contact-admin {
+    cursor: pointer;
+    margin-top: 20px;
+    color: #0099cc;
+    font-family: "SourceSansPro-bold";
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    text-align: center;
+  }
+}
 
 .btn {
   color: #ffffff;

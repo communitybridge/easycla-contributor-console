@@ -7,7 +7,8 @@
     <div class="container">
         <div class="row justify-content-center align-items-center">
             <div class="col-xs-11 col-sm-11 col-md-11 col-lg-8 select-company-model">
-                <div class="col-12 header">
+                <div class="col-12 header"
+                    (click)="onClickAddNewCompany(true,signedCLANotFoundModal,companyDetailsModal)">
                     Select Company
                 </div>
 
@@ -66,7 +67,8 @@
     <div class="model">
         <div class="modal-body">
             <app-modal-header title="Enter Company Details" (closeDialogEmitter)="onClickClose()"></app-modal-header>
-            <app-add-company-modal (ProccedCLAEmitter)="openWithDismiss(signedCLANotFoundModal)">
+            <app-add-company-modal
+                (ProccedCLAEmitter)="onClickAddNewCompany($event,signedCLANotFoundModal,companyDetailsModal)">
             </app-add-company-modal>
         </div>
     </div>
@@ -83,11 +85,22 @@
     </div>
 </ng-template>
 
+<ng-template #companyDetailsModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <app-modal-header title="Company Profile" (closeDialogEmitter)="onClickClose()">
+            </app-modal-header>
+            <app-company-details-modal></app-company-details-modal>
+        </div>
+    </div>
+</ng-template>
+
 <ng-template #identifyCLAManager let-modal>
     <div class="model">
         <div class="modal-body">
             <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="onClickClose()"></app-modal-header>
-            <app-identify-cla-manager-modal (submitEmitter)="onClickSubmitRequestToAdmin()">
+            <app-identify-cla-manager-modal [hasShowContactAdmin]="hasShowContactAdmin"
+                (submitEmitter)="onClickSubmitRequestToAdmin()">
             </app-identify-cla-manager-modal>
         </div>
     </div>
