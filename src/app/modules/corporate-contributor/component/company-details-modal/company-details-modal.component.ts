@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
@@ -37,9 +40,9 @@ export class CompanyDetailsModalComponent implements OnInit {
   onClickUploadLogo(event) {
     this.hasValidFile = false;
     const selectedFile = event.target.files[0];
-    const idxDot = selectedFile.name.lastIndexOf(".") + 1;
+    const idxDot = selectedFile.name.lastIndexOf('.') + 1;
     const extFile = selectedFile.name.substr(idxDot, selectedFile.name.length).toLowerCase();
-    if (extFile == "svg") {
+    if (extFile === 'svg') {
       this.hasValidFile = true;
       // upload file
     }

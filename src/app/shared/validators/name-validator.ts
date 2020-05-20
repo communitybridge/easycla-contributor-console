@@ -5,9 +5,9 @@ import { FormControl } from '@angular/forms';
 
 export class NameValidator {
     static isValid(control: FormControl): any {
-        const NAME_PATTERN = new RegExp(['^[A-Za-z]+([\ A-Za-z]+)*'].join(''));
+        const NAME_PATTERN = new RegExp(['^[A-Za-z]+([ A-Za-z]+)*'].join(''));
         const name = control.value;
-        let isValid = NAME_PATTERN.test(name);
+        const isValid = NAME_PATTERN.test(name);
         if (!isValid) {
             return {
                 'not a valid name': true
