@@ -89,7 +89,9 @@
         <div class="modal-body">
             <app-modal-header title="Company Profile" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-company-details-modal></app-company-details-modal>
+            <app-company-details-modal
+                (nextCompanyDetailEmitter)="onClickAddNewCompany(false,signedCLANotFoundModal,companyDetailsModal)">
+            </app-company-details-modal>
         </div>
     </div>
 </ng-template>

@@ -86,7 +86,8 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button type="button" class="btn" [disabled]="!(form.valid && hasValidFile)" (click)="onClickProceed()">
+                <button type="button" class="btn inactive" [ngClass]="{'active':form.valid && hasValidFile}"
+                    [disabled]="!(form.valid && hasValidFile)" (click)="onClickProceed()">
                     Next
                 </button>
             </div>
