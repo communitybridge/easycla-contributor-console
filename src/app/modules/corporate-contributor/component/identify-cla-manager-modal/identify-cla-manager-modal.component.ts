@@ -4,7 +4,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator } from 'src/app/shared/validators/email-validator';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',

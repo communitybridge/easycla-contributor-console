@@ -4,7 +4,6 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { ProjectModel } from 'src/app/core/models/project';
 import { UserModel } from 'src/app/core/models/user';
 import { StorageService } from '../../services/storage.service';
-import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-project-title',
@@ -67,7 +66,7 @@ export class ProjectTitleComponent implements OnInit {
   getUser() {
     if (this.userId) {
       this.claContributorService.getUser(this.userId).subscribe(
-        (response) => {
+        () => {
           this.storageService.setItem('userId', this.userId);
         },
         (exception) => {
