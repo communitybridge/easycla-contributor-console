@@ -1,7 +1,9 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
  
-<label class="container">{{text}}
-    <input type="checkbox">
-    <span class="checkmark" (click)="onCheckboxClick()"></span>
+<label class="container">
+    <span>{{message1}}</span>
+    <span class="italic">{{message2}}</span>
+    <input type="checkbox" (click)="onCheckboxClick()">
+    <span class="checkmark"></span>
 </label>

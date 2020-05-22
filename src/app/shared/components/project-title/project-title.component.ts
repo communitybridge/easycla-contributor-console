@@ -27,8 +27,17 @@ export class ProjectTitleComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.projectId && this.userId) {
-      this.getProject();
-      this.getUser();
+      const localProjectId = JSON.parse(this.storageService.getItem('projectId'));
+      const localUserId = JSON.parse(this.storageService.getItem('userId'));
+      if (localProjectId !== this.projectId) {
+        this.getProject();
+      } else {
+        this.project.project_name = JSON.parse(this.storageService.getItem('projectName'));
+      }
+
+      if (localUserId !== this.userId) {
+        this.getUser();
+      }
     } else {
       this.errorEmitter.emit(true);
       this.alertService.error('Invalid project id and user id in URL');
@@ -40,7 +49,8 @@ export class ProjectTitleComponent implements OnInit {
       this.claContributorService.getProject(this.projectId).subscribe(
         (response) => {
           this.project = response;
-          this.storageService.setItem('claProjectName', this.project.project_name);
+          this.storageService.setItem('projectName', this.project.project_name);
+          this.storageService.setItem('projectId', this.projectId);
         },
         (exception) => {
           this.errorEmitter.emit(true);
@@ -58,7 +68,7 @@ export class ProjectTitleComponent implements OnInit {
     if (this.userId) {
       this.claContributorService.getUser(this.userId).subscribe(
         (response) => {
-          this.storageService.setItem(AppSettings.CLA_USER, response);
+          this.storageService.setItem('userId', this.userId);
         },
         (exception) => {
           this.errorEmitter.emit(true);

@@ -15,8 +15,8 @@
                             <div>
                                 <div class="file btn btn-lg btn-primary upload-btn">
                                     Upload
-                                    <input type="file" name="file" accept="image/*"
-                                        (change)="onClickUploadLogo($event)" />
+                                    <input type="file" name="file" accept="image/*" (change)="onClickUploadLogo($event)"
+                                        tabindex="-1" />
                                 </div>
                             </div>
                         </div>
@@ -25,56 +25,56 @@
                 </div>
                 <div class="col-6 element">
                     <input type="text" name="companyName" placeholder="Enter Company Name" formControlName="companyName"
-                        class="form-control" />
+                        class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.companyName.valid && form.controls.companyName.touched">
                         <span class="error">Company name is required.</span>
                     </div>
                 </div>
                 <div class="col-6 element">
                     <input type="text" name="website" placeholder="Enter Website Address" formControlName="website"
-                        class="form-control" />
+                        class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.website.valid && form.controls.website.touched">
                         <span class="error">Website is invalid.</span>
                     </div>
                 </div>
                 <div class="col-12 element">
                     <input type="text" name="streetAddress" placeholder="Enter Street Address"
-                        formControlName="streetAddress" class="form-control" />
+                        formControlName="streetAddress" class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.streetAddress.valid && form.controls.streetAddress.touched">
                         <span class="error">Street address is required.</span>
                     </div>
                 </div>
                 <div class="col-4 element">
-                    <input type="text" name="city" placeholder="Enter City" formControlName="city"
-                        class="form-control" />
+                    <input type="text" name="city" placeholder="Enter City" formControlName="city" class="form-control"
+                        tabindex="-1" />
                     <div *ngIf="!form.controls.city.valid && form.controls.city.touched">
                         <span class="error">City is required.</span>
                     </div>
                 </div>
                 <div class="col-4 element">
                     <input type="text" name="state" placeholder="Enter State/Province" formControlName="state"
-                        class="form-control" />
+                        class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.state.valid && form.controls.state.touched">
                         <span class="error">State is required.</span>
                     </div>
                 </div>
                 <div class="col-4 element">
                     <input type="text" name="postalCode" placeholder="Enter Postal Code" formControlName="postalCode"
-                        class="form-control" />
+                        class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.postalCode.valid && form.controls.postalCode.touched">
                         <span class="error">Postal code is required.</span>
                     </div>
                 </div>
                 <div class="col-6 element">
                     <input type="text" name="country" placeholder="Enter Country" formControlName="country"
-                        class="form-control" />
+                        class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.country.valid && form.controls.country.touched">
                         <span class="error">Country is required.</span>
                     </div>
                 </div>
                 <div class="col-6 element">
                     <input type="text" name="telephoneNo" placeholder="Enter Telephone Number"
-                        formControlName="telephoneNo" class="form-control" />
+                        formControlName="telephoneNo" class="form-control" tabindex="-1" />
                     <div *ngIf="!form.controls.telephoneNo.valid && form.controls.telephoneNo.touched">
                         <span class="error">Telephone number is invalid.</span>
                     </div>

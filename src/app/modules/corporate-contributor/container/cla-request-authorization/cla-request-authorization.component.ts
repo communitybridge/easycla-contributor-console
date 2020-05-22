@@ -43,7 +43,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
 
   onClickRequestAuthorization(content) {
     this.title = 'Request Submitted';
-    const projectName = this.storageService.getItem('claProjectName');
+    const projectName = JSON.parse(this.storageService.getItem('projectName'));
     this.message = 'The CLA Manager for ' + projectName + ' will be notified of your request to be authorized for contributions.' +
       ' You will be notified via email when the status has been approved or rejected.';
     this.modalService.open(content, {

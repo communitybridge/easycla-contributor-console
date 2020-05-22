@@ -7,7 +7,7 @@
             <div col="row">
                 <div class="col-12 element">
                     <input type="text" name="companyName" placeholder="Enter Company Name" formControlName="companyName"
-                        class="form-control" />
+                        tabindex="-1" class="form-control" />
                     <div *ngIf="!form.controls.companyName.valid && form.controls.companyName.touched">
                         <span class="error">Company name is required.</span>
                     </div>
@@ -16,14 +16,14 @@
                 <div class="col-12 element">
                     <input type="text" name="companyWebsite"
                         placeholder="Enter Company Website (http://www.example.com)" formControlName="companyWebsite"
-                        class="form-control" />
+                        tabindex="-1" class="form-control" />
                     <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
                         <span class="error">Company website is invalid.</span>
                     </div>
                 </div>
 
                 <div class="col-12 mt-20">
-                    <app-checkbox [checked]="isChecked" [text]="checkboxText"
+                    <app-checkbox [checked]="isChecked" [message1]="checkboxText1" [message2]="checkboxText2"
                         (checkboxEmitter)="onClickCheckbox($event)">
                     </app-checkbox>
                 </div>
@@ -34,7 +34,8 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button type="button" class="btn" [disabled]="!form.valid" (click)="onClickProceed(successModal)">
+                <button type="button" class="btn inactive" [disabled]="!form.valid" [ngClass]="{'active':form.valid}"
+                    (click)="onClickProceed(successModal)">
                     Next
                 </button>
             </div>
