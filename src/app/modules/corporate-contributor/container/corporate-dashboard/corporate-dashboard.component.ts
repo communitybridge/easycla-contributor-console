@@ -13,6 +13,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CorporateDashboardComponent {
   selectedCompany: string;
+  searchBoxValue: string;
   companies: any[];
   searchTimeout = null;
   projectId: string;
@@ -31,6 +32,7 @@ export class CorporateDashboardComponent {
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.searchBoxValue = '';
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.dropdown) {
         if (!this.dropdown.nativeElement.contains(e.target)) {
@@ -41,6 +43,7 @@ export class CorporateDashboardComponent {
   }
 
   ngOnInit(): void {
+    this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.hasShowContactAdmin = true;
     this.companies = [
@@ -53,10 +56,16 @@ export class CorporateDashboardComponent {
 
   onSelectCompany(company) {
     this.selectedCompany = company;
+    this.searchBoxValue = this.selectedCompany;
+    this.hasShowDropdown = false;
   }
 
   onCompanyKeypress(event) {
+    this.hasShowDropdown = true;
     const value = event.target.value;
+    if (this.selectedCompany !== value) {
+      this.selectedCompany = '';
+    }
     if (this.searchTimeout !== null) {
       clearTimeout(this.searchTimeout);
     }
@@ -68,7 +77,6 @@ export class CorporateDashboardComponent {
 
   searchOrganization(searchText: string) {
     console.log(searchText);
-    this.hasShowDropdown = true;
     // this.claContributorService.searchOrganization(searchText).subscribe(
     //   (response) => {
     //     console.log(response);
