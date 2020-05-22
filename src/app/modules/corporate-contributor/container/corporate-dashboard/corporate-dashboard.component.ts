@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -14,24 +14,34 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class CorporateDashboardComponent {
   selectedCompany: string;
   companies: any[];
-  showcompaniesList: boolean;
   searchTimeout = null;
   projectId: string;
   userId: string;
   hasShowNoSignedCLAFoundDialog: boolean;
   hasShowContactAdmin: boolean;
+  hasShowDropdown: boolean;
+  @ViewChild('dropdown') dropdown: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private claContributorService: ClaContributorService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private renderer: Renderer2
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (this.dropdown) {
+        if (!this.dropdown.nativeElement.contains(e.target)) {
+          this.hasShowDropdown = false;
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
+    this.hasShowDropdown = false;
     this.hasShowContactAdmin = true;
     this.companies = [
       'Vison',
@@ -43,7 +53,6 @@ export class CorporateDashboardComponent {
 
   onSelectCompany(company) {
     this.selectedCompany = company;
-    this.showcompaniesList = false;
   }
 
   onCompanyKeypress(event) {
@@ -58,14 +67,16 @@ export class CorporateDashboardComponent {
 
 
   searchOrganization(searchText: string) {
-    this.claContributorService.searchOrganization(searchText).subscribe(
-      (response) => {
-        console.log(response);
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+    console.log(searchText);
+    this.hasShowDropdown = true;
+    // this.claContributorService.searchOrganization(searchText).subscribe(
+    //   (response) => {
+    //     console.log(response);
+    //   },
+    //   (exception) => {
+    //     this.claContributorService.handleError(exception);
+    //   }
+    // );
   }
 
   onClickProceed() {

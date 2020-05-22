@@ -36,14 +36,9 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   onClickBack() {
+    this.modalService.dismissAll();
     const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
     this.router.navigate([url]);
-  }
-
-  onClickExitEastCLA() {
-    this.modalService.dismissAll();
-    this.router.navigate(['/dashboard'],
-      { queryParams: { projectId: this.projectId, userId: this.userId } });
   }
 
   onClickRequestAuthorization(content) {

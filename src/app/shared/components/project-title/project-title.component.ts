@@ -41,7 +41,6 @@ export class ProjectTitleComponent implements OnInit {
         (response) => {
           this.project = response;
           this.storageService.setItem('claProjectName', this.project.project_name);
-
         },
         (exception) => {
           this.errorEmitter.emit(true);

@@ -25,7 +25,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      email: ['', Validators.compose([Validators.required])],
     });
   }
 

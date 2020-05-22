@@ -19,7 +19,7 @@
                                     placeholder="Type your Company Name" (keyup)="onCompanyKeypress($event)">
                                 <i class="fas fa-building"></i>
                             </div>
-                            <div *ngIf="selectedCompany" class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                            <div *ngIf="hasShowDropdown" #dropdown class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                                 <div class="col-12 dropdown-container">
                                     <div class="companies">
                                         <div class="col-12 item" *ngFor="let company of companies;"
