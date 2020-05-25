@@ -21,7 +21,7 @@
 
     <div class="row justify-content-center">
         <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-            <button type="button" class="btn inactive" [ngClass]="{'active':form.valid}" [disabled]="!form.valid"
+            <button tabindex="-1" type="button" class="btn inactive" [ngClass]="{'active':form.valid}" [disabled]="!form.valid"
                 (click)="onClickSubmit(successModal)">
                 Submit Request
             </button>
@@ -60,7 +60,7 @@
                 <div class="col-12 title">{{title}}</div>
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
-                    <button type="button" class="success-btn" (click)="onClickExitCLABtn()">
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickExitCLABtn()">
                         Exit EasyCLA
                     </button>
                 </div>

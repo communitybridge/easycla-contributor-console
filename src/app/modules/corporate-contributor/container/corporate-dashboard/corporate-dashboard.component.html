@@ -42,12 +42,12 @@
                     <div class="col-12 buttons" [ngClass]="{'mt-30':selectedCompany}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button type="button" class="btn" (click)="onClickBack()">
+                                <button tabindex="-1" type="button" class="btn" (click)="onClickBack()">
                                     Go Back
                                 </button>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button type="button" [disabled]="selectedCompany ===''" class="btn inactive"
+                                <button tabindex="-1" type="button" [disabled]="selectedCompany ===''" class="btn inactive"
                                     [ngClass]="{'active':selectedCompany!==''}" (click)="onClickProceed()">
                                     Proceed
                                 </button>

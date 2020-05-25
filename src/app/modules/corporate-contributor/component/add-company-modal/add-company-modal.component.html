@@ -34,7 +34,7 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button type="button" class="btn inactive" [disabled]="!form.valid" [ngClass]="{'active':form.valid}"
+                <button tabindex="-1" type="button" class="btn inactive" [disabled]="!form.valid" [ngClass]="{'active':form.valid}"
                     (click)="onClickProceed(successModal)">
                     Next
                 </button>
@@ -54,7 +54,7 @@
                 <div class="col-12 title">{{title}}</div>
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
-                    <button type="button" class="success-btn" (click)="onClickDialogBtn()">
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickDialogBtn()">
                         {{hasError?'Go Back':'Procced'}}
                     </button>
                 </div>

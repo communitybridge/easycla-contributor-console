@@ -5,6 +5,7 @@ import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -28,11 +29,15 @@ export class CorporateDashboardComponent {
     private claContributorService: ClaContributorService,
     private router: Router,
     private modalService: NgbModal,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private location: PlatformLocation
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
     this.searchBoxValue = '';
+
+    this.location.onPopState(() => this.modalService.dismissAll());
+
     this.renderer.listen('window', 'click', (e: Event) => {
       if (this.dropdown) {
         if (!this.dropdown.nativeElement.contains(e.target)) {
@@ -50,7 +55,7 @@ export class CorporateDashboardComponent {
       'Vison',
       'Amol test company',
       'Long test check for just a dummy',
-      'Long test check for just a dummy'
+      'Long test check for just a dummy 1'
     ];
   }
 

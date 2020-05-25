@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -24,11 +25,12 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-    private storageService: StorageService
-
+    private storageService: StorageService,
+    private location: PlatformLocation
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.location.onPopState(() => this.modalService.dismissAll());
   }
 
   ngOnInit(): void {
