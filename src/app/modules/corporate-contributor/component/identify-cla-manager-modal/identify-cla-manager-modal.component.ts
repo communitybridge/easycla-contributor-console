@@ -4,7 +4,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator } from 'src/app/shared/validators/email-validator';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -25,7 +24,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      email: ['', Validators.compose([Validators.required])],
     });
   }
 

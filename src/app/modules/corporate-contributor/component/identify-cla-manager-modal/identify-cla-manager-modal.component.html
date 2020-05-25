@@ -4,23 +4,25 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12 message">
-            Please enter the email address of the person from your company who will be the CLA Manager for this project
+            Please enter the email address or LFID of the person from your company who will be the CLA Manager for this
+            project
         </div>
 
         <div class="col-10 emailbox">
             <form [formGroup]="form">
-                <input type="text" name="email" placeholder="Enter Email Address" formControlName="email"
-                    class="form-control" />
+                <input type="text" name="email" placeholder="Enter Email Address or LFID" formControlName="email"
+                    class="form-control" tabindex="-1" />
                 <div *ngIf="!form.controls.email.valid && form.controls.email.touched">
-                    <span class="error">Email address is invalid.</span>
+                    <span class="error">Email address or LFID is required.</span>
                 </div>
             </form>
         </div>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-5">
-            <button type="button" class="btn" [disabled]="!form.valid" (click)="onClickSubmit(successModal)">
+        <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+            <button tabindex="-1" type="button" class="btn inactive" [ngClass]="{'active':form.valid}" [disabled]="!form.valid"
+                (click)="onClickSubmit(successModal)">
                 Submit Request
             </button>
         </div>
@@ -58,7 +60,7 @@
                 <div class="col-12 title">{{title}}</div>
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
-                    <button type="button" class="success-btn" (click)="onClickExitCLABtn()">
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickExitCLABtn()">
                         Exit EasyCLA
                     </button>
                 </div>

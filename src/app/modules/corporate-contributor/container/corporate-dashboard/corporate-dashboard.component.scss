@@ -29,6 +29,7 @@
       border: 1px solid #8492a6;
       border-radius: 6px;
       z-index: 100;
+      color: #000000;
       position: relative;
     }
 
@@ -50,6 +51,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #424242;
     }
 
     .dropdown-container {

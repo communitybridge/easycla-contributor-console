@@ -1,10 +1,11 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -13,41 +14,63 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class CorporateDashboardComponent {
   selectedCompany: string;
+  searchBoxValue: string;
   companies: any[];
-  showcompaniesList: boolean;
   searchTimeout = null;
   projectId: string;
   userId: string;
   hasShowNoSignedCLAFoundDialog: boolean;
   hasShowContactAdmin: boolean;
+  hasShowDropdown: boolean;
+  @ViewChild('dropdown') dropdown: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
     private claContributorService: ClaContributorService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private renderer: Renderer2,
+    private location: PlatformLocation
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.searchBoxValue = '';
+
+    this.location.onPopState(() => this.modalService.dismissAll());
+
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (this.dropdown) {
+        if (!this.dropdown.nativeElement.contains(e.target)) {
+          this.hasShowDropdown = false;
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
+    this.selectedCompany = '';
+    this.hasShowDropdown = false;
     this.hasShowContactAdmin = true;
     this.companies = [
       'Vison',
       'Amol test company',
       'Long test check for just a dummy',
-      'Long test check for just a dummy'
+      'Long test check for just a dummy 1'
     ];
   }
 
   onSelectCompany(company) {
     this.selectedCompany = company;
-    this.showcompaniesList = false;
+    this.searchBoxValue = this.selectedCompany;
+    this.hasShowDropdown = false;
   }
 
   onCompanyKeypress(event) {
+    this.hasShowDropdown = true;
     const value = event.target.value;
+    if (this.selectedCompany !== value) {
+      this.selectedCompany = '';
+    }
     if (this.searchTimeout !== null) {
       clearTimeout(this.searchTimeout);
     }
@@ -58,14 +81,15 @@ export class CorporateDashboardComponent {
 
 
   searchOrganization(searchText: string) {
-    this.claContributorService.searchOrganization(searchText).subscribe(
-      (response) => {
-        console.log(response);
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+    console.log(searchText);
+    // this.claContributorService.searchOrganization(searchText).subscribe(
+    //   (response) => {
+    //     console.log(response);
+    //   },
+    //   (exception) => {
+    //     this.claContributorService.handleError(exception);
+    //   }
+    // );
   }
 
   onClickProceed() {

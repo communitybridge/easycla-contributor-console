@@ -15,11 +15,11 @@
                     <div class="col-12">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                <input id="msg" type="text" [(ngModel)]="selectedCompany"
-                                    placeholder="Type your Company Name" (keyup)="onCompanyKeypress($event)">
+                                <input id="msg" type="text" [value]="searchBoxValue"
+                                    placeholder="Type Your Company Name" (keyup)="onCompanyKeypress($event)">
                                 <i class="fas fa-building"></i>
                             </div>
-                            <div *ngIf="selectedCompany" class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                            <div *ngIf="hasShowDropdown" #dropdown class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                                 <div class="col-12 dropdown-container">
                                     <div class="companies">
                                         <div class="col-12 item" *ngFor="let company of companies;"
@@ -42,13 +42,13 @@
                     <div class="col-12 buttons" [ngClass]="{'mt-30':selectedCompany}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button type="button" class="btn" (click)="onClickBack()">
+                                <button tabindex="-1" type="button" class="btn" (click)="onClickBack()">
                                     Go Back
                                 </button>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button type="button" class="btn inactive" [ngClass]="{'active':selectedCompany}"
-                                    (click)="onClickProceed()">
+                                <button tabindex="-1" type="button" [disabled]="selectedCompany ===''" class="btn inactive"
+                                    [ngClass]="{'active':selectedCompany!==''}" (click)="onClickProceed()">
                                     Proceed
                                 </button>
                             </div>
@@ -89,7 +89,9 @@
         <div class="modal-body">
             <app-modal-header title="Company Profile" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-company-details-modal></app-company-details-modal>
+            <app-company-details-modal
+                (nextCompanyDetailEmitter)="onClickAddNewCompany(false,signedCLANotFoundModal,companyDetailsModal)">
+            </app-company-details-modal>
         </div>
     </div>
 </ng-template>

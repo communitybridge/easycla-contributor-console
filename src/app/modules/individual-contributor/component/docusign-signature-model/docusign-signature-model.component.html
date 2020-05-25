@@ -33,12 +33,12 @@
 
                 <div class="row buttons justify-content-center align-items-center">
                     <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-                        <button type="button" class="btn" (click)="onClickBack()">
+                        <button tabindex="-1" type="button" class="btn" (click)="onClickBack()">
                             GO BACK
                         </button>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-                        <button type="button" [disabled]="status!=='Completed'"
+                        <button tabindex="-1" type="button" [disabled]="status!=='Completed'"
                             [ngClass]="{'blue':status==='Completed'}" class="btn gray" (click)="onClickSignCLA()">
                             SIGN CLA</button>
                     </div>

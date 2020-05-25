@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { PlatformLocation } from '@angular/common';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -24,11 +25,12 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-    private storageService: StorageService
-
+    private storageService: StorageService,
+    private location: PlatformLocation
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.location.onPopState(() => this.modalService.dismissAll());
   }
 
   ngOnInit(): void {
@@ -36,19 +38,14 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   onClickBack() {
+    this.modalService.dismissAll();
     const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
     this.router.navigate([url]);
   }
 
-  onClickExitEastCLA() {
-    this.modalService.dismissAll();
-    this.router.navigate(['/dashboard'],
-      { queryParams: { projectId: this.projectId, userId: this.userId } });
-  }
-
   onClickRequestAuthorization(content) {
     this.title = 'Request Submitted';
-    const projectName = this.storageService.getItem('claProjectName');
+    const projectName = JSON.parse(this.storageService.getItem('projectName'));
     this.message = 'The CLA Manager for ' + projectName + ' will be notified of your request to be authorized for contributions.' +
       ' You will be notified via email when the status has been approved or rejected.';
     this.modalService.open(content, {

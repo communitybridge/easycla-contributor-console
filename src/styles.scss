@@ -32,9 +32,25 @@
 }
 
 body {
-  font-family: "SourceSansPro", sans-serif;
+  font-family: "SourceSansPro", "sans-serif";
   font-size: 14px;
   color: #333333;
+  background-color: #f5f5f5;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #8492A6;
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #8492A6;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #8492A6;
 }
 
 .success-dialog {

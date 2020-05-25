@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { NameValidator } from 'src/app/shared/validators/name-validator';
@@ -15,6 +15,7 @@ import { TelephoneNumberValidator } from 'src/app/shared/validators/telephone-va
 export class CompanyDetailsModalComponent implements OnInit {
   form: FormGroup;
   hasValidFile: boolean;
+  @Output() nextCompanyDetailEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private formBuilder: FormBuilder
@@ -34,7 +35,7 @@ export class CompanyDetailsModalComponent implements OnInit {
   }
 
   onClickProceed() {
-
+    this.nextCompanyDetailEmitter.emit();
   }
 
   onClickUploadLogo(event) {
