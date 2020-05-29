@@ -100,9 +100,9 @@ export class CorporateDashboardComponent {
     this.claContributorService.CheckPreparedEmployeeSignature(data).subscribe(
       (response) => {
         if (response.errors) {
-          if (response.errors.hasOwnProperty('missing_ccla')) {
+          if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
             this.openWithDismiss(signedCLANotFoundModal)
-          } else if (response.errors.hasOwnProperty('ccla_whitelist')) {
+          } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_whitelist')) {
             // Confirm with David.
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);
