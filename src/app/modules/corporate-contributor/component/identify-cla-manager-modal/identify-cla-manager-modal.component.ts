@@ -41,7 +41,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   postEmailToCompanyAdmin(content) {
     const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
-    let data = {
+    const data = {
       contributor_name: user.user_github_username,
       contributor_email: user.user_emails[0],
       cla_manager_name: 'Amol Sontakke',

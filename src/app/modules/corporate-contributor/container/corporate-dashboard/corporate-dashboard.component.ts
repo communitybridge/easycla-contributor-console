@@ -92,7 +92,7 @@ export class CorporateDashboardComponent {
   }
 
   checkEmployeeeSignature(signedCLANotFoundModal) {
-    let data = {
+    const data = {
       project_id: this.projectId,
       company_id: this.organization.companyID,
       user_id: this.userId

@@ -7,8 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { PlatformLocation } from '@angular/common';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { ProjectCompanySingatureModel, SignatureACL, Signature } from 'src/app/core/models/project-company-signature';
-import { OrganizationModel } from 'src/app/core/models/organization';
+import { ProjectCompanySingatureModel, SignatureACL } from 'src/app/core/models/project-company-signature';
 import { UserModel } from 'src/app/core/models/user';
 
 @Component({
@@ -40,7 +39,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
+    // const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
     // this.selectedCompany = company.companyID;
     this.selectedCompany = '08c1d2e9-7a22-48b8-b8b1-e56cb9a559e0';
     this.getProjectCompanySignature();
@@ -58,7 +57,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
 
   callRequestAuthorization(content: any, manager: SignatureACL) {
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
-    let data = {
+    const data = {
       contributorId: user.user_id,
       contributorName: user.user_github_username,
       contributorEmail: user.user_emails[0],

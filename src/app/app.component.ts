@@ -12,10 +12,10 @@ import { AppSettings } from './config/app-settings';
 })
 
 export class AppComponent {
+  title = 'easycla-contributor-console';
   constructor(
     private storageService: StorageService,
   ) {
     this.storageService.setItem(AppSettings.TOKEN_KEY, AppSettings.TOKEN);
   }
-  title = 'easycla-contributor-console';
 }
