@@ -9,6 +9,7 @@ import { PlatformLocation } from '@angular/common';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectCompanySingatureModel, SignatureACL } from 'src/app/core/models/project-company-signature';
 import { UserModel } from 'src/app/core/models/user';
+import { OrganizationModel } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -39,10 +40,11 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
-    // this.selectedCompany = company.companyID;
-    this.selectedCompany = '08c1d2e9-7a22-48b8-b8b1-e56cb9a559e0';
-    this.getProjectCompanySignature();
+    const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
+    if (company) {
+      this.selectedCompany = company.companyID;
+      this.getProjectCompanySignature();
+    }
   }
 
   onClickBack() {
