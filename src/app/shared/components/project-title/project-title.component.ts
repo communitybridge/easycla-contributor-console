@@ -50,6 +50,7 @@ export class ProjectTitleComponent implements OnInit {
           this.project = response;
           this.storageService.setItem('projectName', this.project.project_name);
           this.storageService.setItem('projectId', this.projectId);
+          this.storageService.setItem('project', this.project);
         },
         (exception) => {
           this.errorEmitter.emit(true);
@@ -66,8 +67,10 @@ export class ProjectTitleComponent implements OnInit {
   getUser() {
     if (this.userId) {
       this.claContributorService.getUser(this.userId).subscribe(
-        () => {
+        (response) => {
+          this.user = response;
           this.storageService.setItem('userId', this.userId);
+          this.storageService.setItem('user', this.user);
         },
         (exception) => {
           this.errorEmitter.emit(true);

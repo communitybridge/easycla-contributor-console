@@ -6,6 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlatformLocation } from '@angular/common';
+import { OrganizationModel, OrganizationListModel } from 'src/app/core/models/organization';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -15,13 +19,16 @@ import { PlatformLocation } from '@angular/common';
 export class CorporateDashboardComponent {
   selectedCompany: string;
   searchBoxValue: string;
-  companies: any[];
   searchTimeout = null;
   projectId: string;
   userId: string;
   hasShowNoSignedCLAFoundDialog: boolean;
   hasShowContactAdmin: boolean;
   hasShowDropdown: boolean;
+  organization = new OrganizationModel();
+  organizationList = new OrganizationListModel();
+  form: FormGroup;
+
   @ViewChild('dropdown') dropdown: ElementRef;
 
   constructor(
@@ -30,7 +37,10 @@ export class CorporateDashboardComponent {
     private router: Router,
     private modalService: NgbModal,
     private renderer: Renderer2,
-    private location: PlatformLocation
+    private location: PlatformLocation,
+    private storageService: StorageService,
+    private formBuilder: FormBuilder,
+    private alertService: AlertService
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
@@ -51,51 +61,87 @@ export class CorporateDashboardComponent {
     this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.hasShowContactAdmin = true;
-    this.companies = [
-      'Vison',
-      'Amol test company',
-      'Long test check for just a dummy',
-      'Long test check for just a dummy 1'
-    ];
+
+    this.form = this.formBuilder.group({
+      companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+    });
   }
 
-  onSelectCompany(company) {
-    this.selectedCompany = company;
-    this.searchBoxValue = this.selectedCompany;
+  onClickProceed(signedCLANotFoundModal, ) {
+    this.hasShowContactAdmin = true;
+    this.getOrganizationInformation(signedCLANotFoundModal)
+  }
+
+  onSelectCompany(organization) {
     this.hasShowDropdown = false;
+    this.selectedCompany = organization.organization_id;
+    this.searchBoxValue = organization.organization_name;
+  }
+
+  getOrganizationInformation(signedCLANotFoundModal) {
+    this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
+      (response) => {
+        this.organization = response;
+        this.storageService.setItem('selectedCompany', this.organization);
+        this.checkEmployeeeSignature(signedCLANotFoundModal);
+      },
+      (exception) => {
+        this.alertService.error(exception.error.Message);
+      }
+    );
+  }
+
+  checkEmployeeeSignature(signedCLANotFoundModal) {
+    let data = {
+      project_id: this.projectId,
+      company_id: this.organization.companyID,
+      user_id: this.userId
+    };
+    this.claContributorService.CheckPreparedEmployeeSignature(data).subscribe(
+      (response) => {
+        if (response.errors) {
+          this.openWithDismiss(signedCLANotFoundModal)
+        } else {
+          const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
+          this.router.navigate([url]);
+        }
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   onCompanyKeypress(event) {
-    this.hasShowDropdown = true;
-    const value = event.target.value;
-    if (this.selectedCompany !== value) {
-      this.selectedCompany = '';
+    if (this.form.valid) {
+      this.hasShowDropdown = true;
+      const value = event.target.value;
+      if (this.selectedCompany !== value) {
+        this.selectedCompany = '';
+      }
+      if (this.searchTimeout !== null) {
+        clearTimeout(this.searchTimeout);
+      }
+      this.searchTimeout = setTimeout(() => {
+        this.searchOrganization(value);
+      }, 300);
+    } else {
+      this.organizationList.list = [];
     }
-    if (this.searchTimeout !== null) {
-      clearTimeout(this.searchTimeout);
-    }
-    this.searchTimeout = setTimeout(() => {
-      this.searchOrganization(value);
-    }, 300);
   }
 
 
   searchOrganization(searchText: string) {
-    console.log(searchText);
-    // this.claContributorService.searchOrganization(searchText).subscribe(
-    //   (response) => {
-    //     console.log(response);
-    //   },
-    //   (exception) => {
-    //     this.claContributorService.handleError(exception);
-    //   }
-    // );
-  }
-
-  onClickProceed() {
-    this.hasShowContactAdmin = true;
-    const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
-    this.router.navigate([url]);
+    this.alertService.clearAlert();
+    this.organizationList.list = [];
+    this.claContributorService.searchOrganization(searchText).subscribe(
+      (response) => {
+        this.organizationList = response;
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   onClickBack() {

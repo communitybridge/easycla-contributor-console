@@ -23,13 +23,16 @@
                                     <th class="left-border">CLA Manager(s)</th>
                                     <th class="right-border">Action</th>
                                 </tr>
-                                <tr class="table-border" *ngFor="let manager of mangers;let i=index;">
-                                    <td>{{manager}}</td>
+                                <tr class="table-border" *ngFor="let manager of managers;let i=index;">
+                                    <td>{{manager.username}}</td>
                                     <td>
                                         <span class="request"
-                                            (click)="onClickRequestAuthorization(successModal)">Request
+                                            (click)="onClickRequestAuthorization(successModal,manager)">Request
                                             Authorization</span>
                                     </td>
+                                </tr>
+                                <tr *ngIf="managers.length <=0">
+                                    <td colspan="2">No CLA manager found.</td>
                                 </tr>
                             </table>
                         </div>
