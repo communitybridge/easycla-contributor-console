@@ -76,17 +76,6 @@ export class ClaContributorService {
     return this.httpClient.get<ProjectCompanySingatureModel>(url);
   }
 
-  // getHttpHeaders() {
-  //   const token = JSON.parse(this.storageService.getItem(AppSettings.TOKEN_KEY));
-  //   const headers = new HttpHeaders({
-  //     'Accept-Language': AppSettings.HEADER_ACCEPT_LANGUAGE,
-  //     'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
-  //     'Accept': AppSettings.HEADER_CONTENT_TYPE,
-  //     'Authorization': 'bearer ' + token
-  //   });
-  //   return { headers: headers, withCredentials: true };
-  // }
-
   handleError(errorObj: any) {
     const errors = errorObj.error.errors;
     if (errors) {
