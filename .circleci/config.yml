@@ -1,0 +1,217 @@
+# Copyright The Linux Foundation and each contributor to CommunityBridge.
+# SPDX-License-Identifier: MIT
+version: 2.1
+
+var_1: &cache_key angular-node-12-{{ checksum "yarn.lock" }}
+var_2: &workspace_location ~/
+
+environment:
+  BASH_ENV: ~/.bashrc
+
+commands:
+  custom_attach_workspace:
+    description: Attach workspace at a predefined location
+    steps:
+      - attach_workspace:
+          at: *workspace_location
+  # Initializes the CI environment by setting up common environment variables.
+  init_environment:
+    description: Initializing environment (setting up variables)
+    steps:
+      - run:
+          # Configure git as the CircleCI `checkout` command does.
+          # This is needed because we only checkout on the setup job.
+          # Add GitHub to known hosts
+          name: Configure git
+          command: |
+            mkdir -p ~/.ssh
+            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' >> ~/.ssh/known_hosts
+            git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
+            git config --global gc.auto 0 || true
+
+jobs:
+  setup:
+    docker:
+      - image: circleci/node:12-browsers
+    steps:
+      - checkout
+      # This cache is saved in the build-npm-packages so that Bazel cache is also included.
+      - restore_cache:
+          keys:
+            - *cache_key
+      - run:
+          name: Setup AWS key
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
+      - run:
+          name: Install AWS Profile
+          command: |
+            echo "PROJECT_DIR=${PROJECT_DIR}"
+            echo "Installing Profile '${AWS_PROFILE}'..."
+            mkdir -p ~/.aws
+            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
+            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
+            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
+      - run:
+          name: Install Top Level Dependencies
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running top level install..."
+            yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 10m
+      - persist_to_workspace:
+          root: *workspace_location
+          paths:
+            - .
+
+  lint:
+    docker:
+      - image: circleci/node:12-browser
+    steps:
+      - custom_attach_workspace
+      - init_environment
+      - run: yarn eslint || true
+
+  #test:
+  #  steps:
+  #    - custom_attach_workspace
+  #    - init_environment
+  #    - run:
+  #        command: yarn test
+  #        no_output_timeout: 15m
+
+  deployFrontend: &deployFrontendAnchor
+    docker:
+      - image: circleci/node:12-browsers
+    steps:
+      - checkout
+      - run:
+          name: Setup AWS key
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
+      - run:
+          name: Install AWS Profile
+          command: |
+            echo "PROJECT_DIR=${PROJECT_DIR}"
+            echo "Installing Profile '${AWS_PROFILE}'..."
+            mkdir -p ~/.aws
+            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
+            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
+            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
+      - run:
+          name: Install Dependencies
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running top level install..."
+            yarn install
+      - run:
+          name: Build Source
+          command: |
+            echo "Current directory is: `pwd`"
+            echo "Running build: 'yarn build..."
+            yarn build
+      - run:
+          name: Deploy Cloudfront and LambdaEdge
+          command: |
+            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true""
+            yarn sls deploy --stage="${STAGE}" --cloudfront=true"
+      - run:
+          name: Deploy Frontend Bucket
+          command: |
+            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change"
+            yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change
+      - run:
+          name: Invalidate Cache
+          command: |
+            echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
+            yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true"
+
+  deployContributorConsoleDev:
+    <<: *deployFrontendAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_DEV
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_DEV
+      AWS_PROFILE: lf-cla
+      AWS_REGION: us-east-2
+      STAGE: dev
+      ROOT_DOMAIN: dev.communitybridge.org
+      PRODUCT_DOMAIN: easycla.dev.communitybridge.org
+
+  deployContributorConsoleStaging:
+    <<: *deployFrontendAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
+      AWS_PROFILE: lf-cla
+      AWS_REGION: us-east-2
+      STAGE: staging
+      ROOT_DOMAIN: staging.communitybridge.org
+      PRODUCT_DOMAIN: easycla.staging.communitybridge.org
+
+  deployContributorConsoleProd:
+    <<: *deployFrontendAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_PROD
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_PROD
+      AWS_PROFILE: lf-cla
+      AWS_REGION: us-east-2
+      STAGE: prod
+      ROOT_DOMAIN: communitybridge.org
+      PRODUCT_DOMAIN: easycla.communitybridge.org
+
+
+workflows:
+  build_and_deploy:
+   jobs:
+      - deployContributorConsoleDev:
+          filters:
+            tags:
+              ignore: /.*/
+            branches:
+              only:
+                - master
+
+      # Deploy Staging
+      - approve_staging:
+          type: approval
+          requires:
+            - setup
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+      - deployContributorConsoleStaging:
+          requires:
+            - approve_staging
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+
+      # Deploy Prod
+      - approve_prod:
+          type: approval
+          requires:
+            - deployContributorConsoleStaging
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+      - deployContributorConsoleProd:
+          requires:
+            - approve_prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
+
