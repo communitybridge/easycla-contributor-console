@@ -100,32 +100,6 @@ jobs:
           at: /tmp/workspace
       - restore_cache: *restore-cache
       - run:
-          name: Setup AWS key
-          command: |
-            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
-            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
-      - run:
-          name: Install AWS Profile
-          command: |
-            echo "PROJECT_DIR=${PROJECT_DIR}"
-            echo "Installing Profile '${AWS_PROFILE}'..."
-            mkdir -p ~/.aws
-            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
-            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
-            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
-      - run:
-          name: Install Dependencies
-          command: |
-            echo "Node version is: $(node --version)"
-            echo "Running top level install..."
-            yarn install
-      - run:
-          name: Build Source
-          command: |
-            echo "Current directory is: `pwd`"
-            echo "Running build: 'yarn build..."
-            yarn build
-      - run:
           name: Deploy Cloudfront and LambdaEdge
           command: |
             echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true""
