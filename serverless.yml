@@ -1,4 +1,10 @@
-service: easycla-contributor-consol
+service: easycla-contributor-console
+
+package:
+  exclude:
+    - "**"
+  include:
+    - dist/*
 
 provider:
   name: aws

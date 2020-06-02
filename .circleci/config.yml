@@ -73,13 +73,13 @@ jobs:
       - init_environment
       - run: yarn eslint || true
 
-  #test:
-  #  steps:
-  #    - custom_attach_workspace
-  #    - init_environment
-  #    - run:
-  #        command: yarn test
-  #        no_output_timeout: 15m
+  test:
+   steps:
+     - custom_attach_workspace
+     - init_environment
+     - run:
+         command: yarn test
+         no_output_timeout: 15m
 
   deployFrontend: &deployFrontendAnchor
     docker:

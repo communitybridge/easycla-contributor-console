@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "sls": "./node_modules/serverless/bin/serverless",
     "eslint": "./node_modules/.bin/eslint \"./src/**/*.ts\"",
     "eslint-fix": "./node_modules/.bin/eslint \"./src/**/*.ts\" --fix"
   },
