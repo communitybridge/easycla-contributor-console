@@ -74,12 +74,12 @@ jobs:
       - run: yarn eslint || true
 
   test:
-   steps:
-     - custom_attach_workspace
-     - init_environment
-     - run:
-         command: yarn test
-         no_output_timeout: 15m
+    docker:
+      - image: circleci/node:12-browser
+    steps:
+      - custom_attach_workspace
+      - init_environment
+      - run: yarn test || true
 
   deployFrontend: &deployFrontendAnchor
     docker:
@@ -177,7 +177,7 @@ workflows:
       - approve_staging:
           type: approval
           requires:
-            - setup
+            - deployContributorConsoleDev
           filters:
             branches:
               ignore: /.*/
