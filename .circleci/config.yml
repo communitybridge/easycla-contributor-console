@@ -2,18 +2,25 @@
 # SPDX-License-Identifier: MIT
 version: 2.1
 
-var_1: &cache_key angular-node-12-{{ checksum "yarn.lock" }}
-var_2: &workspace_location ~/
-
 environment:
   BASH_ENV: ~/.bashrc
 
+references:
+  save_cache: &save_cache
+    key: angular-node-12-{{ checksum "yarn.lock" }}
+    paths:
+      - node_modules
+      - yarn.lock
+  restore_cache: &restore_cache
+    keys:
+      - angular-node-12-{{ checksum "yarn.lock" }}
+  persist_to_workspace: &persist_to_workspace
+    root: '.'
+    paths:
+      - build
+      - dist
+
 commands:
-  custom_attach_workspace:
-    description: Attach workspace at a predefined location
-    steps:
-      - attach_workspace:
-          at: *workspace_location
   # Initializes the CI environment by setting up common environment variables.
   init_environment:
     description: Initializing environment (setting up variables)
@@ -35,10 +42,9 @@ jobs:
       - image: circleci/node:12-browsers
     steps:
       - checkout
-      # This cache is saved in the build-npm-packages so that Bazel cache is also included.
-      - restore_cache:
-          keys:
-            - *cache_key
+      - attach_workspace:
+          at: '.'
+      - restore_cache: *restore_cache
       - run:
           name: Setup AWS key
           command: |
@@ -60,17 +66,15 @@ jobs:
             echo "Running top level install..."
             yarn install --frozen-lockfile --non-interactive
           no_output_timeout: 10m
-      - persist_to_workspace:
-          root: *workspace_location
-          paths:
-            - node_modules/
-            - yarn.lock
+      - persist_to_workspace: *persist_to_workspace
 
   lint:
     docker:
       - image: circleci/node:12-browsers
     steps:
-      - custom_attach_workspace
+      - attach_workspace:
+          at: '.'
+      - restore_cache: *restore_cache
       - init_environment
       - run: yarn eslint || true
 
@@ -78,7 +82,9 @@ jobs:
     docker:
       - image: circleci/node:12-browsers
     steps:
-      - custom_attach_workspace
+      - attach_workspace:
+          at: '.'
+      - restore_cache: *restore_cache
       - init_environment
       - run: yarn test || true
 
@@ -87,6 +93,9 @@ jobs:
       - image: circleci/node:12-browsers
     steps:
       - checkout
+      - attach_workspace:
+          at: '.'
+      - restore_cache: *restore_cache
       - run:
           name: Setup AWS key
           command: |
@@ -128,6 +137,7 @@ jobs:
           command: |
             echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
             yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true"
+      - persist_to_workspace: *persist_to_workspace
 
   deployContributorConsoleDev:
     <<: *deployFrontendAnchor
