@@ -63,11 +63,12 @@ jobs:
       - persist_to_workspace:
           root: *workspace_location
           paths:
-            - .
+            - node_modules/
+            - yarn.lock
 
   lint:
     docker:
-      - image: circleci/node:12-browser
+      - image: circleci/node:12-browsers
     steps:
       - custom_attach_workspace
       - init_environment
@@ -75,7 +76,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:12-browser
+      - image: circleci/node:12-browsers
     steps:
       - custom_attach_workspace
       - init_environment
