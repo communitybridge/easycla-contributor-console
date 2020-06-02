@@ -5,30 +5,38 @@ version: 2.1
 environment:
   BASH_ENV: ~/.bashrc
 
-references:
-  save_cache: &save_cache
-    key: angular-node-12-{{ checksum "yarn.lock" }}
+aliases:
+  - &restore-cache
+    keys:
+      - dependency-cache-{{ checksum "yarn.lock" }}
+
+  - &save-cache
+    key: dependency-cache-{{ checksum "yarn.lock" }}
     paths:
       - node_modules
       - yarn.lock
-  restore_cache: &restore_cache
-    keys:
-      - angular-node-12-{{ checksum "yarn.lock" }}
-  persist_to_workspace: &persist_to_workspace
+
+  - &persist_to_workspace
     root: '.'
     paths:
-      - build
-      - dist
+      - "*"
+
+  - &persist_to_workspace
+    root: '.'
+    paths:
+      - "*"
+
+defaults: &defaults
+  docker:
+    - image: circleci/node:12-browsers
+  working_directory: /tmp/workspace
 
 jobs:
   setup:
-    docker:
-      - image: circleci/node:12-browsers
+    <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: '.'
-      - restore_cache: *restore_cache
+      - restore_cache: *restore-cache
       - run:
           name: Setup AWS key
           command: |
@@ -50,47 +58,45 @@ jobs:
             echo "Running top level install..."
             yarn install --frozen-lockfile --non-interactive
           no_output_timeout: 10m
+      - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
 
   build:
-    docker:
-      - image: circleci/node:12-browsers
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: '.'
-      - restore_cache: *restore_cache
+          at: /tmp/workspace
+      - restore_cache: *restore-cache
       - run: yarn build
+      - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
 
   lint:
-    docker:
-      - image: circleci/node:12-browsers
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: '.'
-      - restore_cache: *restore_cache
+          at: /tmp/workspace
+      - restore_cache: *restore-cache
       - run: yarn eslint
 
   test:
-    docker:
-      - image: circleci/node:12-browsers
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: '.'
-      - restore_cache: *restore_cache
+          at: /tmp/workspace
+      - restore_cache: *restore-cache
       - run: yarn test
 
   deployFrontend: &deployFrontendAnchor
-    docker:
-      - image: circleci/node:12-browsers
+    <<: *defaults
     steps:
       - checkout
       - attach_workspace:
-          at: '.'
-      - restore_cache: *restore_cache
+          at: /tmp/workspace
+      - restore_cache: *restore-cache
       - run:
           name: Setup AWS key
           command: |
