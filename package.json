@@ -1,6 +1,6 @@
 {
   "name": "EasyCLA-Contributor-Console",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "scripts": {
     "ng": "./node_modules/@angular/cli/bin/ng",
     "serve": "./node_modules/@angular/cli/bin/ng serve",
