@@ -17,6 +17,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   styleUrls: ['./corporate-dashboard.component.scss']
 })
 export class CorporateDashboardComponent {
+  @ViewChild('dropdown') dropdown: ElementRef;
   selectedCompany: string;
   searchBoxValue: string;
   searchTimeout = null;
@@ -28,8 +29,6 @@ export class CorporateDashboardComponent {
   organization = new OrganizationModel();
   organizationList = new OrganizationListModel();
   form: FormGroup;
-
-  @ViewChild('dropdown') dropdown: ElementRef;
 
   constructor(
     private route: ActivatedRoute,

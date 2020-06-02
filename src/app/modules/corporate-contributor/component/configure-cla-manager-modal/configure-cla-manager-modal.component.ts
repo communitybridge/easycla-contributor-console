@@ -9,8 +9,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./configure-cla-manager-modal.component.scss']
 })
 export class ConfigureClaManagerModalComponent {
-  isProcessed: boolean;
   @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
+  isProcessed: boolean;
 
   constructor() {
     this.isProcessed = false;
