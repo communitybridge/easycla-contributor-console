@@ -20,22 +20,6 @@ references:
       - build
       - dist
 
-commands:
-  # Initializes the CI environment by setting up common environment variables.
-  init_environment:
-    description: Initializing environment (setting up variables)
-    steps:
-      - run:
-          # Configure git as the CircleCI `checkout` command does.
-          # This is needed because we only checkout on the setup job.
-          # Add GitHub to known hosts
-          name: Configure git
-          command: |
-            mkdir -p ~/.ssh
-            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==' >> ~/.ssh/known_hosts
-            git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
-            git config --global gc.auto 0 || true
-
 jobs:
   setup:
     docker:
@@ -67,25 +51,36 @@ jobs:
             yarn install --frozen-lockfile --non-interactive
           no_output_timeout: 10m
 
+  build:
+    docker:
+      - image: circleci/node:12-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: '.'
+      - restore_cache: *restore_cache
+      - run: yarn build
+      - persist_to_workspace: *persist_to_workspace
+
   lint:
     docker:
       - image: circleci/node:12-browsers
     steps:
+      - checkout
       - attach_workspace:
           at: '.'
       - restore_cache: *restore_cache
-      - init_environment
-      - run: yarn eslint || true
+      - run: yarn eslint
 
   test:
     docker:
       - image: circleci/node:12-browsers
     steps:
+      - checkout
       - attach_workspace:
           at: '.'
       - restore_cache: *restore_cache
-      - init_environment
-      - run: yarn test || true
+      - run: yarn test
 
   deployFrontend: &deployFrontendAnchor
     docker:
@@ -179,21 +174,27 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - lint:
+      - build:
           requires:
             - setup
+          filters:
+            tags:
+              only: /.*/
+      - lint:
+          requires:
+            - build
           filters:
             tags:
               only: /.*/
       - test:
           requires:
-            - setup
+            - build
           filters:
             tags:
               only: /.*/
       - deployContributorConsoleDev:
           requires:
-            - setup
+            - build
             - lint
             - test
           filters:
