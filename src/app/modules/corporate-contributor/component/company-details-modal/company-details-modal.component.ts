@@ -13,9 +13,9 @@ import { TelephoneNumberValidator } from 'src/app/shared/validators/telephone-va
   styleUrls: ['./company-details-modal.component.scss']
 })
 export class CompanyDetailsModalComponent implements OnInit {
+  @Output() nextCompanyDetailEmitter: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   hasValidFile: boolean;
-  @Output() nextCompanyDetailEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private formBuilder: FormBuilder

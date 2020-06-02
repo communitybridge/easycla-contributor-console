@@ -7,10 +7,10 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 })
 export class DocusignSignatureModelComponent implements OnInit {
   @Input() status: string;
-  checkedItems: string[];
   @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() signCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
-
+  checkedItems: string[];
+  
   constructor() { }
 
   ngOnInit(): void {
