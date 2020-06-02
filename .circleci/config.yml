@@ -81,14 +81,16 @@ jobs:
       - restore_cache: *restore-cache
       - run: yarn eslint
 
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - restore_cache: *restore-cache
-      - run: yarn test
+#  test:
+#    <<: *defaults
+#    steps:
+#      - checkout
+#      - attach_workspace:
+#          at: /tmp/workspace
+#      - restore_cache: *restore-cache
+#      - run:
+#          command: yarn test
+#          no_output_timeout: 3m
 
   deployFrontend: &deployFrontendAnchor
     <<: *defaults
@@ -193,17 +195,17 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - test:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /.*/
+      #- test:
+      #    requires:
+      #      - build
+      #    filters:
+      #      tags:
+      #        only: /.*/
       - deployContributorConsoleDev:
           requires:
             - build
             - lint
-            - test
+            #- test
           filters:
             tags:
               ignore: /.*/
