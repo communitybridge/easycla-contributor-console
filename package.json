@@ -2,7 +2,7 @@
   "name": "EasyCLA-Contributor-Console",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
+    "ng": "./node_modules/@angular/cli/bin/ng",
     "serve": "ng serve",
     "build": "ng build",
     "test": "ng test",
