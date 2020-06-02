@@ -66,7 +66,6 @@ jobs:
             echo "Running top level install..."
             yarn install --frozen-lockfile --non-interactive
           no_output_timeout: 10m
-      - persist_to_workspace: *persist_to_workspace
 
   lint:
     docker:
