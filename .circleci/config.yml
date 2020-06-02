@@ -165,7 +165,27 @@ jobs:
 workflows:
   build_and_deploy:
    jobs:
+      - setup:
+          filters:
+            tags:
+              only: /.*/
+      - lint:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
+      - test:
+          requires:
+            - setup
+          filters:
+            tags:
+              only: /.*/
       - deployContributorConsoleDev:
+          requires:
+            - setup
+            - lint
+            - test
           filters:
             tags:
               ignore: /.*/

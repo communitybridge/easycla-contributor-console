@@ -8,16 +8,16 @@ package:
 
 provider:
   name: aws
-    runtime: nodejs12.x
-    stage: ${opt:stage}
-    region: us-east-2
-    deploymentBucket:
-      serverSideEncryption: AES256 # Make sure items are uploaded encrypted.
-    role: EdgeRole
-    tracing:
-      apiGateway: true
-      lambda: true
-    timeout: 60 # optional, in seconds, default is 6
+  runtime: nodejs12.x
+  stage: ${opt:stage}
+  region: us-east-2
+  deploymentBucket:
+    serverSideEncryption: AES256 # Make sure items are uploaded encrypted.
+  role: EdgeRole
+  tracing:
+    apiGateway: true
+    lambda: true
+  timeout: 60 # optional, in seconds, default is 6
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -44,9 +44,9 @@ plugins:
   - serverless-cloudfront-invalidate
   - serverless-pseudo-parameters
 
-  environment:
-    STAGE: ${self:provider.stage}
-    REGION: us-east-2
+environment:
+  STAGE: ${self:provider.stage}
+  REGION: us-east-2
 
 custom:
   client: # Configurations for serverless finch.
