@@ -14,7 +14,7 @@ import { NameValidator } from 'src/app/shared/validators/name-validator';
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
-
+  @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   isChecked: boolean;
   checkboxText1: string;
@@ -22,8 +22,7 @@ export class AddCompanyModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
-  @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
-
+ 
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,

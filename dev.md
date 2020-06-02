@@ -24,23 +24,38 @@ SPDX-License-Identifier: CC-BY-4.0
     - Example: `git rebase upstream/master`
 
 ## Angular project setup (Frontend) and essential commands
-Install the CLI using the npm package manager:
+Yarn is available for Windows, Linux and MacOS. Once you have successfully installed Yarn. (You can test by running the command below, it will give you the yarn version number)
 
-`npm install -g @angular/cli`
+`yarn -v`
+
+
+Install angualar CLI
+
+`yarn global add @angular/cli`
 
 
 Install dependencies:
 
-`npm install`
+`yarn install`
 
 
 Run Angular Project 
 
-`ng s` or `ng serve`
+`yarn serve`
+
 
 Run ES Lint 
 
-`npm run eslint`
+`yarn run eslint`
+
+
+To install packages using Yarn is rather simple. Find or take any NPM package name and add it using yarn add command as indicated below:
+
+`yarn add package-name-1 package-name-2 …`
+
+
+Removing a dependency
+`yarn remove [package]`
 
 
 Create a new module
@@ -60,8 +75,8 @@ Create a new service
 
 Create a local build
 
-`ng build`
+`ng build` or `yarn build`
 
 Create a production build
 
-`ng build --prod`
+`ng build --prod` or `yarn build --prod`
