@@ -4,7 +4,7 @@ package:
   exclude:
     - "**"
   include:
-    - dist/easycla-contributor-console/*
+    - edge/dist/*
 
 provider:
   name: aws
@@ -71,7 +71,6 @@ functions:
   # Configure a lambda@edge handler. Lambda@edge is a function that adds http headers to
   # cloudfront requests. We use it to enforce HTTP security best practices.
   clientEdge:
-    # TODO - implement this
     handler: edge/dist/index.handler
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
