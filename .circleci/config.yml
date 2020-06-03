@@ -127,18 +127,18 @@ jobs:
       - run:
           name: Deploy Cloudfront and LambdaEdge
           command: |
-            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true""
-            yarn sls deploy --stage="${STAGE}" --cloudfront=true"
+            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true --verbose"
+            SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --cloudfront=true --verbose
       - run:
           name: Deploy Frontend Bucket
           command: |
-            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change"
-            yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change
+            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose"
+            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose
       - run:
           name: Invalidate Cache
           command: |
             echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
-            yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true"
+            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true" --verbose
       - persist_to_workspace: *persist_to_workspace
 
   deployContributorConsoleDev:
@@ -147,7 +147,7 @@ jobs:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_DEV
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_DEV
       AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_REGION: us-east-1
       STAGE: dev
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
@@ -158,7 +158,7 @@ jobs:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
       AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_REGION: us-east-1
       STAGE: staging
       ROOT_DOMAIN: staging.communitybridge.org
       PRODUCT_DOMAIN: easycla.staging.communitybridge.org
@@ -169,7 +169,7 @@ jobs:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_PROD
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_PROD
       AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_REGION: us-east-1
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org

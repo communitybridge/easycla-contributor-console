@@ -13,7 +13,8 @@
     "eslint-fix": "./node_modules/.bin/eslint \"./src/**/*.ts\" --fix",
     "deploy:cloudfront:dev": "SLS_DEBUG=* ROOT_DOMAIN=dev.communitybridge.org PRODUCT_DOMAIN=easycla.dev.communitybridge.org yarn sls deploy --stage='dev' --cloudfront=true --verbose",
     "deploy:frontend:dev": "SLS_DEBUG=* ROOT_DOMAIN=dev.communitybridge.org PRODUCT_DOMAIN=easycla.dev.communitybridge.org yarn sls client deploy --stage='dev' --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose",
-    "deploy:invalidate:dev": "SLS_DEBUG=* ROOT_DOMAIN=dev.communitybridge.org PRODUCT_DOMAIN=easycla.dev.communitybridge.org yarn sls cloudfrontInvalidate --stage='dev' --region='us-east-2' --cloudfront='true' --verbose"
+    "deploy:invalidate:dev": "SLS_DEBUG=* ROOT_DOMAIN=dev.communitybridge.org PRODUCT_DOMAIN=easycla.dev.communitybridge.org yarn sls cloudfrontInvalidate --stage='dev' --region='us-east-1' --cloudfront='true' --verbose",
+    "remove:dev": "SLS_DEBUG=* yarn sls remove --stage='dev' --region='us-east-1' --verbose"
   },
   "private": true,
   "dependencies": {
