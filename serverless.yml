@@ -4,7 +4,7 @@ package:
   exclude:
     - "**"
   include:
-    - dist/*
+    - dist/easycla-contributor-console/*
 
 provider:
   name: aws
@@ -14,9 +14,6 @@ provider:
   deploymentBucket:
     serverSideEncryption: AES256 # Make sure items are uploaded encrypted.
   role: EdgeRole
-  tracing:
-    apiGateway: true
-    lambda: true
   timeout: 60 # optional, in seconds, default is 6
   iamRoleStatements:
     - Effect: Allow
@@ -33,6 +30,12 @@ provider:
     - Effect: Allow
       Action:
         - ssm:GetParameter
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:ssm:${self:provider.region}:"
+            - Ref: AWS::AccountId
+            - ":parameter/cla-*"
 
 plugins:
   # Serverless Finch does s3 uploading. Called with 'sls client deploy'.
@@ -51,7 +54,7 @@ environment:
 custom:
   client: # Configurations for serverless finch.
     bucketName: ${self:service}-${opt:stage}
-    distributionFolder: src/www
+    distributionFolder: dist/easycla-contributor-console
     indexDocument: index.html
     # Because our application is a Single Page Application, we always want our index
     # documents to handle 404/403 urls.
