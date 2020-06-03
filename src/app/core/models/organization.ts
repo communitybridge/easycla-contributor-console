@@ -15,4 +15,5 @@ export class OrganizationListModel {
 export class Organization {
     organization_id: string;
     organization_name: string;
+    organization_website: string;
 }
