@@ -28,6 +28,7 @@
     "bootstrap": "^4.4.0",
     "rxjs": "~6.5.4",
     "serverless": "^1.69.0",
+    "serverless-cloudfront-invalidate": "^1.4.0",
     "serverless-finch": "^2.3.2",
     "serverless-lambda-version": "^0.1.2",
     "serverless-layers": "^1.4.3",
