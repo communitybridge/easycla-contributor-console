@@ -6,6 +6,9 @@
 # Don't use npm lock
 package-lock.json
 
+# Ignore serverless
+.serverless/
+
 # compiled output
 /dist
 /tmp
