@@ -183,7 +183,7 @@ resources:
     EdgeRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.project}-${opt:stage}-edge-role
+        RoleName: ${self:service}-${opt:stage}-edge-role
         Path: /
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
