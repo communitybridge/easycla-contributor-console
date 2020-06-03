@@ -1,5 +1,11 @@
 {
-  "name": "EasyCLA-Contributor-Console",
+  "name": "easycla-contributor-console",
+  "description": "The EasyCLA v2 Contributor Console",
+  "author": {
+    "name": "The Linux Foundation",
+    "email": "support@linuxfoundation.org",
+    "url": "https://www.linuxfoundation.org/"
+  },
   "version": "0.1.0",
   "scripts": {
     "ng": "./node_modules/@angular/cli/bin/ng",

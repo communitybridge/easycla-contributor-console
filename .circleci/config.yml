@@ -146,7 +146,7 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_DEV
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_DEV
-      AWS_PROFILE: lf-cla
+      AWS_PROFILE: easycla
       AWS_REGION: us-east-1
       STAGE: dev
       ROOT_DOMAIN: dev.communitybridge.org
@@ -157,7 +157,7 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
-      AWS_PROFILE: lf-cla
+      AWS_PROFILE: easycla
       AWS_REGION: us-east-1
       STAGE: staging
       ROOT_DOMAIN: staging.communitybridge.org
@@ -168,7 +168,7 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_PROD
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_PROD
-      AWS_PROFILE: lf-cla
+      AWS_PROFILE: easycla
       AWS_REGION: us-east-1
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
