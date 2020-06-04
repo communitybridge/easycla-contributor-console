@@ -158,7 +158,13 @@ resources:
           ViewerCertificate:
             AcmCertificateArn:
               Ref: Cert
+            # The distribution accepts HTTPS connections from only viewers that support server name indication
+            # Recommended, most browsers and clients released after 2010 support SNI.
             SslSupportMethod: sni-only
+            # Specify the security policy that you want CloudFront to use for HTTPS connections
+            # Recommend that you specify TLSv1.2_2018 unless your viewers are using browsers or devices that don’t support TLSv1.2
+            # Allowed Values: SSLv3 | TLSv1 | TLSv1.1_2016 | TLSv1.2_2018 | TLSv1_2016
+            MinimumProtocolVersion: TLSv1.2_2018
           Origins:
             - DomainName: { "Fn::GetAtt": [ WebsiteDeploymentBucket, DomainName ] }
               Id:
@@ -228,7 +234,7 @@ resources:
                     - lambda:GetFunction
                     - lambda:EnableReplication
                   Resource:
-                    - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse
+                    - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-*
                 - Effect: Allow
                   Action:
                     - iam:CreateServiceLinkedRole
