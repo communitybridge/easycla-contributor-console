@@ -40,17 +40,20 @@ provider:
       Action:
         - s3:GetObject
       Resource:
-        - "arn:aws:s3:::cla-signature-files-${self:provider.stage}/*"
-        - "arn:aws:s3:::cla-project-logo-${self:provider.stage}/*"
+        - "arn:aws:s3:::cla-signature-files-${opt:stage}/*"
+        - "arn:aws:s3:::cla-project-logo-${opt:stage}/*"
     - Effect: Allow
       Action:
         - ssm:GetParameter
       Resource:
-        Fn::Join:
-          - ""
-          - - "arn:aws:ssm:${self:provider.region}:"
-            - Ref: AWS::AccountId
-            - ":parameter/cla-*"
+        - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/cla-*
+    - Effect: Allow
+      Action:
+        - lambda:GetFunction
+        - lambda:InvokeFunction
+      Resource:
+        - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:*
+        - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:*
 
 plugins:
   # Serverless Finch does s3 uploading. Called with 'sls client deploy'.
@@ -94,10 +97,12 @@ functions:
   # Configure a lambda@edge handler. Lambda@edge is a function that adds http headers to
   # cloudfront requests. We use it to enforce HTTP security best practices.
   clientEdge:
+    name: ${self:service}-${opt:stage}-clientEdgeResponse
     handler: edge/dist/index.response
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
   clientEdgeRequest:
+    name: ${self:service}-${opt:stage}-clientEdgeRequest
     handler: edge/dist/index.request
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
@@ -114,7 +119,7 @@ resources:
           ServerSideEncryptionConfiguration:
               - ServerSideEncryptionByDefault:
                   SSEAlgorithm: AES256
-        BucketName: ${self:service}-${opt:stage}
+        BucketName: ${self:custom.project}-${opt:stage}-${self:service}
     # Policy that only exposes bucket to cloudfront with proper
     # Origin Access Identity
     WebsiteDeploymentBucketPolicy:
@@ -143,7 +148,8 @@ resources:
       Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
       Properties:
         CloudFrontOriginAccessIdentityConfig:
-          Comment: "CloudFrontOriginAccessIdentity for ${self:service}-${self:provider.stage}"
+          Comment: "CloudFrontOriginAccessIdentity for ${self:custom.project}-${opt:stage}-${self:service}"
+
     # The cloudfront distribution wraps around our static website S3 bucket. Using a CDN to host our SPA is good
     # practice, and also lets us set custom headers using lambda@edge.
     CloudfrontDistribution:
@@ -156,10 +162,10 @@ resources:
           Aliases:
             - ${env:PRODUCT_DOMAIN}
             - ${env:ROOT_DOMAIN}
-          ViewerCertificate:
-            AcmCertificateArn:
-              Ref: Cert
-            SslSupportMethod: sni-only
+          #ViewerCertificate:
+          #  AcmCertificateArn:
+          #    Ref: Cert
+          #  SslSupportMethod: sni-only
           Origins:
             - DomainName: { "Fn::GetAtt": [ WebsiteDeploymentBucket, DomainName ] }
               Id:
@@ -181,7 +187,7 @@ resources:
             - ErrorCode: 404
               ResponseCode: 200
               ResponsePagePath: '/index.html'
-          HttpVersion: http2
+          #HttpVersion: http2
           DefaultRootObject: index.html
           DefaultCacheBehavior:
             AllowedMethods:
@@ -189,15 +195,18 @@ resources:
               - HEAD
             # Links our lambda@edge function, (which adds HTTPS our security headers), to the cloudfront distribution.
             LambdaFunctionAssociations:
-              - EventType: 'viewer-response'
                 # Cloudfront requires a lambda@edge arn in the format
                 # 'arn:aws:lambda:${region}:${accountNumber}:function:${lambdaName}:${explicitVersion}'
-                # We use the serverless-lambda-version plugin to automatically update this every time there is a change.
-                LambdaFunctionARN: ClientEdgeLambdaFunction
               - EventType: 'viewer-request'
-                LambdaFunctionARN: ClientEdgeRequestLambdaFunction
+                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:1
+                #LambdaFunctionARN: ClientEdgeRequestLambdaFunction
+              - EventType: 'viewer-response'
+                # We use the serverless-lambda-version plugin to automatically update this every time there is a change.
+                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
+                #LambdaFunctionARN: ClientEdgeLambdaFunction
               - EventType: 'origin-response'
-                LambdaFunctionARN: ClientEdgeLambdaFunction
+                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
+                #LambdaFunctionARN: ClientEdgeLambdaFunction
             Compress: true # Turns on gzipping
             #DefaultTTL: 86400 # Defaults to a day if no Cache-Control header is set.
             DefaultTTL: 600 # 10 minutes only due to users seeing a lot of stale cache issues after release (even after invalidating
@@ -256,15 +265,23 @@ resources:
           - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
-    Cert:
-      Type: AWS::CertificateManager::Certificate
-      Properties:
-        DomainName: ${env:ROOT_DOMAIN}
-        SubjectAlternativeNames:
-          - ${env:PRODUCT_DOMAIN}
-        ValidationMethod: DNS
+    #Cert:
+    #  Type: AWS::CertificateManager::Certificate
+    #  Properties:
+    #    DomainName: ${env:ROOT_DOMAIN}
+    #    SubjectAlternativeNames:
+    #      - ${env:PRODUCT_DOMAIN}
+    #    ValidationMethod: DNS
 
   Outputs:
     CloudfrontDistributionId:
       Value:
         Ref: CloudfrontDistribution
+
+    WebsiteDeploymentBucketName:
+      Value:
+        Ref: WebsiteDeploymentBucket
+
+#    Cert:
+#      Value:
+#        Ref: DomainName
