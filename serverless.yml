@@ -1,7 +1,7 @@
 # Copyright The Linux Foundation and each contributor to CommunityBridge.
 # SPDX-License-Identifier: MIT
 
-service: contributor-console-ui
+service: easycla-contributor-console-ui
 
 package:
   exclude:
@@ -47,27 +47,19 @@ provider:
         - ssm:GetParameter
       Resource:
         - arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/cla-*
-    - Effect: Allow
-      Action:
-        - lambda:GetFunction
-        - lambda:InvokeFunction
-      Resource:
-        # - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:*
-        - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:*
-        # Lambda@Edge cannot retrieve the specified Lambda function. Update the IAM policy to add permission: lambda:GetFunction for resource:
-        #- arn:aws:lambda:us-east-1:395594542180:function:contributor-console-ui-dev-clientEdgeRequest:1
 
 plugins:
   # Serverless Finch does s3 uploading. Called with 'sls client deploy'.
   # Also allows bucket removal with 'sls client remove'.
   - serverless-finch
   # Automatically versions and updates the lambda@edge function
-  - serverless-lambda-version
+  #- serverless-lambda-version
   # Automatically invalidates cloudfront after frontend bucket is deployed
   - serverless-cloudfront-invalidate
   - serverless-pseudo-parameters
   - serverless-plugin-tracing
   - serverless-prune-plugin
+  - '@silvermine/serverless-plugin-cloudfront-lambda-edge'
 
 environment:
   STAGE: ${self:provider.stage}
@@ -87,7 +79,7 @@ custom:
   # CloudFront invalidation plugin configuration
   cloudfrontInvalidate:
     # Grab the distribution ID key from the output section
-    distributionIdKey: 'CloudfrontDistributionId'
+    distributionIdKey: 'CloudFrontDistribution'
     items: # one or more paths required
       - '/*'
 
@@ -97,17 +89,16 @@ custom:
 
 functions:
   # Configure a lambda@edge handler. Lambda@edge is a function that adds http headers to
-  # cloudfront requests. We use it to enforce HTTP security best practices.
-  clientEdge:
+  # cloudfront requests/responses. We use it to enforce HTTP security best practices.
+  clientEdgeResponse:
     name: ${self:service}-${opt:stage}-clientEdgeResponse
     handler: edge/dist/index.response
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
-#  clientEdgeRequest:
-#    name: ${self:service}-${opt:stage}-clientEdgeRequest
-#    handler: edge/dist/index.request
-#    memorySize: 128 # This is the maximum memory size for lambda@edge functions
-#    timeout: 1 # This is the maximum execution time for lambda@edge functions
+    lambdaAtEdge:
+      # The logical name used in your Resources section to define the CloudFront distribution.
+      distribution: 'CloudFrontDistribution'
+      eventType: 'viewer-response'
 
 resources:
   Resources:
@@ -122,6 +113,7 @@ resources:
               - ServerSideEncryptionByDefault:
                   SSEAlgorithm: AES256
         BucketName: ${self:custom.project}-${opt:stage}-${self:service}
+
     # Policy that only exposes bucket to cloudfront with proper
     # Origin Access Identity
     WebsiteDeploymentBucketPolicy:
@@ -154,7 +146,7 @@ resources:
 
     # The cloudfront distribution wraps around our static website S3 bucket. Using a CDN to host our SPA is good
     # practice, and also lets us set custom headers using lambda@edge.
-    CloudfrontDistribution:
+    CloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       DependsOn:
         - WebsiteDeploymentBucket
@@ -164,10 +156,10 @@ resources:
           Aliases:
             - ${env:PRODUCT_DOMAIN}
             - ${env:ROOT_DOMAIN}
-          #ViewerCertificate:
-          #  AcmCertificateArn:
-          #    Ref: Cert
-          #  SslSupportMethod: sni-only
+          ViewerCertificate:
+            AcmCertificateArn:
+              Ref: Cert
+            SslSupportMethod: sni-only
           Origins:
             - DomainName: { "Fn::GetAtt": [ WebsiteDeploymentBucket, DomainName ] }
               Id:
@@ -195,20 +187,6 @@ resources:
             AllowedMethods:
               - GET
               - HEAD
-            # Links our lambda@edge function, (which adds HTTPS our security headers), to the cloudfront distribution.
-            LambdaFunctionAssociations:
-                # Cloudfront requires a lambda@edge arn in the format
-                # 'arn:aws:lambda:${region}:${accountNumber}:function:${lambdaName}:${explicitVersion}'
-              #- EventType: 'viewer-request'
-              #  LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:1
-              #  #LambdaFunctionARN: ClientEdgeRequestLambdaFunction
-              - EventType: 'viewer-response'
-                # We use the serverless-lambda-version plugin to automatically update this every time there is a change.
-                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
-                #LambdaFunctionARN: ClientEdgeLambdaFunction
-              #- EventType: 'origin-response'
-              #  LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
-              #  #LambdaFunctionARN: ClientEdgeLambdaFunction
             Compress: true # Turns on gzipping
             #DefaultTTL: 86400 # Defaults to a day if no Cache-Control header is set.
             DefaultTTL: 600 # 10 minutes only due to users seeing a lot of stale cache issues after release (even after invalidating
@@ -229,7 +207,7 @@ resources:
     EdgeRole:
       Type: AWS::IAM::Role
       Properties:
-        RoleName: ${self:custom.project}-${opt:stage}-edge-role
+        RoleName: ${self:custom.project}-${opt:stage}-${self:service}-edge-role
         Path: /
         AssumeRolePolicyDocument:
           Version: '2012-10-17'
@@ -242,10 +220,40 @@ resources:
               Action:
                 - sts:AssumeRole
         Policies:
-          - PolicyName: LogGroupPolicy # Permissions to access Lambda@edge log groups.
+          - PolicyName: ${self:custom.project}-${opt:stage}-${self:service}-origin-response-policy #LogGroupPolicy-${self:provider.stage} # Permissions to access Lambda@edge log groups.
             PolicyDocument:
               Version: '2012-10-17'
               Statement:
+                - Effect: Allow
+                  Action:
+                    - lambda:GetFunction
+                    - lambda:EnableReplication
+                  Resource:
+                    - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse
+                - Effect: Allow
+                  Action:
+                    - iam:CreateServiceLinkedRole
+                    - cloudFront:UpdateDistribution
+                    - cloudFront:CreateDistribution
+                  Resource:
+                    - '*'
+                - Effect: Allow
+                  Action:
+                    - s3:PutObject
+                    - s3:GetObjectAcl
+                    - s3:GetObject
+                    - s3:ListBucket
+                    - s3:DeleteObject
+                    - s3:GetBucketLocation
+                    - s3:PutObjectAcl
+                  Resource:
+                    - arn:aws:s3:::${self:custom.project}-${opt:stage}-${self:service}
+                    - arn:aws:s3:::${self:custom.project}-${opt:stage}-${self:service}/*
+                - Effect: Allow
+                  Action:
+                    - s3:ListAllMyBuckets
+                  Resource:
+                    - '*'
                 - Effect: Allow
                   Action:
                     - logs:CreateLogGroup
@@ -256,34 +264,33 @@ resources:
                     - logs:GetLogEvents
                     - logs:FilterLogEvents
                   Resource:
-                    - "Fn::Join":
-                      - ":"
-                      - - arn:aws:logs
-                        - "Ref": "AWS::Region"
-                        - "Ref": "AWS::AccountId"
-                        - log-group
-                        - "*"
+                    - arn:aws:logs:#{AWS::Region}:#{AWS::AccountId}:log-group:*
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
           - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
-    #Cert:
-    #  Type: AWS::CertificateManager::Certificate
-    #  Properties:
-    #    DomainName: ${env:ROOT_DOMAIN}
-    #    SubjectAlternativeNames:
-    #      - ${env:PRODUCT_DOMAIN}
-    #    ValidationMethod: DNS
+    Cert:
+      Type: AWS::CertificateManager::Certificate
+      Properties:
+        DomainName: ${env:ROOT_DOMAIN}
+        SubjectAlternativeNames:
+          - ${env:PRODUCT_DOMAIN}
+        ValidationMethod: DNS
 
   Outputs:
-    CloudfrontDistributionId:
+    CloudFrontDistributionId:
       Value:
-        Ref: CloudfrontDistribution
+        Ref: CloudFrontDistribution
 
     WebsiteDeploymentBucketName:
       Value:
         Ref: WebsiteDeploymentBucket
+      Export:
+        Name: WebsiteDeploymentBucketName
 
-#    Cert:
-#      Value:
-#        Ref: DomainName
+    Certificate:
+      Description: Domain certificate ARN
+      Value:
+        Ref: Cert
+      Export:
+        Name: CertificateArn

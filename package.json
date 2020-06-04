@@ -36,6 +36,7 @@
     "@angular/router": "~9.1.3",
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
+    "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.1.1",
     "bootstrap": "^4.4.0",
     "rxjs": "~6.5.4",
     "serverless": "^1.69.0",

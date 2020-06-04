@@ -18,7 +18,7 @@ function splitAssignmentPair(assignment) {
 }
 
 /**
- * Splits a comma seperated header into a list of key-value pairs.
+ * Splits a comma separated header into a list of key-value pairs.
  * @param {string} headerValue
  */
 function splitHeaderValue(headerValue) {
