@@ -52,8 +52,10 @@ provider:
         - lambda:GetFunction
         - lambda:InvokeFunction
       Resource:
-        - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:*
+        # - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:*
         - arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:*
+        # Lambda@Edge cannot retrieve the specified Lambda function. Update the IAM policy to add permission: lambda:GetFunction for resource:
+        #- arn:aws:lambda:us-east-1:395594542180:function:contributor-console-ui-dev-clientEdgeRequest:1
 
 plugins:
   # Serverless Finch does s3 uploading. Called with 'sls client deploy'.
@@ -101,11 +103,11 @@ functions:
     handler: edge/dist/index.response
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
-  clientEdgeRequest:
-    name: ${self:service}-${opt:stage}-clientEdgeRequest
-    handler: edge/dist/index.request
-    memorySize: 128 # This is the maximum memory size for lambda@edge functions
-    timeout: 1 # This is the maximum execution time for lambda@edge functions
+#  clientEdgeRequest:
+#    name: ${self:service}-${opt:stage}-clientEdgeRequest
+#    handler: edge/dist/index.request
+#    memorySize: 128 # This is the maximum memory size for lambda@edge functions
+#    timeout: 1 # This is the maximum execution time for lambda@edge functions
 
 resources:
   Resources:
@@ -197,16 +199,16 @@ resources:
             LambdaFunctionAssociations:
                 # Cloudfront requires a lambda@edge arn in the format
                 # 'arn:aws:lambda:${region}:${accountNumber}:function:${lambdaName}:${explicitVersion}'
-              - EventType: 'viewer-request'
-                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:1
-                #LambdaFunctionARN: ClientEdgeRequestLambdaFunction
+              #- EventType: 'viewer-request'
+              #  LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeRequest:1
+              #  #LambdaFunctionARN: ClientEdgeRequestLambdaFunction
               - EventType: 'viewer-response'
                 # We use the serverless-lambda-version plugin to automatically update this every time there is a change.
                 LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
                 #LambdaFunctionARN: ClientEdgeLambdaFunction
-              - EventType: 'origin-response'
-                LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
-                #LambdaFunctionARN: ClientEdgeLambdaFunction
+              #- EventType: 'origin-response'
+              #  LambdaFunctionARN: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-clientEdgeResponse:1
+              #  #LambdaFunctionARN: ClientEdgeLambdaFunction
             Compress: true # Turns on gzipping
             #DefaultTTL: 86400 # Defaults to a day if no Cache-Control header is set.
             DefaultTTL: 600 # 10 minutes only due to users seeing a lot of stale cache issues after release (even after invalidating
