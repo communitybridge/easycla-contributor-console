@@ -7,13 +7,11 @@
     "prebuild": "yarn install",
     "build": "webpack",
     "pretest": "yarn install",
-    "test": "./node_modules/.bin/jasmine --config=jasmine.json",
-    "lint": "npx eslint src/*.js"
+    "lint": "./node_modules/.bin/eslint \"src/*.js\"",
+    "test": "./node_modules/.bin/jasmine --config=jasmine.json"
   },
   "dependencies": {
     "eslint": "^7.1.0",
-    "eslint-plugin-import": ">=2.18.0",
-    "eslint-plugin-node": "^11.1.0",
     "graceful-fs": "^4.2.2"
   },
   "devDependencies": {

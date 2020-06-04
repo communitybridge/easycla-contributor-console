@@ -17,16 +17,14 @@ function getSources(environmentSources, sourceType) {
   if (environmentSources[sourceType] === undefined) {
     return [];
   }
-  return environmentSources[sourceType].filter((source) => {
-    return typeof source === 'string';
-  });
+  return environmentSources[sourceType].filter((source) => typeof source === 'string');
 }
 
 function generateCSP(env, isDevServer) {
-  const SELF = "'self'";
-  const UNSAFE_INLINE = "'unsafe-inline'";
-  const UNSAFE_EVAL = "'unsafe-eval'";
-  const NONE = "'none'";
+  const SELF = '\'self\'';
+  const UNSAFE_INLINE = '\'unsafe-inline\'';
+  const UNSAFE_EVAL = '\'unsafe-eval\'';
+  const NONE = '\'none\'';
 
   let connectSources = [
     SELF,
@@ -40,7 +38,7 @@ function generateCSP(env, isDevServer) {
     'https://communitybridge.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE];
-  let styleSources = [SELF, UNSAFE_INLINE, 'https://communitybridge.org/'];
+  const styleSources = [SELF, UNSAFE_INLINE, 'https://communitybridge.org/'];
 
   if (isDevServer) {
     connectSources = [...connectSources, 'https://localhost:8100/sockjs-node/', 'wss://localhost:8100/sockjs-node/'];
