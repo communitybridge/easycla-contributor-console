@@ -91,7 +91,6 @@ functions:
   # Configure a lambda@edge handler. Lambda@edge is a function that adds http headers to
   # cloudfront requests/responses. We use it to enforce HTTP security best practices.
   clientEdgeResponse:
-    name: ${self:service}-${opt:stage}-clientEdgeResponse
     handler: edge/dist/index.response
     memorySize: 128 # This is the maximum memory size for lambda@edge functions
     timeout: 1 # This is the maximum execution time for lambda@edge functions
@@ -181,7 +180,7 @@ resources:
             - ErrorCode: 404
               ResponseCode: 200
               ResponsePagePath: '/index.html'
-          #HttpVersion: http2
+          HttpVersion: http2
           DefaultRootObject: index.html
           DefaultCacheBehavior:
             AllowedMethods:
