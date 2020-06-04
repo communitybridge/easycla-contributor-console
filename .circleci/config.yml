@@ -38,25 +38,20 @@ jobs:
       - checkout
       - restore_cache: *restore-cache
       - run:
-          name: Setup AWS key
-          command: |
-            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
-            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
-      - run:
-          name: Install AWS Profile
-          command: |
-            echo "PROJECT_DIR=${PROJECT_DIR}"
-            echo "Installing Profile '${AWS_PROFILE}'..."
-            mkdir -p ~/.aws
-            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
-            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
-            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
-      - run:
           name: Install Top Level Dependencies
           command: |
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
             yarn install --frozen-lockfile --non-interactive
+          no_output_timeout: 10m
+      - run:
+          name: Install Edge Dependencies
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running top level install..."
+            pushd edge
+            yarn install --frozen-lockfile --non-interactive
+            popd
           no_output_timeout: 10m
       - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
@@ -69,6 +64,22 @@ jobs:
           at: /tmp/workspace
       - restore_cache: *restore-cache
       - run: yarn build
+      - run:
+          name: Build
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running yarn build..."
+            yarn build
+          no_output_timeout: 10m
+      - run:
+          name: Build Edge
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running yarn build..."
+            pushd edge
+            yarn build
+            popd
+          no_output_timeout: 10m
       - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
 
@@ -100,20 +111,34 @@ jobs:
           at: /tmp/workspace
       - restore_cache: *restore-cache
       - run:
+          name: Setup AWS key
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
+      - run:
+          name: Install AWS Profile
+          command: |
+            echo "PROJECT_DIR=${PROJECT_DIR}"
+            echo "Installing Profile '${AWS_PROFILE}'..."
+            mkdir -p ~/.aws
+            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
+            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
+            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
+      - run:
           name: Deploy Cloudfront and LambdaEdge
           command: |
-            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true""
-            yarn sls deploy --stage="${STAGE}" --cloudfront=true"
+            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true --verbose"
+            SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --cloudfront=true --verbose
       - run:
           name: Deploy Frontend Bucket
           command: |
-            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change"
-            yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change
+            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose"
+            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose
       - run:
           name: Invalidate Cache
           command: |
             echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
-            yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true"
+            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true" --verbose
       - persist_to_workspace: *persist_to_workspace
 
   deployContributorConsoleDev:
@@ -121,8 +146,8 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_DEV
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_DEV
-      AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
       STAGE: dev
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
@@ -132,8 +157,8 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
-      AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
       STAGE: staging
       ROOT_DOMAIN: staging.communitybridge.org
       PRODUCT_DOMAIN: easycla.staging.communitybridge.org
@@ -143,8 +168,8 @@ jobs:
     environment:
       AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_PROD
       AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_PROD
-      AWS_PROFILE: lf-cla
-      AWS_REGION: us-east-2
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org

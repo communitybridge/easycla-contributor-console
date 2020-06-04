@@ -7,7 +7,7 @@
     "prebuild": "yarn install",
     "build": "webpack",
     "pretest": "yarn install",
-    "eslint": "./node_modules/.bin/eslint \"src/*.js\"",
+    "lint": "./node_modules/.bin/eslint \"src/*.js\"",
     "test": "./node_modules/.bin/jasmine --config=jasmine.json"
   },
   "dependencies": {

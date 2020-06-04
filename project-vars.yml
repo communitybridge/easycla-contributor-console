@@ -1,0 +1,6 @@
+# Copyright The Linux Foundation and each contributor to CommunityBridge.
+# SPDX-License-Identifier: MIT
+
+# Don't put secrets into this file
+projectIdentifier: easycla # Used for prefixing aws resources.
+profile: lf-cla # Used for setting the AWS Profile with serverless.
