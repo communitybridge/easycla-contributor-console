@@ -70,7 +70,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run eslint --quiet"
+      "pre-push": "yarn eslint --quiet"
     }
   },
   "license": "MIT"
