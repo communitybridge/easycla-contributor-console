@@ -11,7 +11,8 @@
     "ng": "./node_modules/@angular/cli/bin/ng",
     "serve": "./node_modules/@angular/cli/bin/ng serve",
     "build": "./node_modules/@angular/cli/bin/ng build",
-    "test": "./node_modules/@angular/cli/bin/ng test --code-coverage",
+    "test": "yarn test:unit",
+    "test:unit": "ng test --watch=false --progress=false --browsers=ChromeHeadless",
     "lint": "./node_modules/@angular/cli/bin/ng lint",
     "e2e": "./node_modules/@angular/cli/bin/ng e2e",
     "sls": "./node_modules/serverless/bin/serverless",
@@ -76,7 +77,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run eslint --quiet"
+      "pre-push": "yarn eslint --quiet"
     }
   },
   "license": "MIT"

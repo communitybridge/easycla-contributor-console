@@ -4,7 +4,7 @@
 const handler = require('./set-cache-control');
 
 describe('setCacheControl', () => {
-  it("turns on Cache-Control with max-age when resource isn't in filesNotToCache", () => {
+  it('turns on Cache-Control with max-age when resource isn\'t in filesNotToCache', () => {
     const headers = {
       'Some-Header-One': '1',
       'Some-Header-Two': '2'
@@ -30,11 +30,11 @@ describe('setCacheControl', () => {
     const result = handler.setCacheControl(headers, 'index.html', filesNotToCache, timeToLive);
     expect(result).toEqual({
       ...headers,
-      'Cache-Control': `no-cache, no-store, must-revalidate`
+      'Cache-Control': 'no-cache, no-store, must-revalidate'
     });
   });
 
-  it("doesn't change the s-maxage property in an existing Cache-Control header", () => {
+  it('doesn\'t change the s-maxage property in an existing Cache-Control header', () => {
     const headers = {
       'Some-Header-One': '1',
       'Some-Header-Two': '2',
@@ -46,7 +46,7 @@ describe('setCacheControl', () => {
     const result = handler.setCacheControl(headers, 'index.html', filesNotToCache, timeToLive);
     expect(result).toEqual({
       ...headers,
-      'Cache-Control': `s-maxage=100, no-cache, no-store, must-revalidate`
+      'Cache-Control': 's-maxage=100, no-cache, no-store, must-revalidate'
     });
   });
 
