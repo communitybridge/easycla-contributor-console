@@ -150,8 +150,7 @@ export class CorporateDashboardComponent {
   }
 
   onClickBack() {
-    this.router.navigate(['/dashboard'],
-      { queryParams: { projectId: this.projectId, userId: this.userId } });
+    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId]);
   }
 
   open(content) {

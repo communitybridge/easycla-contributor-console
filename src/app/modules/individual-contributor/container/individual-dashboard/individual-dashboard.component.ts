@@ -83,7 +83,6 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   onBackClick() {
-    this.router.navigate(['/dashboard'],
-      { queryParams: { projectId: this.projectId, userId: this.userId } });
+    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId]);
   }
 }
