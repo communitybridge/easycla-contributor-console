@@ -21,8 +21,8 @@ export class ClaDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this.projectId = this.route.snapshot.queryParamMap.get('projectId');
-    this.userId = this.route.snapshot.queryParamMap.get('userId');
+    this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.userId = this.route.snapshot.paramMap.get('userId');
     this.hasErrorPresent();
   }
 

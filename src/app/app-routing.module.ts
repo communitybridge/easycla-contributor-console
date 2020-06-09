@@ -14,10 +14,10 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/dashboard'
+    redirectTo: '/cla'
   },
   {
-    path: 'dashboard',
+    path: 'cla/project/:projectId/user/:userId',
     pathMatch: 'full',
     component: ClaDashboardComponent
   },
@@ -43,7 +43,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
