@@ -10,6 +10,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { ProjectCompanySingatureModel, SignatureACL } from 'src/app/core/models/project-company-signature';
 import { UserModel } from 'src/app/core/models/user';
 import { OrganizationModel } from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -32,7 +33,8 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     private modalService: NgbModal,
     private storageService: StorageService,
     private location: PlatformLocation,
-    private claContributorService: ClaContributorService
+    private claContributorService: ClaContributorService,
+    private alertService: AlertService
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
@@ -59,30 +61,34 @@ export class ClaRequestAuthorizationComponent implements OnInit {
 
   callRequestAuthorization(content: any, manager: SignatureACL) {
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
+    this.title = 'Request Submitted';
+    const projectName = JSON.parse(this.storageService.getItem('projectName'));
+    this.message = 'The CLA Manager for ' + projectName + ' will be notified of your request to be authorized for contributions.' +
+      ' You will be notified via email when the status has been approved or rejected.';
+    if (user.user_emails === null) {
+      this.alertService.error('User email id is not found on github.')
+      return false;
+    }
     const data = {
       contributorId: user.user_id,
       contributorName: user.user_github_username,
       contributorEmail: user.user_emails[0],
-      message: '',
+      message: 'Please add me.',
       recipientName: manager.username,
       recipientEmail: manager.lfEmail,
     };
     this.claContributorService.requestToBeOnCompanyApprovedList(this.selectedCompany, this.projectId, data).subscribe(
       () => {
-        this.hasError = false;
-        this.title = 'Request Submitted';
-        const projectName = JSON.parse(this.storageService.getItem('projectName'));
-        this.message = 'The CLA Manager for ' + projectName + ' will be notified of your request to be authorized for contributions.' +
-          ' You will be notified via email when the status has been approved or rejected.';
         this.showDialogModal(content);
       },
       () => {
-        this.hasError = true;
-        this.title = 'Problem Sending Request';
-        this.message = 'The request already exists for you. Please ask the CLA Manager to log into the EasyCLA Corporate Console and authorize you using one of the available methods.';
         this.showDialogModal(content);
       }
     );
+  }
+
+  closeModal() {
+    this.modalService.dismissAll();
   }
 
   getProjectCompanySignature() {

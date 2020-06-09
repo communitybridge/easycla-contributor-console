@@ -91,6 +91,7 @@ export class CorporateDashboardComponent {
   }
 
   checkEmployeeeSignature(signedCLANotFoundModal) {
+    this.alertService.clearAlert();
     const data = {
       project_id: this.projectId,
       company_id: this.organization.companyID,
@@ -101,8 +102,7 @@ export class CorporateDashboardComponent {
         if (response.errors) {
           if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
             this.openWithDismiss(signedCLANotFoundModal)
-          } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_whitelist')) {
-            // Confirm with David.
+          } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);
           }
