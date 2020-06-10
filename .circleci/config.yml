@@ -216,7 +216,8 @@ workflows:
       - approve_staging:
           type: approval
           requires:
-            - deployContributorConsoleDev
+            - build
+            - lint
           filters:
             branches:
               ignore: /.*/
