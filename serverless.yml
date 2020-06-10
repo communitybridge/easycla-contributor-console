@@ -75,6 +75,24 @@ custom:
     # Because our application is a Single Page Application, we always want our index
     # documents to handle 404/403 urls.
     errorDocument: index.html
+  product:
+    root:
+      name:
+        dev: 'dev.communitybridge.org'
+        staging: 'staging.communitybridge.org'
+        prod: 'communitybridge.org'
+        other: 'dev.communitybridge.org'
+    domain:
+      name:
+        dev: 'easycla.dev.communitybridge.org'
+        staging: 'easycla.staging.communitybridge.org'
+        prod: 'easycla.communitybridge.org'
+        other: 'easycla.dev.communitybridge.org'
+  certificate:
+    arn:
+      # ARN of the Externally generated certificate
+      prod: 'arn:aws:acm:us-east-1:716487311010:certificate/64dbe152-05ef-460e-98ad-b71a9a650d31'
+      other: 'invalid - value'
 
   # CloudFront invalidation plugin configuration
   cloudfrontInvalidate:
@@ -101,6 +119,11 @@ functions:
       eventType: 'viewer-response'
 
 resources:
+  Conditions:
+    # true when a TSL certificate should be created by serverless (false created externally)
+    ShouldGenerateCertificate:
+      Fn::Not: [Fn::Equals: ["${env:STAGE}", "prod"]]
+
   Resources:
     # The bucket the website is uploaded to. We make sure to turn on AES256 encryption, which
     # is best practice.
@@ -154,18 +177,27 @@ resources:
         DistributionConfig:
           Enabled: true
           Aliases:
-            - ${env:PRODUCT_DOMAIN}
-            - ${env:ROOT_DOMAIN}
+            - ${self:custom.product.domain.name.${opt:stage}, self:custom.product.domain.name.other}
           ViewerCertificate:
-            AcmCertificateArn:
-              Ref: Cert
-            # The distribution accepts HTTPS connections from only viewers that support server name indication
-            # Recommended, most browsers and clients released after 2010 support SNI.
-            SslSupportMethod: sni-only
-            # Specify the security policy that you want CloudFront to use for HTTPS connections
-            # Recommend that you specify TLSv1.2_2018 unless your viewers are using browsers or devices that don’t support TLSv1.2
-            # Allowed Values: SSLv3 | TLSv1 | TLSv1.1_2016 | TLSv1.2_2018 | TLSv1_2016
-            MinimumProtocolVersion: TLSv1.2_2018
+            Fn::If:
+              - ShouldGenerateCertificate
+              - AcmCertificateArn:
+                  Ref: Cert
+                # The distribution accepts HTTPS connections from only viewers that support server name indication
+                # Recommended, most browsers and clients released after 2010 support SNI.
+                SslSupportMethod: sni-only
+                # Specify the security policy that you want CloudFront to use for HTTPS connections
+                # Recommend that you specify TLSv1.2_2018 unless your viewers are using browsers or devices that don’t support TLSv1.2
+                # Allowed Values: SSLv3 | TLSv1 | TLSv1.1_2016 | TLSv1.2_2018 | TLSv1_2016
+                MinimumProtocolVersion: TLSv1.2_2018
+              - AcmCertificateArn: ${self:custom.certificate.arn.${opt:stage}, self:custom.certificate.arn.other}
+                # The distribution accepts HTTPS connections from only viewers that support server name indication
+                # Recommended, most browsers and clients released after 2010 support SNI.
+                SslSupportMethod: sni-only
+                # Specify the security policy that you want CloudFront to use for HTTPS connections
+                # Recommend that you specify TLSv1.2_2018 unless your viewers are using browsers or devices that don’t support TLSv1.2
+                # Allowed Values: SSLv3 | TLSv1 | TLSv1.1_2016 | TLSv1.2_2018 | TLSv1_2016
+                MinimumProtocolVersion: TLSv1.2_2018
           Origins:
             - DomainName: { "Fn::GetAtt": [ WebsiteDeploymentBucket, DomainName ] }
               Id:
@@ -277,10 +309,11 @@ resources:
 
     Cert:
       Type: AWS::CertificateManager::Certificate
+      Condition: ShouldGenerateCertificate
       Properties:
-        DomainName: ${env:ROOT_DOMAIN}
+        DomainName: ${self:custom.product.root.name.${opt:stage}, self:custom.product.root.name.other}
         SubjectAlternativeNames:
-          - ${env:PRODUCT_DOMAIN}
+          - ${self:custom.product.domain.name.${opt:stage}, self:custom.product.domain.name.other}
         ValidationMethod: DNS
 
   Outputs:
@@ -293,10 +326,3 @@ resources:
         Ref: WebsiteDeploymentBucket
       Export:
         Name: WebsiteDeploymentBucketName
-
-    Certificate:
-      Description: Domain certificate ARN
-      Value:
-        Ref: Cert
-      Export:
-        Name: CertificateArn
