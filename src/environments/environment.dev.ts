@@ -2,6 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 export const environment = {
-  production: false,
+  production: true,
   baseUrl: 'https://api.dev.lfcla.com/',
 };

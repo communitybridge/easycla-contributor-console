@@ -38,7 +38,7 @@ function generateCSP(env, isDevServer) {
     'https://communitybridge.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE];
-  const styleSources = [SELF, UNSAFE_INLINE, 'https://communitybridge.org/'];
+  const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
 
   if (isDevServer) {
     connectSources = [...connectSources, 'https://localhost:8100/sockjs-node/', 'wss://localhost:8100/sockjs-node/'];
