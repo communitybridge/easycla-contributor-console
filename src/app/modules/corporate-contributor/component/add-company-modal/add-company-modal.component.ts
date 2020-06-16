@@ -7,7 +7,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NameValidator } from 'src/app/shared/validators/name-validator';
-import { AddCompanyModel } from 'src/app/core/models/add-company';
 
 @Component({
   selector: 'app-add-company-modal',
