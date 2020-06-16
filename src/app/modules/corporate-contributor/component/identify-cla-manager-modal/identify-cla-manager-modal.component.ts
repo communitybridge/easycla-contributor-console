@@ -51,10 +51,10 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
     const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
     const data = {
-      'companySFID': company.companyExternalID,
-      'contactAdmin': hasCompanyAdmin,
-      'projectSFID': project.project_id,
-      'userEmail': hasCompanyAdmin ? '' : this.form.controls.email.value
+      companySFID: company.companyID,
+      contactAdmin: hasCompanyAdmin,
+      projectSFID: project.project_id,
+      userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
     }
     this.callInviteManagerAPI(data, hasCompanyAdmin, content);
   }
