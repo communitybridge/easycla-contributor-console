@@ -1,7 +1,8 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<app-project-title [projectId]="projectId" [userId]="userId" (errorEmitter)="hasErrorPresent($event)"></app-project-title>
+<app-project-title [projectId]="projectId" [userId]="userId" (successEmitter)="onAPILoad($event)"
+    (errorEmitter)="hasErrorPresent($event)"></app-project-title>
 
 <div class="container-fluid dashboard-container">
 
@@ -31,14 +32,18 @@
             <div class="deskop-view">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <app-dashboard-contributor-buttons [type]="corporateContributor"
-                            (proceedBtnEmitter)="onClickCorporateProceed()">
-                        </app-dashboard-contributor-buttons>
+                        <ng-container *ngIf="project.project_ccla_enabled">
+                            <app-dashboard-contributor-buttons [type]="corporateContributor"
+                                (proceedBtnEmitter)="onClickCorporateProceed()">
+                            </app-dashboard-contributor-buttons>
+                        </ng-container>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <app-dashboard-contributor-buttons [type]="individualContributor"
-                            (proceedBtnEmitter)="onClickIndividualProceed()">
-                        </app-dashboard-contributor-buttons>
+                        <ng-container *ngIf="project.project_icla_enabled">
+                            <app-dashboard-contributor-buttons [type]="individualContributor"
+                                (proceedBtnEmitter)="onClickIndividualProceed()">
+                            </app-dashboard-contributor-buttons>
+                        </ng-container>
                     </div>
                 </div>
             </div>
