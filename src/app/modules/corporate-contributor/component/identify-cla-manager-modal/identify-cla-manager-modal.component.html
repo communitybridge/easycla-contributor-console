@@ -10,10 +10,10 @@
 
         <div class="col-10 emailbox">
             <form [formGroup]="form">
-                <input type="text" name="email" placeholder="Enter Email Address or LFID" formControlName="email"
+                <input type="text" name="email" placeholder="Enter Email Address" formControlName="email"
                     class="form-control" tabindex="-1" />
                 <div *ngIf="!form.controls.email.valid && form.controls.email.touched">
-                    <span class="error">Email address or LFID is required.</span>
+                    <span class="error">Email address is required.</span>
                 </div>
             </form>
         </div>

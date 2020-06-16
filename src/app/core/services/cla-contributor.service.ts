@@ -10,20 +10,20 @@ import { UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { StorageService } from 'src/app/shared/services/storage.service';
 import { ProjectCompanySingatureModel } from '../models/project-company-signature';
 import { OrganizationModel, OrganizationListModel } from '../models/organization';
+import { InviteCompanyModel } from '../models/invite-company';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClaContributorService {
   baseURL = environment.baseUrl;
+  v4BaseUrl = environment.v4BaseUrl;
 
   constructor(
     private httpClient: HttpClient,
-    private alertService: AlertService,
-    private storageService: StorageService
+    private alertService: AlertService
   ) { }
 
   getUser(userId: string): Observable<UserModel> {
@@ -66,9 +66,9 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
-  postEmailToCompanyAdmin(userId: string, data: any): Observable<any> {
-    const url = this.baseURL + 'v2/user/' + userId + '/invite-company-admin';
-    return this.httpClient.post<any>(url, data);
+  inviteManager(userLFID: string, data: any): Observable<InviteCompanyModel> {
+    const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
+    return this.httpClient.post<InviteCompanyModel>(url, data);
   }
 
   getProjectCompanySignature(projectId: string, companyId: string): Observable<ProjectCompanySingatureModel> {
