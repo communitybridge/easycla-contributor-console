@@ -62,7 +62,6 @@ export class ClaDashboardComponent implements OnInit {
   onAPILoad(APIType: string) {
     if (APIType === 'Project') {
       this.project = JSON.parse(this.storageService.getItem('project'));
-      console.log(this.project);
     }
   }
 
