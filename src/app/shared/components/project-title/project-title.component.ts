@@ -14,6 +14,7 @@ export class ProjectTitleComponent implements OnInit {
   @Input() projectId: string;
   @Input() userId: string;
   @Output() errorEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() successEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   project = new ProjectModel();
   user = new UserModel();
@@ -31,6 +32,7 @@ export class ProjectTitleComponent implements OnInit {
       if (localProjectId !== this.projectId) {
         this.getProject();
       } else {
+        this.successEmitter.emit('Project');
         this.project.project_name = JSON.parse(this.storageService.getItem('projectName'));
       }
 
@@ -51,6 +53,7 @@ export class ProjectTitleComponent implements OnInit {
           this.storageService.setItem('projectName', this.project.project_name);
           this.storageService.setItem('projectId', this.projectId);
           this.storageService.setItem('project', this.project);
+          this.successEmitter.emit('Project');
         },
         (exception) => {
           this.errorEmitter.emit(true);
@@ -71,6 +74,7 @@ export class ProjectTitleComponent implements OnInit {
           this.user = response;
           this.storageService.setItem('userId', this.userId);
           this.storageService.setItem('user', this.user);
+          this.successEmitter.emit('User');
         },
         (exception) => {
           this.errorEmitter.emit(true);

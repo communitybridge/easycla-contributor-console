@@ -3,6 +3,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProjectModel } from 'src/app/core/models/project';
+import { StorageService } from 'src/app/shared/services/storage.service';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -16,10 +18,12 @@ export class ClaDashboardComponent implements OnInit {
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
   hasError: boolean;
+  project = new ProjectModel();
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private storageService: StorageService
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
@@ -52,6 +56,13 @@ export class ClaDashboardComponent implements OnInit {
     if (!this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
+    }
+  }
+
+  onAPILoad(APIType: string) {
+    if (APIType === 'Project') {
+      this.project = JSON.parse(this.storageService.getItem('project'));
+      console.log(this.project);
     }
   }
 
