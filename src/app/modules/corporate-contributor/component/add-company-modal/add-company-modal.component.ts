@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NameValidator } from 'src/app/shared/validators/name-validator';
+import { AddCompanyModel } from 'src/app/core/models/add-company';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -22,7 +23,7 @@ export class AddCompanyModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
- 
+
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
@@ -59,24 +60,24 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   addOrganization(content) {
-    this.hasError = false;
-    this.title = 'Successfully Added';
-    this.message = 'Your company has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
-    this.openDialog(content);
+    const data = {
+      companyName: this.form.controls.companyName.value,
+      companyWebsite: this.form.controls.companyWebsite.value
+    };
 
-    // this.claContributorService.searchOrganization('').subscribe(
-    //   () => {
-    //     this.hasError = false;
-    //     this.title = 'Successfully Added';
-    //     this.message = 'Your company has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
-    //     this.openDialog(content);
-    //   },
-    //   () => {
-    //     this.title = 'Company Already Exist';
-    //     this.message = 'Your Company already exists in our database. Please go back to the search stage in order to find your company.';
-    //     this.openDialog(content);
-    //   }
-    // );
+    this.claContributorService.addCompany(data).subscribe(
+      () => {
+        this.hasError = false;
+        this.title = 'Successfully Added';
+        this.message = 'Your company has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
+        this.openDialog(content);
+      },
+      () => {
+        this.title = 'Company Already Exist';
+        this.message = 'Your Company already exists in our database. Please go back to the search stage in order to find your company.';
+        this.openDialog(content);
+      }
+    );
   }
 
   onClickDialogBtn() {

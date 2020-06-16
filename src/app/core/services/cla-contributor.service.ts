@@ -13,6 +13,7 @@ import { IndividualRequestSignatureModel } from '../models/individual-request-si
 import { ProjectCompanySingatureModel } from '../models/project-company-signature';
 import { OrganizationModel, OrganizationListModel } from '../models/organization';
 import { InviteCompanyModel } from '../models/invite-company';
+import { AddCompanyModel } from '../models/add-company';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,11 @@ export class ClaContributorService {
   getProjectCompanySignature(projectId: string, companyId: string): Observable<ProjectCompanySingatureModel> {
     const url = this.baseURL + 'v3/signatures/project/' + projectId + '/company/' + companyId;
     return this.httpClient.get<ProjectCompanySingatureModel>(url);
+  }
+
+  addCompany(data: any): Observable<AddCompanyModel> {
+    const url = this.v4BaseUrl + 'v4/company';
+    return this.httpClient.post<AddCompanyModel>(url, data);
   }
 
   handleError(errorObj: any) {
