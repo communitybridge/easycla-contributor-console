@@ -77,8 +77,8 @@ export class ClaContributorService {
     return this.httpClient.get<ProjectCompanySingatureModel>(url);
   }
 
-  addCompany(data: any): Observable<AddCompanyModel> {
-    const url = this.v4BaseUrl + 'v4/company';
+  addCompany(userId: string, data: any): Observable<AddCompanyModel> {
+    const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
     return this.httpClient.post<AddCompanyModel>(url, data);
   }
 
