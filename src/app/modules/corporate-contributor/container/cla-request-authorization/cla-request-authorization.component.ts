@@ -26,6 +26,8 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   projectSignature = new ProjectCompanySingatureModel();
   managers: SignatureACL[] = [];
   selectedCompany: string;
+  company: OrganizationModel;
+  claManagerError: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,9 +44,10 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
-    if (company) {
-      this.selectedCompany = company.companyID;
+    this.claManagerError = 'Wait... we are loading CLA manager(s).';
+    this.company = JSON.parse(this.storageService.getItem('selectedCompany'));
+    if (this.company) {
+      this.selectedCompany = this.company.companyID;
       this.getProjectCompanySignature();
     }
   }
@@ -62,8 +65,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   callRequestAuthorization(content: any, manager: SignatureACL) {
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
     this.title = 'Request Submitted';
-    const projectName = JSON.parse(this.storageService.getItem('projectName'));
-    this.message = 'The CLA Manager for ' + projectName + ' will be notified of your request to be authorized for contributions.' +
+    this.message = 'The CLA Manager for ' + this.company.companyName + ' will be notified of your request to be authorized for contributions.' +
       ' You will be notified via email when the status has been approved or rejected.';
     if (user.user_emails === null) {
       this.alertService.error('User email id is not found on github.')
@@ -110,6 +112,10 @@ export class ClaRequestAuthorizationComponent implements OnInit {
           this.managers.push(acl);
         }
       }
+    }
+
+    if (this.managers.length <= 0) {
+      this.claManagerError = 'No CLA manager found.';
     }
   }
 
