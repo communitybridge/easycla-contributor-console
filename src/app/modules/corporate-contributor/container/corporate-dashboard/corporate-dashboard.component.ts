@@ -75,6 +75,7 @@ export class CorporateDashboardComponent {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
     this.searchBoxValue = organization.organization_name;
+    this.form.controls.companyName.setValue(organization.organization_name);
   }
 
   getOrganizationInformation(signedCLANotFoundModal) {
