@@ -8,6 +8,10 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { UserModel } from 'src/app/core/models/user';
 import { ProjectModel } from 'src/app/core/models/project';
+import { OrganizationModel } from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { EmailValidator } from 'src/app/shared/validators/email-validator';
+import { InviteCompanyModel } from 'src/app/core/models/invite-company';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -26,59 +30,62 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     private modalService: NgbModal,
     private claContributorService: ClaContributorService,
     private storageService: StorageService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required])],
+      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
     });
   }
 
   onClickSubmit(content) {
-    this.postEmailToCompanyAdmin(content);
-  }
-
-  postEmailToCompanyAdmin(content) {
-    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
-    const user: UserModel = JSON.parse(this.storageService.getItem('user'));
-    const data = {
-      contributor_name: user.user_github_username,
-      contributor_email: user.user_emails[0],
-      cla_manager_name: 'Amol Sontakke',
-      cla_manager_email: this.form.controls.email.value,
-      project_name: project.project_name,
-      company_name: 'Proxima',
-    };
-    this.claContributorService.postEmailToCompanyAdmin(user.user_id, data).subscribe(
-      () => {
-        this.hasError = false;
-        this.title = 'Notification Sent';
-        this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
-        if (this.hasShowContactAdmin) {
-          this.title = 'Request Submitted';
-          this.message = 'Your authorized representative has been contacted. You will need to follow up with them to process your CLA request.';
-        }
-        this.openDialogModal(content);
-      },
-      (exception) => {
-        this.hasError = true;
-        this.title = 'Request Failed';
-        this.message = 'Your request is Failed due to internal server error please try later.';
-        this.openDialogModal(content);
-        this.claContributorService.handleError(exception);
-      }
-    );
+    this.inviteCLAManager(false, content);
   }
 
   onClickContactAdmin(content) {
+    this.inviteCLAManager(true, content);
+  }
 
-    this.hasError = false;
-    this.title = 'Request Submitted to Company Admin';
-    this.message = 'Your Company Admin has been contacted, you will need to follow up with them to process your CLA request.';
-    this.modalService.open(content, {
-      centered: true,
-      backdrop: 'static'
-    });
+  inviteCLAManager(hasCompanyAdmin: boolean, content: any) {
+    const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
+    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    const data = {
+      companySFID: company.companyID,
+      contactAdmin: hasCompanyAdmin,
+      projectSFID: project.project_id,
+      userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
+    }
+    this.callInviteManagerAPI(data, hasCompanyAdmin, content);
+  }
+
+  callInviteManagerAPI(data: any, hasCompanyAdmin: boolean, content: any) {
+    this.alertService.clearAlert();
+    const user: UserModel = JSON.parse(this.storageService.getItem('user'));
+    if (user.user_id) {
+      this.claContributorService.inviteManager(user.user_id, data).subscribe(
+        (response: InviteCompanyModel) => {
+          this.hasError = false;
+          this.title = 'Notification Sent';
+          this.message = 'An email has been sent to "' + response.email + '" to request that they start the CLA signature process.';
+          if (hasCompanyAdmin) {
+            this.title = 'Request Submitted to Company Admin';
+            this.message = 'Your Company Admin has been contacted, you will need to follow up with them to process your CLA request.';
+          }
+          this.openDialogModal(content);
+        },
+        (exception) => {
+          console.log(exception);
+          this.hasError = true;
+          this.title = 'Request Failed';
+          this.message = 'Your request is Failed due to internal server error please try later.';
+          if (exception.error?.Message) {
+            this.message = exception.error.Message;
+          }
+          this.openDialogModal(content);
+        }
+      );
+    }
   }
 
   onClickExitCLABtn() {
