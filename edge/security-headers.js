@@ -35,7 +35,9 @@ function generateCSP(env, isDevServer) {
     'https://api.staging.lfcla.com/',
     'https://api.lfcla.com/',
     'https://communitybridge.org/',
-    'https://api-gw.dev.platform.linuxfoundation.org/'
+    'https://api-gw.dev.platform.linuxfoundation.org/',
+    'https://api-gw.staging.platform.linuxfoundation.org/',
+    'https://api-gw.platform.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE];
   const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
