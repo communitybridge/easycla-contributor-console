@@ -30,11 +30,13 @@
                                             *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
                                             <span *ngIf="!form.controls.companyName.errors.required"
                                                 class="error">Minimum 3 characters are required to search company
-                                                name</span>
+                                                name
+                                            </span>
                                         </div>
 
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
                                             company.</div>
+
                                         <div *ngIf="!noCompanyFound">
                                             <div class="col-12 item" *ngFor="let organization of organizationList.list"
                                                 (click)="onSelectCompany(organization)">
@@ -45,6 +47,7 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="footer col-12">
                                         <span>Company not listed? </span>
