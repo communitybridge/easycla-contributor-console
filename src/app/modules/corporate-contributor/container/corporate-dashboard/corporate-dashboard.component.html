@@ -35,12 +35,14 @@
 
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
                                             company.</div>
-
-                                        <div class="col-12 item" *ngFor="let organization of organizationList.list"
-                                            (click)="onSelectCompany(organization)">
-                                            <div class="row">
-                                                <div class="col-6 ellipsis">{{organization.organization_name}}</div>
-                                                <div class="col-6 ellipsis">{{organization.organization_website}}</div>
+                                        <div *ngIf="!noCompanyFound">
+                                            <div class="col-12 item" *ngFor="let organization of organizationList.list"
+                                                (click)="onSelectCompany(organization)">
+                                                <div class="row">
+                                                    <div class="col-6 ellipsis">{{organization.organization_name}}</div>
+                                                    <div class="col-6 ellipsis">{{organization.organization_website}}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

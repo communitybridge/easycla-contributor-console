@@ -114,6 +114,7 @@ export class CorporateDashboardComponent {
   onCompanyKeypress(event) {
     this.hasShowDropdown = true;
     this.noCompanyFound = false;
+
     if (this.form.valid) {
       const value = event.target.value;
       if (this.selectedCompany !== value) {
@@ -127,6 +128,9 @@ export class CorporateDashboardComponent {
       }, 300);
     } else {
       this.organizationList.list = [];
+      if (this.form.controls.companyName.value === '') {
+        this.noCompanyFound = true;
+      }
     }
   }
 
