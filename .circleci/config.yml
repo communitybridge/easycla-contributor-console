@@ -63,9 +63,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - restore_cache: *restore-cache
-      - run: yarn build
       - run:
-          name: Build
+          name: Building Source
           command: |
             echo "Node version is: $(node --version)"
             echo "Running yarn build..."
