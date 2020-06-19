@@ -89,6 +89,16 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     );
   }
 
+  exitEasyCLA() {
+    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    if (redirectUrl !== null) {
+      window.open(redirectUrl, '_self');
+    } else {
+      const error = 'Unable to fetch redirect URL.';
+      this.alertService.error(error);
+    }
+  }
+
   closeModal() {
     this.modalService.dismissAll();
   }

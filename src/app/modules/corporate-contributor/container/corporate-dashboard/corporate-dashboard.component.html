@@ -29,21 +29,21 @@
                                         <div class="col-12"
                                             *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
                                             <span *ngIf="!form.controls.companyName.errors.required"
-                                                class="error">Minimum 3 characters are required to search company
-                                                name
+                                                class="error">{{minLengthValidationMsg}}
                                             </span>
+                                        </div>
+                                        <!--Repeated error message but it is requirement when no search text is present-->
+                                        <div class="col-12 error" *ngIf="emptySearchError">{{minLengthValidationMsg}}
                                         </div>
 
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
                                             company.</div>
 
-                                        <div *ngIf="!noCompanyFound">
-                                            <div class="col-12 item" *ngFor="let organization of organizationList.list"
-                                                (click)="onSelectCompany(organization)">
-                                                <div class="row">
-                                                    <div class="col-6 ellipsis">{{organization.organization_name}}</div>
-                                                    <div class="col-6 ellipsis">{{organization.organization_website}}
-                                                    </div>
+                                        <div class="col-12 item" *ngFor="let organization of organizationList.list"
+                                            (click)="onSelectCompany(organization)">
+                                            <div class="row">
+                                                <div class="col-6 ellipsis">{{organization.organization_name}}</div>
+                                                <div class="col-6 ellipsis">{{organization.organization_website}}
                                                 </div>
                                             </div>
                                         </div>
