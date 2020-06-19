@@ -69,7 +69,9 @@ export class IndividualDashboardComponent implements OnInit {
           this.status = 'Completed';
         } else {
           this.status = 'Incomplete';
-          const error = 'CLA system is not able to support your request please open a support ticket.';
+          let error = 'CLA system is not able to support your request. Please ';
+          error += '<a href="https://jira.linuxfoundation.org/servicedesk/customer/portal/4" style="color:#0099cc" target="_blank">create a ticket</a>';
+          error += ' to help us resolve this issue';
           this.alertService.error(error);
         }
       },
