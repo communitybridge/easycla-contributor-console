@@ -30,6 +30,8 @@ export class CorporateDashboardComponent {
   organizationList = new OrganizationListModel();
   form: FormGroup;
   noCompanyFound: boolean;
+  minLengthValidationMsg: string;
+  emptySearchError: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,8 +46,6 @@ export class CorporateDashboardComponent {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
     this.searchBoxValue = '';
-    this.noCompanyFound = true;
-
     this.location.onPopState(() => this.modalService.dismissAll());
   }
 
@@ -53,6 +53,9 @@ export class CorporateDashboardComponent {
     this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.hasShowContactAdmin = true;
+    this.emptySearchError = true;
+    this.noCompanyFound = false;
+    this.minLengthValidationMsg = 'Minimum 3 characters are required to search company name';
 
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
@@ -114,7 +117,7 @@ export class CorporateDashboardComponent {
   onCompanyKeypress(event) {
     this.hasShowDropdown = true;
     this.noCompanyFound = false;
-
+    this.emptySearchError = false;
     if (this.form.valid) {
       const value = event.target.value;
       if (this.selectedCompany !== value) {
@@ -128,16 +131,19 @@ export class CorporateDashboardComponent {
       }, 300);
     } else {
       this.organizationList.list = [];
-      if (this.form.controls.companyName.value === '') {
-        this.noCompanyFound = true;
-      }
+      this.resetEmptySearchMessage();
+    }
+  }
+
+  resetEmptySearchMessage() {
+    if (this.form.controls.companyName.value === '') {
+      this.emptySearchError = true;
     }
   }
 
   toggleDropdown() {
     this.hasShowDropdown = !this.hasShowDropdown;
   }
-
 
   searchOrganization(searchText: string) {
     this.alertService.clearAlert();
@@ -148,6 +154,13 @@ export class CorporateDashboardComponent {
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;
         }
+        // Changed error message from company not found to 3 char required.
+        if (this.form.controls.companyName.value.length < 3) {
+          this.noCompanyFound = false;
+          this.organizationList.list = [];
+        }
+
+        this.resetEmptySearchMessage();
       },
       (exception) => {
         this.noCompanyFound = true;
