@@ -63,8 +63,17 @@ export class IndividualDashboardComponent implements OnInit {
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
-        this.status = 'Completed';
         this.individualRequestSignatureModel = response;
+        const url = this.individualRequestSignatureModel.sign_url;
+        if (url) {
+          this.status = 'Completed';
+        } else {
+          this.status = 'Incomplete';
+          let error = 'CLA system is not able to support your request. Please ';
+          error += '<a href="https://jira.linuxfoundation.org/servicedesk/customer/portal/4" style="color:#0099cc" target="_blank">create a ticket</a>';
+          error += ' to help us resolve this issue';
+          this.alertService.error(error);
+        }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
@@ -76,9 +85,6 @@ export class IndividualDashboardComponent implements OnInit {
     const url = this.individualRequestSignatureModel.sign_url;
     if (url) {
       window.open(url, '_self');
-    } else {
-      const error = 'Something went wrong to request individual signature. Contact your administrator.';
-      this.alertService.error(error);
     }
   }
 
