@@ -73,7 +73,6 @@ export class ClaDashboardComponent implements OnInit {
 
   onExitEasyCLA() {
     const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
-    console.log(redirectUrl);
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {

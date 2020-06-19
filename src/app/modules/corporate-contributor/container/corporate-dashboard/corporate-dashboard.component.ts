@@ -157,7 +157,9 @@ export class CorporateDashboardComponent {
   }
 
   onClickBack() {
-    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId]);
+    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
+      { queryParams: { redirect: redirectUrl } });
   }
 
   open(content) {

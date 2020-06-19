@@ -89,7 +89,14 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickExitCLABtn() {
-    this.modalService.dismissAll();
+    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    if (redirectUrl !== null) {
+      window.open(redirectUrl, '_self');
+    } else {
+      const error = 'Unable to fetch redirect URL.';
+      this.alertService.error(error);
+      this.modalService.dismissAll();
+    }
   }
 
   openDialogModal(content) {
