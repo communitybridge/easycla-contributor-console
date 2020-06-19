@@ -73,10 +73,11 @@ export class ClaDashboardComponent implements OnInit {
 
   onExitEasyCLA() {
     const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
-    if (redirectUrl !== undefined) {
+    console.log(redirectUrl);
+    if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {
-      const error = 'Unable to fetch redirect URL, please redirect manually.';
+      const error = 'Unable to fetch redirect URL.';
       this.alertService.error(error);
     }
   }
