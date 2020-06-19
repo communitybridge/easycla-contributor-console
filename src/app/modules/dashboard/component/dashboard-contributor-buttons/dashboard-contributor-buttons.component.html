@@ -4,9 +4,13 @@
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center">
         <div class="col-10">
-            <button tabindex="-1" type="button" [ngClass]="{'green':type === 'Individual Contributor'}" class="btn sky-blue button"
+            <button *ngIf="type !== 'exitEasyCLA'" tabindex="-1" type="button"
+                [ngClass]="{'green':type === 'Individual Contributor'}" class="btn sky-blue button"
                 (click)="onClickProceed()">Proceed as a
                 {{type}}</button>
+
+            <button *ngIf="type === 'exitEasyCLA'" tabindex="-1" type="button" [ngClass]="{'red':type === 'exitEasyCLA'}" class="btn sky-blue button"
+                (click)="onClickProceed()">Exit EasyCLA</button>
         </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectModel } from 'src/app/core/models/project';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { AlertService } from 'src/app/shared/services/alert.service';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -17,16 +18,20 @@ export class ClaDashboardComponent implements OnInit {
   individualHightlights: string[];
   corporateContributor = 'Corporate Contributor';
   individualContributor = 'Individual Contributor';
+  exitEasyCLA = 'exitEasyCLA';
   hasError: boolean;
   project = new ProjectModel();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private alertService: AlertService
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    const redirect = this.route.snapshot.queryParamMap.get('redirect');
+    this.storageService.setItem('redirect', redirect);
     this.hasErrorPresent();
   }
 
@@ -62,6 +67,17 @@ export class ClaDashboardComponent implements OnInit {
   onAPILoad(APIType: string) {
     if (APIType === 'Project') {
       this.project = JSON.parse(this.storageService.getItem('project'));
+    }
+  }
+
+
+  onExitEasyCLA() {
+    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    if (redirectUrl !== undefined) {
+      window.open(redirectUrl, '_self');
+    } else {
+      const error = 'Unable to fetch redirect URL, please redirect manually.';
+      this.alertService.error(error);
     }
   }
 
