@@ -63,8 +63,15 @@ export class IndividualDashboardComponent implements OnInit {
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
-        this.status = 'Completed';
         this.individualRequestSignatureModel = response;
+        const url = this.individualRequestSignatureModel.sign_url;
+        if (url) {
+          this.status = 'Completed';
+        } else {
+          this.status = 'Incomplete';
+          const error = 'CLA system is not able to support your request please open a support ticket.';
+          this.alertService.error(error);
+        }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
@@ -76,9 +83,6 @@ export class IndividualDashboardComponent implements OnInit {
     const url = this.individualRequestSignatureModel.sign_url;
     if (url) {
       window.open(url, '_self');
-    } else {
-      const error = 'Something went wrong to request individual signature. Contact your administrator.';
-      this.alertService.error(error);
     }
   }
 
