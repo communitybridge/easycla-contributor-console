@@ -37,7 +37,7 @@
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
                                             company.</div>
 
-                                        <div *ngIf="!noCompanyFound">
+                                        <div *ngIf="!noCompanyFound || form.controls.companyName.valid">
                                             <div class="col-12 item" *ngFor="let organization of organizationList.list"
                                                 (click)="onSelectCompany(organization)">
                                                 <div class="row">
