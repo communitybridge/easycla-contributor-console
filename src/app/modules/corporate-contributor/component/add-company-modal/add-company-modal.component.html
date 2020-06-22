@@ -10,15 +10,15 @@
                         tabindex="-1" class="form-control" />
                     <div
                         *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
-                        <span [hidden]="!form.controls.companyName.errors.required" class="error">
+                        <div [hidden]="!form.controls.companyName.errors.required" class="error">
                             Company name is required
-                        </span>
-                        <span [hidden]="!form.controls.companyName.errors.maxlength" class="error">
+                        </div>
+                        <div [hidden]="!form.controls.companyName.errors.maxlength" class="error">
                             Company name should not be exceed 60 characters
-                        </span>
-                        <span [hidden]="!form.controls.companyName.errors.pattern" class="error">
+                        </div>
+                        <div [hidden]="!form.controls.companyName.errors.pattern" class="error">
                             Company name is invalid.
-                        </span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-12 element">
