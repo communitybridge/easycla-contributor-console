@@ -8,10 +8,18 @@
                 <div class="col-12 element">
                     <input type="text" name="companyName" placeholder="Enter Company Name" formControlName="companyName"
                         tabindex="-1" class="form-control" />
-                    <div *ngIf="!form.controls.companyName.valid && form.controls.companyName.touched">
-                        <span class="error">Company name is required.</span>
+                    <div
+                        *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
+                        <span [hidden]="!form.controls.companyName.errors.required" class="error">
+                            Company name is required
+                        </span>
+                        <span [hidden]="!form.controls.companyName.errors.maxlength" class="error">
+                            Company name should not be exceed 60 characters
+                        </span>
+                        <span [hidden]="!form.controls.companyName.errors.pattern" class="error">
+                            Company name is invalid.
+                        </span>
                     </div>
-
                 </div>
                 <div class="col-12 element">
                     <input type="text" name="companyWebsite"
@@ -34,8 +42,8 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button tabindex="-1" type="button" class="btn inactive" [disabled]="!form.valid" [ngClass]="{'active':form.valid}"
-                    (click)="onClickProceed(successModal)">
+                <button tabindex="-1" type="button" class="btn inactive" [disabled]="!form.valid"
+                    [ngClass]="{'active':form.valid}" (click)="onClickProceed(successModal)">
                     Next
                 </button>
             </div>

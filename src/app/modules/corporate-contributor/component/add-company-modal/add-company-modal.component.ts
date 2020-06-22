@@ -37,8 +37,8 @@ export class AddCompanyModalComponent implements OnInit {
     this.checkboxText1 = 'Create a complete CommunityBridge profile for your company.';
     this.checkboxText2 = ' Leave unchecked if you do not want to create a full profile now.';
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, NameValidator.isValid])],
-      companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid])],
+      companyName: ['', Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9- ]*$'), Validators.maxLength(60)])],
+      companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, , Validators.maxLength(255)])],
     });
   }
 
