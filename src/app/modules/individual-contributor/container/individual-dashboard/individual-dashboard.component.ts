@@ -7,6 +7,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from 'src/app/core/models/active-signature';
 import { IndividualRequestSignatureModel } from 'src/app/core/models/individual-request-signature';
+import { StorageService } from 'src/app/shared/services/storage.service';
 
 @Component({
   selector: 'app-individual-dashboard',
@@ -24,7 +25,8 @@ export class IndividualDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private claContributorService: ClaContributorService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private storageService: StorageService
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
@@ -89,6 +91,8 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   onBackClick() {
-    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId]);
+    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
+      { queryParams: { redirect: redirectUrl } });
   }
 }
