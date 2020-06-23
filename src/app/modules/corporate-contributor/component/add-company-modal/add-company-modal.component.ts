@@ -7,6 +7,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -36,7 +37,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.checkboxText1 = 'Create a complete CommunityBridge profile for your company.';
     this.checkboxText2 = ' Leave unchecked if you do not want to create a full profile now.';
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, Validators.pattern('^[a-zA-Z0-9- ]*$'), Validators.maxLength(60)])],
+      companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
       companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
     });
   }

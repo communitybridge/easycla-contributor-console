@@ -13,6 +13,9 @@
                         <div [hidden]="!form.controls.companyName.errors.required" class="error">
                             Company name is required
                         </div>
+                        <div [hidden]="!form.controls.companyName.errors.minlength" class="error">
+                            Company name should be atleast 2 characters.
+                        </div>
                         <div [hidden]="!form.controls.companyName.errors.maxlength" class="error">
                             Company name should not be exceed 60 characters
                         </div>

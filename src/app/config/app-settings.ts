@@ -12,5 +12,6 @@ export class AppSettings {
     public static HEADER_CONTENT_TYPE = 'application/json';
     public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';
     public static USERNAME_REGEX = '/^[a-zA-Z0-9_]{1,15}$/';
-    public static URL_PATTERN = '^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$';
+    public static COMPANY_NAME_REGEX = '^[a-zA-Z0-9- ]*$';
+    public static URL_PATTERN = '^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[0-9a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$';
 }
