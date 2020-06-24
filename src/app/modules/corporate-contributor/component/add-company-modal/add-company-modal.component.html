@@ -5,7 +5,7 @@
     <form [formGroup]="form">
         <div class="container">
             <div class="row">
-                <div class="col-12 element">
+                <div class="col-10 element">
                     <input type="text" name="companyName" placeholder="Enter Organization Name" formControlName="companyName"
                         tabindex="-1" class="form-control" />
                     <div
@@ -14,13 +14,13 @@
                             Organization name is required
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.minlength" class="error">
-                            Organization name should be atleast 2 characters.
+                            Organization name should be atleast 2 characters
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.maxlength" class="error">
                             Organization name should not be exceed 60 characters
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            Organization name is invalid.
+                            Organization name is invalid
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                         placeholder="Enter Organization Website (http://www.example.com)" formControlName="companyWebsite"
                         tabindex="-1" class="form-control" />
                     <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
-                        <span class="error">Organization website is invalid.</span>
+                        <span class="error">Organization website is invalid</span>
                     </div>
                 </div>
 
