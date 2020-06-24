@@ -1,11 +1,30 @@
 /* Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT */
 
-.add-company-container {
-  padding: 20px 10px 0 10px;
+ .add-company-container {
+  padding: 10px 10px 0 10px;
+  font-family: "SourceSansPro";
 
   .mt-20 {
     margin-top: 20px;
+  }
+
+  .info {
+    font-family: "SourceSansPro";
+    font-size: 12px;
+  }
+
+  .pr-0 {
+    padding-right: 0;
+  }
+
+  .pad-left-5{
+    padding-left: 5px;
+  }
+
+  i {
+    font-size: 14px;
+    color: #8492a6;
   }
 
   .element {
@@ -27,7 +46,7 @@
   }
 
   .buttons {
-    margin-top: 30px;
+    margin-top: 25px;
     .btn {
       color: #ffffff;
       font-size: 14px;
