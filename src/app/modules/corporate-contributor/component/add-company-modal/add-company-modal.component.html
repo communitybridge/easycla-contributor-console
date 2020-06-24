@@ -1,10 +1,10 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<div class="add-company-container">
+ <div class="add-company-container">
     <form [formGroup]="form">
         <div class="container">
-            <div col="row">
+            <div class="row">
                 <div class="col-12 element">
                     <input type="text" name="companyName" placeholder="Enter Organization Name" formControlName="companyName"
                         tabindex="-1" class="form-control" />
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 element">
+                <div class="col-10 element">
                     <input type="text" name="companyWebsite"
                         placeholder="Enter Organization Website (http://www.example.com)" formControlName="companyWebsite"
                         tabindex="-1" class="form-control" />
@@ -33,10 +33,16 @@
                     </div>
                 </div>
 
-                <div class="col-12 mt-20">
-                    <app-checkbox [checked]="isChecked" [message1]="checkboxText1" [message2]="checkboxText2"
-                        (checkboxEmitter)="onClickCheckbox($event)">
-                    </app-checkbox>
+                <div class="col-11 mt-20">
+                    <div class="row">
+                        <div class="col-auto pr-0">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="col info pad-left-5">
+                            You will receive an email from the Linux Foundation with instructions on how to setup a
+                            detailed profile for your Organization
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

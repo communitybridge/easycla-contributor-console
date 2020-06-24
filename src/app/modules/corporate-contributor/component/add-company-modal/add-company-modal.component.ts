@@ -17,7 +17,6 @@ import { AppSettings } from 'src/app/config/app-settings';
 export class AddCompanyModalComponent implements OnInit {
   @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
-  isChecked: boolean;
   checkboxText1: string;
   checkboxText2: string;
   message: string;
@@ -33,25 +32,14 @@ export class AddCompanyModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isChecked = false;
-    this.checkboxText1 = 'Create a complete CommunityBridge profile for your organization.';
-    this.checkboxText2 = ' Leave unchecked if you do not want to create a full profile now.';
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
       companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
     });
   }
 
-  onClickCheckbox(checked) {
-    this.isChecked = checked;
-  }
-
   onClickProceed(content) {
-    if (this.isChecked) {
-      this.ProccedCLAEmitter.emit(true);
-    } else {
-      this.addOrganization(content);
-    }
+    this.addOrganization(content);
   }
 
   openDialog(content) {
@@ -75,10 +63,10 @@ export class AddCompanyModalComponent implements OnInit {
         this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
         this.openDialog(content);
       },
-      () => {
+      (exception) => {
         this.hasError = true;
-        this.title = 'Organization Already Exist';
-        this.message = 'Your organization already exists in our database. Please go back to the search stage in order to find your organization.';
+        this.title = 'Request Failed';
+        this.message = exception.error.Message;
         this.openDialog(content);
       }
     );
