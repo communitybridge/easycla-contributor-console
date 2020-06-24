@@ -60,7 +60,7 @@ export class AddCompanyModalComponent implements OnInit {
       () => {
         this.hasError = false;
         this.title = 'Successfully Added';
-        this.message = 'Your company has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
+        this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
         this.openDialog(content);
       },
       (exception) => {
