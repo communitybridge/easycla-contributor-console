@@ -6,30 +6,30 @@
         <div class="container">
             <div col="row">
                 <div class="col-12 element">
-                    <input type="text" name="companyName" placeholder="Enter Company Name" formControlName="companyName"
+                    <input type="text" name="companyName" placeholder="Enter Organization Name" formControlName="companyName"
                         tabindex="-1" class="form-control" />
                     <div
                         *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
                         <div [hidden]="!form.controls.companyName.errors.required" class="error">
-                            Company name is required
+                            Organization name is required
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.minlength" class="error">
-                            Company name should be atleast 2 characters.
+                            Organization name should be atleast 2 characters.
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.maxlength" class="error">
-                            Company name should not be exceed 60 characters
+                            Organization name should not be exceed 60 characters
                         </div>
                         <div [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            Company name is invalid.
+                            Organization name is invalid.
                         </div>
                     </div>
                 </div>
                 <div class="col-12 element">
                     <input type="text" name="companyWebsite"
-                        placeholder="Enter Company Website (http://www.example.com)" formControlName="companyWebsite"
+                        placeholder="Enter Organization Website (http://www.example.com)" formControlName="companyWebsite"
                         tabindex="-1" class="form-control" />
                     <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
-                        <span class="error">Company website is invalid.</span>
+                        <span class="error">Organization website is invalid.</span>
                     </div>
                 </div>
 
