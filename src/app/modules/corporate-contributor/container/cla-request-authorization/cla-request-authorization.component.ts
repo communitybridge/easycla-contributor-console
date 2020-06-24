@@ -7,10 +7,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { PlatformLocation } from '@angular/common';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { ProjectCompanySingatureModel, SignatureACL } from 'src/app/core/models/project-company-signature';
+import { SignatureACL } from 'src/app/core/models/project-company-signature';
 import { UserModel } from 'src/app/core/models/user';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { CLAManagersModel } from 'src/app/core/models/cla-manager';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -23,8 +24,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   hasError: boolean;
   title: string;
   message: string;
-  projectSignature = new ProjectCompanySingatureModel();
-  managers: SignatureACL[] = [];
+  managers = new CLAManagersModel();
   selectedCompany: string;
   company: OrganizationModel;
   claManagerError: string;
@@ -48,7 +48,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.company = JSON.parse(this.storageService.getItem('selectedCompany'));
     if (this.company) {
       this.selectedCompany = this.company.companyID;
-      this.getProjectCompanySignature();
+      this.getCLAManagers();
     }
   }
 
@@ -103,30 +103,15 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  getProjectCompanySignature() {
-    this.claContributorService.getProjectCompanySignature(this.projectId, this.selectedCompany).subscribe(
-      (response) => {
-        this.projectSignature = response;
-        this.getCLAManagers();
+  getCLAManagers() {
+    this.claContributorService.getProjectCLAManagers(this.projectId, this.selectedCompany).subscribe(
+      (response: CLAManagersModel) => {
+        this.managers = response;
       },
       (exception) => {
         this.claContributorService.handleError(exception);
       }
     );
-  }
-
-  getCLAManagers() {
-    for (const signatures of this.projectSignature.signatures) {
-      if (signatures !== null) {
-        for (const acl of signatures.signatureACL) {
-          this.managers.push(acl);
-        }
-      }
-    }
-
-    if (this.managers.length <= 0) {
-      this.claManagerError = 'No CLA manager found.';
-    }
   }
 
   showDialogModal(content) {

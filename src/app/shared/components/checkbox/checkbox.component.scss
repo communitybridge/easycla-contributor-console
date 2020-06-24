@@ -13,9 +13,6 @@
   user-select: none;
 }
 
-.italic {
-  font-style: italic;
-}
 /* Hide the browser's default checkbox */
 .container input {
   position: absolute;
@@ -44,7 +41,7 @@
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-  background-color: #2196f3;
+  background-color: #0099cc;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

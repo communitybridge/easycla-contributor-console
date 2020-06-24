@@ -14,6 +14,7 @@ import { ProjectCompanySingatureModel } from '../models/project-company-signatur
 import { OrganizationModel, OrganizationListModel } from '../models/organization';
 import { InviteCompanyModel } from '../models/invite-company';
 import { AddCompanyModel } from '../models/add-company';
+import { CLAManagersModel } from '../models/cla-manager';
 
 @Injectable({
   providedIn: 'root'
@@ -72,9 +73,14 @@ export class ClaContributorService {
     return this.httpClient.post<InviteCompanyModel>(url, data);
   }
 
-  getProjectCompanySignature(projectId: string, companyId: string): Observable<ProjectCompanySingatureModel> {
-    const url = this.baseURL + 'v3/signatures/project/' + projectId + '/company/' + companyId;
-    return this.httpClient.get<ProjectCompanySingatureModel>(url);
+  // getProjectCompanySignature(projectId: string, companyId: string): Observable<ProjectCompanySingatureModel> {
+  //   const url = this.baseURL + 'v3/signatures/project/' + projectId + '/company/' + companyId;
+  //   return this.httpClient.get<ProjectCompanySingatureModel>(url);
+  // }
+
+  getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
+    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers';
+    return this.httpClient.get<CLAManagersModel>(url);
   }
 
   addCompany(userId: string, data: any): Observable<AddCompanyModel> {

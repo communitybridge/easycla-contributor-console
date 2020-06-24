@@ -15,26 +15,18 @@
                 </div>
 
                 <div class="col-12 body">
-
                     <div class="row justify-content-center align-items-center">
-                        <div class="col-8">
-                            <table>
-                                <tr class="header">
-                                    <th class="left-border">CLA Manager(s)</th>
-                                    <th class="right-border">Action</th>
-                                </tr>
-                                <tr class="table-border" *ngFor="let manager of managers;let i=index;">
-                                    <td>{{manager.username}}</td>
-                                    <td>
-                                        <span class="request"
-                                            (click)="onClickRequestAuthorization(successModal,manager)">Request
-                                            Authorization</span>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="managers.length <=0">
-                                    <td colspan="2">{{claManagerError}}</td>
-                                </tr>
-                            </table>
+                        <div class="col-8 cla-managers-container">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-12 header">CLA Manager(s) for your company
+                                </div>
+                                <div class="col-12 manager-list">
+                                    <div>
+                                        <app-checkbox checked="false" message1="select All" message2="">
+                                        </app-checkbox>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -71,7 +63,7 @@
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
                     <button tabindex="-1" type="button" class="success-btn" (click)="closeModal()">
-                       Go Back
+                        Go Back
                     </button>
                 </div>
             </div>
