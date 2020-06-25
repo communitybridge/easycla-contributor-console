@@ -59,9 +59,7 @@ export class CorporateDashboardComponent {
     this.hasShowContactAdmin = true;
     this.emptySearchError = true;
     this.noCompanyFound = false;
-    this.hasError = false;
-
-    this.minLengthValidationMsg = 'Minimum 3 characters are required to search company name';
+    this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
@@ -221,7 +219,7 @@ export class CorporateDashboardComponent {
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;
         }
-        // Changed error message from company not found to 3 char required.
+        // Changed error message from organization not found to 3 char required.
         if (this.form.controls.companyName.value.length < 3) {
           this.noCompanyFound = false;
           this.organizationList.list = [];
@@ -253,13 +251,9 @@ export class CorporateDashboardComponent {
     this.open(content);
   }
 
-  onClickAddNewCompany(hasShowCompanyDetailDialog, signedCLANotFoundModal, companyDetailModal) {
-    if (!hasShowCompanyDetailDialog) {
-      this.hasShowContactAdmin = false;
-      this.openWithDismiss(signedCLANotFoundModal);
-    } else {
-      this.openWithDismiss(companyDetailModal);
-    }
+  onClickAddNewCompany(signedCLANotFoundModal) {
+    this.hasShowContactAdmin = false;
+    this.openWithDismiss(signedCLANotFoundModal);
   }
 
   onClickClose() {
