@@ -158,13 +158,14 @@ export class CorporateDashboardComponent {
 
   showICLASignModal(successModal: any) {
     const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
-    this.hasError = false;
+    this.hasError = true;
     this.title = 'Sign ICLA Required';
     this.message = project.project_name + ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
     this.openWithDismiss(successModal);
   }
 
   onClickModalSuccessBtn() {
+    this.modalService.dismissAll();
     if (this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
