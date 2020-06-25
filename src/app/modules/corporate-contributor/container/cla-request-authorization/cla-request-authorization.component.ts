@@ -7,7 +7,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { PlatformLocation } from '@angular/common';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { UserModel } from 'src/app/core/models/user';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { CLAManagersModel, CLAManagerModel } from 'src/app/core/models/cla-manager';
@@ -125,7 +124,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
       () => {
         this.hasError = true;
         this.title = 'Request Failed';
-        this.message = 'A request is failed due to some technical error please contact your administrator';
+        this.message = 'A request has been failed due to some technical error please contact your administrator';
         this.showDialogModal(content);
       }
     );
