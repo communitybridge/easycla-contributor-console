@@ -15,26 +15,39 @@
                 </div>
 
                 <div class="col-12 body">
-
                     <div class="row justify-content-center align-items-center">
-                        <div class="col-8">
-                            <table>
-                                <tr class="header">
-                                    <th class="left-border">CLA Manager(s)</th>
-                                    <th class="right-border">Action</th>
-                                </tr>
-                                <tr class="table-border" *ngFor="let manager of managers;let i=index;">
-                                    <td>{{manager.username}}</td>
-                                    <td>
-                                        <span class="request"
-                                            (click)="onClickRequestAuthorization(successModal,manager)">Request
-                                            Authorization</span>
-                                    </td>
-                                </tr>
-                                <tr *ngIf="managers.length <=0">
-                                    <td colspan="2">{{claManagerError}}</td>
-                                </tr>
-                            </table>
+                        <div class="col-8 cla-managers-container">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-12 header">CLA Manager(s) for your Organization
+                                </div>
+                                <div class="col-12 error" *ngIf="!managers.list">{{claManagerError}}</div>
+                                <div *ngIf="managers.list" class="col-12 manager-list">
+                                    <div class="item">
+                                        <app-checkbox [checked]="hasSelectAll" text="Select All"
+                                            (checkboxEmitter)="onClickSelectAll($event)">
+                                        </app-checkbox>
+                                    </div>
+                                    <div class="separator"></div>
+                                    <div class="scrollable">
+                                        <div *ngFor="let manager of managers.list" class="item">
+                                            <app-checkbox [checked]="manager.hasChecked" [text]="manager.name"
+                                                (checkboxEmitter)="onClickCheckbox($event,manager)">
+                                            </app-checkbox>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 buttons">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-auto">
+                                <button tabindex="-1" type="button" class="btn active"
+                                    (click)="onClickRequestAuthorization(successModal)">
+                                    Request Authorization
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -46,7 +59,7 @@
                                 </button>
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button tabindex="-1" type="button" class="btn active" (click)="exitEasyCLA()">
+                                <button tabindex="-1" type="button" class="btn" (click)="exitEasyCLA()">
                                     Exit EasyCLA
                                 </button>
                             </div>
@@ -71,7 +84,7 @@
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
                     <button tabindex="-1" type="button" class="success-btn" (click)="closeModal()">
-                       Go Back
+                        Go Back
                     </button>
                 </div>
             </div>

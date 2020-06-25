@@ -7,10 +7,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { PlatformLocation } from '@angular/common';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { ProjectCompanySingatureModel, SignatureACL } from 'src/app/core/models/project-company-signature';
-import { UserModel } from 'src/app/core/models/user';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { CLAManagersModel, CLAManagerModel } from 'src/app/core/models/cla-manager';
+import { ProjectModel } from 'src/app/core/models/project';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -23,11 +23,11 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   hasError: boolean;
   title: string;
   message: string;
-  projectSignature = new ProjectCompanySingatureModel();
-  managers: SignatureACL[] = [];
+  managers = new CLAManagersModel();
   selectedCompany: string;
   company: OrganizationModel;
   claManagerError: string;
+  hasSelectAll: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,11 +44,12 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.hasSelectAll = false;
     this.claManagerError = 'Wait... we are loading CLA manager(s).';
     this.company = JSON.parse(this.storageService.getItem('selectedCompany'));
     if (this.company) {
       this.selectedCompany = this.company.companyID;
-      this.getProjectCompanySignature();
+      this.getCLAManagers();
     }
   }
 
@@ -58,32 +59,74 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.router.navigate([url]);
   }
 
-  onClickRequestAuthorization(content: any, manager: SignatureACL) {
-    this.callRequestAuthorization(content, manager);
+  onClickSelectAll(status) {
+    this.hasSelectAll = status;
+    this.managers.list.map(manager => manager.hasChecked = status);
   }
 
-  callRequestAuthorization(content: any, manager: SignatureACL) {
-    const user: UserModel = JSON.parse(this.storageService.getItem('user'));
-    this.title = 'Request Submitted';
-    this.message = 'The CLA Manager for ' + this.company.companyName + ' will be notified of your request to be authorized for contributions.' +
-      ' You will be notified via email when the status has been approved or rejected.';
-    if (user.user_emails === null) {
-      this.alertService.error('User email id is not found on github.')
-      return false;
+  onClickCheckbox(status, manager: CLAManagerModel) {
+    manager.hasChecked = status;
+    if (!manager.hasChecked) {
+      this.hasSelectAll = status;
     }
+    if (this.hasAllManagerChecked()) {
+      this.hasSelectAll = true;
+    }
+  }
+
+  hasAllManagerChecked() {
+    for (const manager of this.managers.list) {
+      if (!manager.hasChecked) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getSelectedCLAManagers() {
+    const list = [];
+    for (const manager of this.managers.list) {
+      if (manager.hasChecked) {
+        list.push({
+          email: manager.email,
+          name: manager.name
+        });
+      }
+    }
+    return list;
+  }
+
+  onClickRequestAuthorization(content: any) {
+    this.alertService.clearAlert();
+    if (this.getSelectedCLAManagers().length > 0) {
+      this.notifyCLAManagers(content);
+    } else {
+      this.alertService.error('Please select atleast one CLA manager.');
+    }
+  }
+
+  notifyCLAManagers(content: any) {
+    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
     const data = {
-      contributorId: user.user_id,
-      contributorName: user.user_github_username,
-      contributorEmail: user.user_emails[0],
-      message: 'Please add me.',
-      recipientName: manager.username,
-      recipientEmail: manager.lfEmail,
+      companyName: this.company.companyName,
+      projectName: project.project_name,
+      userID: this.userId,
+      list: this.getSelectedCLAManagers()
     };
-    this.claContributorService.requestToBeOnCompanyApprovedList(this.selectedCompany, this.projectId, data).subscribe(
+    this.claContributorService.notifyCLAMangers(data).subscribe(
       () => {
+        this.hasError = false;
+        this.title = 'Request Submitted';
+        this.message = 'The CLA Manager for ' + this.company.companyName + ' will be notified of your request to be authorized for contributions.' +
+          ' You will be notified via email when the status has been approved or rejected.';
         this.showDialogModal(content);
+        this.hasSelectAll = false;
+        this.managers.list.map(manager => manager.hasChecked = false); // Reset checkbox.
       },
       () => {
+        this.hasError = true;
+        this.title = 'Request Failed';
+        this.message = 'A request has been failed due to some technical error please contact your administrator';
         this.showDialogModal(content);
       }
     );
@@ -103,30 +146,18 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  getProjectCompanySignature() {
-    this.claContributorService.getProjectCompanySignature(this.projectId, this.selectedCompany).subscribe(
-      (response) => {
-        this.projectSignature = response;
-        this.getCLAManagers();
+  getCLAManagers() {
+    this.claContributorService.getProjectCLAManagers(this.projectId, this.selectedCompany).subscribe(
+      (response: CLAManagersModel) => {
+        this.managers = response;
+        if (this.managers.list.length === 0) {
+          this.claManagerError = 'No CLA manager found.';
+        }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
       }
     );
-  }
-
-  getCLAManagers() {
-    for (const signatures of this.projectSignature.signatures) {
-      if (signatures !== null) {
-        for (const acl of signatures.signatureACL) {
-          this.managers.push(acl);
-        }
-      }
-    }
-
-    if (this.managers.length <= 0) {
-      this.claManagerError = 'No CLA manager found.';
-    }
   }
 
   showDialogModal(content) {

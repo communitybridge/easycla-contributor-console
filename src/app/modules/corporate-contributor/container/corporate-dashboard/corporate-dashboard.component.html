@@ -68,7 +68,7 @@
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                                 <button tabindex="-1" type="button" [disabled]="selectedCompany ===''"
                                     class="btn inactive" [ngClass]="{'active':selectedCompany!==''}"
-                                    (click)="onClickProceed(signedCLANotFoundModal)">
+                                    (click)="onClickProceed(signedCLANotFoundModal,successModal)">
                                     Proceed
                                 </button>
                             </div>
@@ -122,6 +122,27 @@
             </app-modal-header>
             <app-configure-cla-manager-modal (proceedEmitter)="onClickProceedCLAManagerSetting()">
             </app-configure-cla-manager-modal>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #successModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <div class="row justify-content-center success-dialog">
+                <div class="col-auto">
+                    <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
+                    <i *ngIf="hasError" class="fas fas fa-exclamation-triangle logo red"></i>
+                </div>
+                <div class="col-12 title">{{title}}</div>
+                <p class="col-11 success-message">{{message}}</p>
+                <div class="col-4">
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickModalSuccessBtn()">
+                        {{hasError?'Proceed':'Exit EasyCLA'}}
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>
