@@ -13,7 +13,7 @@ export class CheckboxComponent {
   @Input() text: string;
   @Output() checkboxEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {}
 
   onCheckboxClick() {
     this.checked = !this.checked;

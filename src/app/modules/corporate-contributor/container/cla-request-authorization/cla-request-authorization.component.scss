@@ -41,6 +41,28 @@
         text-align: left;
         width: 100%;
       }
+
+      .error {
+        padding: 10px 0 10px 14px;
+        text-align: left;
+        font-size: 12px;
+      }
+
+      .manager-list {
+        margin-bottom: 10px;
+        .separator {
+          border: 1px solid #e0e0e0;
+          margin-top: 10px;
+          width: 100%;
+        }
+        .item {
+          padding-top: 10px;
+        }
+        .scrollable {
+          max-height: 90px;
+          overflow-y: auto;
+        }
+      }
     }
 
     .buttons {

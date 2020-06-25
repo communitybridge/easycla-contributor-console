@@ -10,6 +10,7 @@ export class CLAManagerModel {
     project_name: string;
     project_sfid: string;
     user_sfid: string;
+    hasChecked: boolean;
 }
 
 export class CLAManagersModel {

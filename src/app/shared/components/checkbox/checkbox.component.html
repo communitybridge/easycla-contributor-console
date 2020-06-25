@@ -3,6 +3,6 @@
 
 <label class="container">
     <span>{{text}}</span>
-    <input type="checkbox" (click)="onCheckboxClick()">
+    <input type="checkbox" [checked]="checked" (click)="onCheckboxClick()">
     <span class="checkmark"></span>
 </label>

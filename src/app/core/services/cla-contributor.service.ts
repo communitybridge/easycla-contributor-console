@@ -10,7 +10,6 @@ import { UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { ProjectCompanySingatureModel } from '../models/project-company-signature';
 import { OrganizationModel, OrganizationListModel } from '../models/organization';
 import { InviteCompanyModel } from '../models/invite-company';
 import { AddCompanyModel } from '../models/add-company';
@@ -63,20 +62,15 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
-  requestToBeOnCompanyApprovedList(companyId: string, projectId: string, data: any): Observable<any> {
-    const url = this.baseURL + 'v3/company/' + companyId + '/ccla-whitelist-requests/' + projectId;
-    return this.httpClient.post<any>(url, data);
-  }
+  // requestToBeOnCompanyApprovedList(companyId: string, projectId: string, data: any): Observable<any> {
+  //   const url = this.baseURL + 'v3/company/' + companyId + '/ccla-whitelist-requests/' + projectId;
+  //   return this.httpClient.post<any>(url, data);
+  // }
 
   inviteManager(userLFID: string, data: any): Observable<InviteCompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
     return this.httpClient.post<InviteCompanyModel>(url, data);
   }
-
-  // getProjectCompanySignature(projectId: string, companyId: string): Observable<ProjectCompanySingatureModel> {
-  //   const url = this.baseURL + 'v3/signatures/project/' + projectId + '/company/' + companyId;
-  //   return this.httpClient.get<ProjectCompanySingatureModel>(url);
-  // }
 
   getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers';
@@ -86,6 +80,11 @@ export class ClaContributorService {
   addCompany(userId: string, data: any): Observable<AddCompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
     return this.httpClient.post<AddCompanyModel>(url, data);
+  }
+
+  notifyCLAMangers( data: any): Observable<any> {
+    const url = this.v4BaseUrl + 'v4/notify-cla-managers';
+    return this.httpClient.post<any>(url, data);
   }
 
   handleError(errorObj: any) {
