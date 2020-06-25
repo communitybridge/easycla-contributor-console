@@ -10,6 +10,7 @@ import { OrganizationModel, OrganizationListModel } from 'src/app/core/models/or
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { ProjectModel } from 'src/app/core/models/project';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -32,6 +33,9 @@ export class CorporateDashboardComponent {
   noCompanyFound: boolean;
   minLengthValidationMsg: string;
   emptySearchError: boolean;
+  hasError: boolean;
+  title: string;
+  message: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +59,8 @@ export class CorporateDashboardComponent {
     this.hasShowContactAdmin = true;
     this.emptySearchError = true;
     this.noCompanyFound = false;
+    this.hasError = false;
+
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search company name';
 
     this.form = this.formBuilder.group({
@@ -62,9 +68,9 @@ export class CorporateDashboardComponent {
     });
   }
 
-  onClickProceed(signedCLANotFoundModal,) {
+  onClickProceed(signedCLANotFoundModal: any, successModal: any) {
     this.hasShowContactAdmin = true;
-    this.getOrganizationInformation(signedCLANotFoundModal)
+    this.getOrganizationInformation(signedCLANotFoundModal, successModal)
   }
 
   onSelectCompany(organization) {
@@ -74,12 +80,12 @@ export class CorporateDashboardComponent {
     this.form.controls.companyName.setValue(organization.organization_name);
   }
 
-  getOrganizationInformation(signedCLANotFoundModal) {
+  getOrganizationInformation(signedCLANotFoundModal, successModal) {
     this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
       (response) => {
         this.organization = response;
         this.storageService.setItem('selectedCompany', this.organization);
-        this.checkEmployeeeSignature(signedCLANotFoundModal);
+        this.checkEmployeeeSignature(signedCLANotFoundModal, successModal);
       },
       (exception) => {
         this.alertService.error(exception.error.Message);
@@ -87,7 +93,7 @@ export class CorporateDashboardComponent {
     );
   }
 
-  checkEmployeeeSignature(signedCLANotFoundModal) {
+  checkEmployeeeSignature(signedCLANotFoundModal, successModal) {
     this.alertService.clearAlert();
     const data = {
       project_id: this.projectId,
@@ -104,14 +110,75 @@ export class CorporateDashboardComponent {
             this.router.navigate([url]);
           }
         } else {
-          const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
-          this.router.navigate([url]);
+          this.hasCCLARequiredICLA(successModal);
         }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
       }
     );
+  }
+
+  hasCCLARequiredICLA(successModal) {
+    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    if (project.project_ccla_requires_icla_signature) {
+      this.checkIndividualLastSignature(successModal);
+    } else {
+      //Show success and redirect to github.
+      this.showSuccessAndRedirectToGit(successModal);
+    }
+  }
+
+  checkIndividualLastSignature(successModal) {
+    this.claContributorService.getLastIndividualSignature(this.userId, this.projectId).subscribe(
+      (response) => {
+        if (response === null) {
+          // User has no icla, they need one. Redirect to ICLA/
+          this.showICLASignModal(successModal);
+        } else {
+          // get whether icla is up to date
+          if (response.requires_resigning) {
+            this.showICLASignModal(successModal);
+          } else {
+            // show success and redirect to github.
+            this.showSuccessAndRedirectToGit(successModal);
+          }
+        }
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
+  }
+
+  showSuccessAndRedirectToGit(successModal) {
+    this.hasError = false;
+    this.title = 'You are done!';
+    this.message = 'You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.';
+    this.openWithDismiss(successModal);
+  }
+
+  showICLASignModal(successModal: any) {
+    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    this.hasError = false;
+    this.title = 'Sign ICLA Required';
+    this.message = project.project_name + ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
+    this.openWithDismiss(successModal);
+  }
+
+  onClickModalSuccessBtn() {
+    if (this.hasError) {
+      const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
+      this.router.navigate([url]);
+    } else {
+      const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+      if (redirectUrl !== null) {
+        window.open(redirectUrl, '_self');
+      } else {
+        const error = 'Unable to fetch redirect URL.';
+        this.alertService.error(error);
+      }
+    }
   }
 
   onCompanyKeypress(event) {
@@ -159,7 +226,6 @@ export class CorporateDashboardComponent {
           this.noCompanyFound = false;
           this.organizationList.list = [];
         }
-
         this.resetEmptySearchMessage();
       },
       (exception) => {

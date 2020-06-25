@@ -40,17 +40,17 @@ body {
 
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #8492A6;
+  color: #8492a6;
 }
 
 :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: #8492A6;
+  color: #8492a6;
 }
 
 ::-ms-input-placeholder {
   /* Microsoft Edge */
-  color: #8492A6;
+  color: #8492a6;
 }
 
 .success-dialog {
@@ -61,6 +61,9 @@ body {
     }
     &.red {
       color: #ff595a;
+    }
+    &.orange {
+      color: orange;
     }
   }
 

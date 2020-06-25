@@ -120,6 +120,8 @@ export class ClaRequestAuthorizationComponent implements OnInit {
         this.message = 'The CLA Manager for ' + this.company.companyName + ' will be notified of your request to be authorized for contributions.' +
           ' You will be notified via email when the status has been approved or rejected.';
         this.showDialogModal(content);
+        this.hasSelectAll = false;
+        this.managers.list.map(manager => manager.hasChecked = false); // Reset checkbox.
       },
       () => {
         this.hasError = true;

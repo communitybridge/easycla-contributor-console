@@ -62,10 +62,10 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
-  // requestToBeOnCompanyApprovedList(companyId: string, projectId: string, data: any): Observable<any> {
-  //   const url = this.baseURL + 'v3/company/' + companyId + '/ccla-whitelist-requests/' + projectId;
-  //   return this.httpClient.post<any>(url, data);
-  // }
+  getLastIndividualSignature(userId: string, projectId: string,): Observable<any> {
+    const url = this.baseURL + 'v2/user/' + userId + '/project/' + projectId + '/last-signature';
+    return this.httpClient.get<InviteCompanyModel>(url);
+  }
 
   inviteManager(userLFID: string, data: any): Observable<InviteCompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
@@ -82,7 +82,7 @@ export class ClaContributorService {
     return this.httpClient.post<AddCompanyModel>(url, data);
   }
 
-  notifyCLAMangers( data: any): Observable<any> {
+  notifyCLAMangers(data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/notify-cla-managers';
     return this.httpClient.post<any>(url, data);
   }
