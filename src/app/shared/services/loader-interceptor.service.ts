@@ -30,7 +30,7 @@ export class LoaderInterceptorService implements HttpInterceptor {
     this.hideLoader();
   }
 
-  public showLoader(): void {
+  private showLoader(): void {
     this.loaderService.show();
   }
 

@@ -32,15 +32,17 @@
             <div class="deskop-view">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <ng-container *ngIf="project.project_ccla_enabled">
+                        <ng-container>
                             <app-dashboard-contributor-buttons [type]="corporateContributor"
+                                [hasEnabled]="project.project_ccla_enabled"
                                 (proceedBtnEmitter)="onClickCorporateProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <ng-container *ngIf="project.project_icla_enabled">
+                        <ng-container>
                             <app-dashboard-contributor-buttons [type]="individualContributor"
+                                [hasEnabled]="project.project_icla_enabled"
                                 (proceedBtnEmitter)="onClickIndividualProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>

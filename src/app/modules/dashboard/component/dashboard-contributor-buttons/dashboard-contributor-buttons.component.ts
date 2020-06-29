@@ -10,6 +10,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class DashboardContributorButtonsComponent {
   @Input() type: string;
+  @Input() hasEnabled: boolean;
   @Output() proceedBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
