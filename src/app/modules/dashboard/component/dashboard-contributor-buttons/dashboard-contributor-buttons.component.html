@@ -6,11 +6,14 @@
         <div class="col-10">
             <button *ngIf="type !== 'exitEasyCLA'" tabindex="-1" type="button"
                 [ngClass]="{'green':type === 'Individual Contributor'}" class="btn sky-blue button"
-                (click)="onClickProceed()">Proceed as a
+                (click)="onClickProceed()">Proceed as
+                <span *ngIf="type === 'Individual Contributor'">an</span>
+                <span *ngIf="type !== 'Individual Contributor'">a</span>
                 {{type}}</button>
 
-            <button *ngIf="type === 'exitEasyCLA'" tabindex="-1" type="button" [ngClass]="{'red':type === 'exitEasyCLA'}" class="btn sky-blue button"
-                (click)="onClickProceed()">Exit EasyCLA</button>
+            <button *ngIf="type === 'exitEasyCLA'" tabindex="-1" type="button"
+                [ngClass]="{'red':type === 'exitEasyCLA'}" class="btn sky-blue button" (click)="onClickProceed()">Exit
+                EasyCLA</button>
         </div>
     </div>
 </div>
