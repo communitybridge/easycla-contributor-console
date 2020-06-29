@@ -51,6 +51,10 @@ export class ClaDashboardComponent implements OnInit {
 
 
   onClickCorporateProceed() {
+    if (!this.project.project_ccla_enabled) {
+      this.alertService.error('CCLA is not enabled to this project please contact to your administrator.');
+      return false;
+    }
     if (!this.hasError) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
@@ -58,6 +62,10 @@ export class ClaDashboardComponent implements OnInit {
   }
 
   onClickIndividualProceed() {
+    if (!this.project.project_icla_enabled) {
+      this.alertService.error('ICLA is not enabled to this project please contact to your administrator.');
+      return false;
+    }
     if (!this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
