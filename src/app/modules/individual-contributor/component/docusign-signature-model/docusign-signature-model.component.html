@@ -20,13 +20,14 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                        <div class="col-12 checkItem" *ngFor="let item of checkedItems">
+                        <div class="col-12 checkItem">
                             <div class="row align-items-center">
                                 <div class="col-auto pr-0">
                                     <i class="fas fa-check-circle checkbox green"
                                         [ngClass]="{'green':status==='Completed'}"></i>
                                 </div>
-                                <label class="col pr-0">{{item}}</label>
+                                <label *ngIf="status === 'Completed'" class="col pr-0">Document Ready</label>
+                                <label *ngIf="status !== 'Completed'" class="col pr-0">Generating Document</label>
                             </div>
                         </div>
                     </div>
