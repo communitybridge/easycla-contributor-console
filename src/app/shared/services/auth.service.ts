@@ -8,16 +8,11 @@ import { getAuthURLFromWindow } from 'src/app/config/auth-utils';
 import { StorageService } from './storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ClaConfiguration } from 'src/app/config/cla-config';
-import { Router } from '@angular/router';
 
 (window as any).global = window;
 
 @Injectable()
 export class AuthService {
-
-  constructor(
-    private storageService: StorageService
-  ) { }
 
   auth0 = new auth0.WebAuth({
     clientID: ClaConfiguration.auth0_clientId,
@@ -26,6 +21,10 @@ export class AuthService {
     redirectUri: getAuthURLFromWindow(),
     scope: 'openid email profile'
   });
+
+  constructor(
+    private storageService: StorageService
+  ) { }
 
   public login(): void {
     this.auth0.authorize();
@@ -52,20 +51,6 @@ export class AuthService {
       return new Date().getTime() < gerritUser.expires_at;
     }
     return false;
-  }
-
-  private setSession(authResult): void {
-    // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
-    const sessionData = {
-      access_token: authResult.accessToken,
-      id_token: authResult.idToken,
-      expires_at: expiresAt,
-      userid: authResult.idTokenPayload.nickname,
-      user_email: authResult.idTokenPayload.email,
-      user_name: authResult.idTokenPayload.name
-    }
-    this.storageService.setItem(AppSettings.GERRIT_USER, sessionData);
   }
 
   public logout(): void {
@@ -95,7 +80,7 @@ export class AuthService {
 
   public getUserInfo(): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-      var accessToken = localStorage.getItem('access_token');
+      const accessToken = localStorage.getItem('access_token');
       if (!accessToken) {
         reject('Access Token must exist to fetch profile');
       }
@@ -105,5 +90,19 @@ export class AuthService {
         }
       });
     });
+  }
+
+  private setSession(authResult): void {
+    // Set the time that the access token will expire at
+    const expiresAt = JSON.stringify(authResult.expiresIn * 1000 + new Date().getTime());
+    const sessionData = {
+      access_token: authResult.accessToken,
+      id_token: authResult.idToken,
+      expires_at: expiresAt,
+      userid: authResult.idTokenPayload.nickname,
+      user_email: authResult.idTokenPayload.email,
+      user_name: authResult.idTokenPayload.name
+    }
+    this.storageService.setItem(AppSettings.GERRIT_USER, sessionData);
   }
 }
