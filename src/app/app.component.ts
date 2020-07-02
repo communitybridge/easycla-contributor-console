@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 import { Component } from '@angular/core';
+import { AuthService } from './shared/services/auth.service';
+import { redirectForGerritFlow } from './config/auth-utils';
 
 @Component({
   selector: 'app-root',
@@ -10,5 +12,11 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
+  constructor(
+    public authService: AuthService
+  ) {
+    this.authService.handleAuthentication();
+  }
   title = 'easycla-contributor-console';
 }
+
