@@ -7,8 +7,16 @@ import { Injectable } from '@angular/core';
 export class AppSettings {
     /* eslint-disable */
     public static COOKIE_EXPIRY = (30 * 24 * 60 * 60 * 1000);
-    public static CLA_USER = 'cla-user';
-    public static HAS_GERRIT_USER = 'hasGerritUser';
+    public static PROJECT_ID = 'projectId';
+    public static GERRIT_ID = 'gerritId';
+    public static PROJECT_NAME = 'projectName';
+    public static USER = 'user';
+    public static PROJECT = 'project';
+    public static USER_ID = 'userId';
+    public static CONTRACT_TYPE = 'contractType';
+    public static ID_TOKEN = 'id_token';
+    public static SELECTED_COMPANY = 'selectedCompany';
+    public static REDIRECT = 'redirect';
     public static GERRIT_USER = 'gerritUser';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';

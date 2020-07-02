@@ -1,7 +1,9 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-export const AUTH_ROUTE = '#/auth?';
+import { AppSettings } from './app-settings';
+
+export const AUTH_ROUTE = '#/auth';
 
 const HTTP_PORT = '80';
 const HTTPS_PORT = '443';
@@ -23,9 +25,9 @@ export function getAuthURLFromWindow() {
 }
 
 export function redirectForGerritFlow() {
-    const userId = JSON.parse(this.storageService.getItem('userId'));
-    const contractType = JSON.parse(this.storageService.getItem('userId'));
-    const projectId = JSON.parse(this.storageService.getItem('projectId'));
+    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
+    const contractType = JSON.parse(this.storageService.getItem(AppSettings.CONTRACT_TYPE));
+    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     if (contractType === 'individual') {
         const url = '/individual-dashboard/' + projectId + '/' + userId;
         this.router.navigate([url]);

@@ -58,14 +58,9 @@ export class AuthService {
     this.storageService.removeItem(AppSettings.GERRIT_USER);
   }
 
-  public getIdToken(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      if (this.isAuthenticated() && localStorage.getItem('id_token')) {
-        resolve(localStorage.getItem('id_token'));
-      } else {
-        return reject('Id token not found. Please login.');
-      }
-    });
+  public getIdToken(): string {
+    const tokenId = JSON.parse(this.storageService.getItem(AppSettings.ID_TOKEN))
+    return tokenId;
   }
 
   public parseIdToken(token: string): Promise<any> {
@@ -103,6 +98,7 @@ export class AuthService {
       user_email: authResult.idTokenPayload.email,
       user_name: authResult.idTokenPayload.name
     }
+    this.storageService.setItem(AppSettings.ID_TOKEN, authResult.idToken);
     this.storageService.setItem(AppSettings.GERRIT_USER, sessionData);
   }
 }

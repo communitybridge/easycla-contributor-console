@@ -14,7 +14,6 @@ export class OrganizationModel {
 export class OrganizationListModel {
     list: Organization[];
 }
-
 export class Organization {
     organization_id: string;
     organization_name: string;

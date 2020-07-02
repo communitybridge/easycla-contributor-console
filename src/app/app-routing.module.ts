@@ -38,7 +38,7 @@ const routes: Routes = [
     component: ClaRequestAuthorizationComponent
   },
   {
-    path: 'cla/gerrit/project/:projectId/:contractType',
+    path: 'cla/gerrit/project/:gerritId/:contractType',
     pathMatch: 'full',
     component: GerritDashboardComponent
   },

@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectModel } from 'src/app/core/models/project';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { AppSettings } from 'src/app/config/app-settings';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -31,7 +32,7 @@ export class ClaDashboardComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
     const redirect = this.route.snapshot.queryParamMap.get('redirect');
-    this.storageService.setItem('redirect', redirect);
+    this.storageService.setItem(AppSettings.REDIRECT, redirect);
     this.hasErrorPresent();
   }
 
