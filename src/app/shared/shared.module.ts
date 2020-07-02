@@ -12,6 +12,7 @@ import { StorageService } from './services/storage.service';
 import { ProjectTitleComponent } from './components/project-title/project-title.component';
 import { TrimCharactersPipe } from './pipes/trim-characters';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,6 @@ import { CheckboxComponent } from './components/checkbox/checkbox.component';
         TrimCharactersPipe,
         CheckboxComponent
     ],
-    providers: [StorageService]
+    providers: [StorageService, AuthService]
 })
 export class SharedModule { }

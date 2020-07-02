@@ -11,6 +11,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ProjectModel } from 'src/app/core/models/project';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -82,7 +83,7 @@ export class CorporateDashboardComponent {
     this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
       (response) => {
         this.organization = response;
-        this.storageService.setItem('selectedCompany', this.organization);
+        this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
         this.checkEmployeeeSignature(signedCLANotFoundModal, successModal);
       },
       (exception) => {

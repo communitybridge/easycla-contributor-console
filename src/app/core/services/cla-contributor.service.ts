@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ProjectModel } from '../models/project';
@@ -14,6 +14,10 @@ import { OrganizationModel, OrganizationListModel } from '../models/organization
 import { InviteCompanyModel } from '../models/invite-company';
 import { AddCompanyModel } from '../models/add-company';
 import { CLAManagersModel } from '../models/cla-manager';
+import { AppSettings } from 'src/app/config/app-settings';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { GerritUserModel, GerritModel } from '../models/gerrit';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +28,9 @@ export class ClaContributorService {
 
   constructor(
     private httpClient: HttpClient,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private storageService: StorageService,
+    private authService: AuthService
   ) { }
 
   getUser(userId: string): Observable<UserModel> {
@@ -62,9 +68,24 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
-  getLastIndividualSignature(userId: string, projectId: string,): Observable<any> {
+  getLastIndividualSignature(userId: string, projectId: string): Observable<any> {
     const url = this.baseURL + 'v2/user/' + userId + '/project/' + projectId + '/last-signature';
     return this.httpClient.get<InviteCompanyModel>(url);
+  }
+
+  getGerrit(gerritId: string): Observable<GerritModel> {
+    const url = this.baseURL + 'v2/gerrit/' + gerritId;
+    return this.httpClient.get<GerritModel>(url, this.getHeaders());
+  }
+
+  getGerritUserInfo(): Observable<GerritUserModel> {
+    const url = this.baseURL + 'v1/user/gerrit';
+    return this.httpClient.post<GerritUserModel>(url, '', this.getHeaders());
+  }
+
+  getGerritProjectInfo(projectId: string): Observable<ProjectModel> {
+    const url = this.baseURL + 'v2/project/' + projectId;
+    return this.httpClient.get<ProjectModel>(url, this.getHeaders());
   }
 
   inviteManager(userLFID: string, data: any): Observable<InviteCompanyModel> {
@@ -97,5 +118,24 @@ export class ClaContributorService {
         }
       }
     }
+  }
+
+  getHeaders() {
+    return { headers: this.getHttpClientHeaders() };
+  }
+
+  private getHttpClientHeaders(): HttpHeaders {
+    const tokenId = this.authService.getIdToken();
+    if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
+      return new HttpHeaders({
+        'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
+        Accept: AppSettings.HEADER_CONTENT_TYPE,
+        Authorization: 'Bearer ' + tokenId
+      });
+    }
+    return new HttpHeaders({
+      'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
+      Accept: AppSettings.HEADER_CONTENT_TYPE
+    });
   }
 }
