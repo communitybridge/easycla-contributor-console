@@ -7,6 +7,8 @@ import { Injectable } from '@angular/core';
 export class AppSettings {
     /* eslint-disable */
     public static COOKIE_EXPIRY = (30 * 24 * 60 * 60 * 1000);
+    public static GERRIT = 'Gerrit';
+    public static GITHUB = 'Github';
     public static PROJECT_ID = 'projectId';
     public static GERRIT_ID = 'gerritId';
     public static PROJECT_NAME = 'projectName';

@@ -8,6 +8,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { GerritUserModel, GerritModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-page-not-found',
@@ -26,7 +27,8 @@ export class PageNotFoundComponent implements OnInit {
     private authService: AuthService,
     private storageService: StorageService,
     private router: Router,
-    private claContributorService: ClaContributorService
+    private claContributorService: ClaContributorService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit(): void {
@@ -57,7 +59,8 @@ export class PageNotFoundComponent implements OnInit {
         this.redirectForGerritFlow();
       },
       (exception) => {
-        this.claContributorService.handleError(exception);
+        this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
+        this.alertService.error(exception.error);
       }
     );
   }

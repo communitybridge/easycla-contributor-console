@@ -47,7 +47,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.1.1",
     "@types/auth0-js": "^8.11.7",
-    "@types/node": "^8.0.17",
+    "@types/node": "^12.11.1",
     "auth0-js": "^9.13.2",
     "bootstrap": "^4.4.0",
     "rxjs": "~6.5.4",
