@@ -17,7 +17,9 @@ export class GerritDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private storageService: StorageService,
     private authService: AuthService
-  ) { }
+  ) { 
+    this.storageService.removeGithubItems();
+  }
 
   ngOnInit(): void {
     this.gerritId = this.route.snapshot.paramMap.get('gerritId');

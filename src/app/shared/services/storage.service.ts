@@ -50,6 +50,19 @@ export class StorageService {
     localStorage.removeItem(key);
   }
 
+  removeGerritItems<T>() {
+    localStorage.removeItem(AppSettings.GERRIT_ID);
+    localStorage.removeItem(AppSettings.GERRIT_USER);
+    localStorage.removeItem(AppSettings.ID_TOKEN);
+    localStorage.removeItem(AppSettings.CONTRACT_TYPE);
+    localStorage.removeItem(AppSettings.SELECTED_COMPANY);
+  }
+
+  removeGithubItems<T>() {
+    localStorage.removeItem(AppSettings.USER);
+    localStorage.removeItem(AppSettings.SELECTED_COMPANY);
+  }
+
   removeAll<T>() {
     localStorage.clear();
   }

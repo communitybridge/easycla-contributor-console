@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from 'src/app/core/models/active-signature';
 import { IndividualRequestSignatureModel } from 'src/app/core/models/individual-request-signature';
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-individual-dashboard',
@@ -18,6 +19,7 @@ export class IndividualDashboardComponent implements OnInit {
   projectId: string;
   userId: string;
   status: string;
+  gerritId: string;
   activeSignatureModel = new ActiveSignatureModel();
   individualRequestSignatureModel = new IndividualRequestSignatureModel();
 
@@ -33,8 +35,13 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.gerritId = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_ID));
     this.status = 'Pending';
-    this.findActiveSignature();
+    if (this.gerritId) {
+      this.postIndivdualRequestSignature();
+    } else {
+      this.findActiveSignature();
+    }
   }
 
   findActiveSignature() {
@@ -60,8 +67,8 @@ export class IndividualDashboardComponent implements OnInit {
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
-      return_url_type: 'Github',
-      return_url: this.activeSignatureModel.return_url
+      return_url_type: this.gerritId ? AppSettings.GERRIT : AppSettings.GITHUB,
+      return_url: this.gerritId ? '' : this.activeSignatureModel.return_url
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
@@ -92,7 +99,14 @@ export class IndividualDashboardComponent implements OnInit {
 
   onBackClick() {
     const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
-    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
-      { queryParams: { redirect: redirectUrl } });
+    if (!this.gerritId) {
+      // Redirect to Github home page.
+      this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
+        { queryParams: { redirect: redirectUrl } });
+    } else {
+      // Redirect to Gerrit home page.
+      // TODO handle Gerritredirection. 
+      this.alertService.error('Gerrit redirect url not found');
+    }
   }
 }
