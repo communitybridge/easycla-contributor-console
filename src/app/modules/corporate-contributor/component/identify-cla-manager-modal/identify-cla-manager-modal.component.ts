@@ -11,7 +11,6 @@ import { ProjectModel } from 'src/app/core/models/project';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
-import { InviteCompanyModel } from 'src/app/core/models/invite-company';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -64,28 +63,36 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
-        (response: InviteCompanyModel) => {
-          this.hasError = false;
-          this.title = 'Notification Sent';
-          this.message = 'An email has been sent to "' + response.email + '" to request that they start the CLA signature process.';
-          if (hasCompanyAdmin) {
-            this.title = 'Request Submitted to Company Admin';
-            this.message = 'Your Company Admin has been contacted, you will need to follow up with them to process your CLA request.';
-          }
-          this.openDialogModal(content);
+        () => {
+          this.handleSuccess(hasCompanyAdmin, content);
         },
         (exception) => {
           console.log(exception);
-          this.hasError = true;
-          this.title = 'Request Failed';
-          this.message = 'Your request is Failed due to internal server error please try later.';
-          if (exception.error?.Message) {
-            this.message = exception.error.Message;
-          }
-          this.openDialogModal(content);
+          this.handleError(exception, content);
         }
       );
     }
+  }
+
+  handleSuccess(hasCompanyAdmin, content) {
+    this.hasError = false;
+    this.title = 'Notification Sent';
+    this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
+    if (hasCompanyAdmin) {
+      this.title = 'Request Submitted to Company Admin';
+      this.message = 'Your Company Admin has been contacted, you will need to follow up with them to process your CLA request.';
+    }
+    this.openDialogModal(content);
+  }
+
+  handleError(exception, content) {
+    this.hasError = true;
+    this.title = 'Request Failed';
+    this.message = 'Your request is Failed due to internal server error please try later.';
+    if (exception.error?.Message) {
+      this.message = exception.error.Message;
+    }
+    this.openDialogModal(content);
   }
 
   onClickExitCLABtn() {

@@ -101,7 +101,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     if (this.getSelectedCLAManagers().length > 0) {
       this.notifyCLAManagers(content);
     } else {
-      this.alertService.error('Please select atleast one CLA manager.');
+      this.alertService.error('Please select at least one CLA Manager.');
     }
   }
 
