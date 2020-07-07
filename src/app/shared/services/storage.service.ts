@@ -51,7 +51,7 @@ export class StorageService {
   }
 
   removeGerritItems<T>() {
-    localStorage.removeItem(AppSettings.GERRIT_ID);
+    localStorage.removeItem(AppSettings.HAS_GERRIT);
     localStorage.removeItem(AppSettings.GERRIT_USER);
     localStorage.removeItem(AppSettings.ID_TOKEN);
     localStorage.removeItem(AppSettings.CONTRACT_TYPE);
