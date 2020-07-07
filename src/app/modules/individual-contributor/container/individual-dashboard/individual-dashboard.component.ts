@@ -19,7 +19,7 @@ export class IndividualDashboardComponent implements OnInit {
   projectId: string;
   userId: string;
   status: string;
-  gerritId: string;
+  hasGerrit: string;
   activeSignatureModel = new ActiveSignatureModel();
   individualRequestSignatureModel = new IndividualRequestSignatureModel();
 
@@ -35,9 +35,9 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gerritId = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_ID));
+    this.hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     this.status = 'Pending';
-    if (this.gerritId) {
+    if (this.hasGerrit) {
       this.postIndivdualRequestSignature();
     } else {
       this.findActiveSignature();
@@ -67,8 +67,8 @@ export class IndividualDashboardComponent implements OnInit {
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
-      return_url_type: this.gerritId ? AppSettings.GERRIT : AppSettings.GITHUB,
-      return_url: this.gerritId ? '' : this.activeSignatureModel.return_url
+      return_url_type: this.hasGerrit ? AppSettings.GERRIT : AppSettings.GITHUB,
+      return_url: this.hasGerrit ? '' : this.activeSignatureModel.return_url
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
@@ -99,14 +99,17 @@ export class IndividualDashboardComponent implements OnInit {
 
   onBackClick() {
     const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
-    if (!this.gerritId) {
+    if (!this.hasGerrit) {
       // Redirect to Github home page.
       this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
         { queryParams: { redirect: redirectUrl } });
     } else {
-      // Redirect to Gerrit home page.
-      // TODO handle Gerritredirection. 
-      this.alertService.error('Gerrit redirect url not found');
+      if (redirectUrl !== null) {
+        window.open(redirectUrl, '_self');
+      } else {
+        const error = 'Unable to fetch redirect URL.';
+        this.alertService.error(error);
+      }
     }
   }
 }
