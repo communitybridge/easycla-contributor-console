@@ -29,6 +29,7 @@ export class ClaDashboardComponent implements OnInit {
     private storageService: StorageService,
     private alertService: AlertService
   ) {
+    this.storageService.setItem(AppSettings.HAS_GERRIT, false);
     this.storageService.removeGerritItems();
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');

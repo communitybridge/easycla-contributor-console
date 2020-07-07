@@ -6,7 +6,7 @@ import { StorageService } from '../../services/storage.service';
 import { Router } from '@angular/router';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { GerritUserModel, GerritModel } from 'src/app/core/models/gerrit';
+import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AlertService } from '../../services/alert.service';
 
@@ -20,7 +20,7 @@ export class PageNotFoundComponent implements OnInit {
   message: string;
   contractType: string;
   projectId: string;
-  gerritId: string;
+  hasGerrit: string;
   userId: string;
 
   constructor(
@@ -33,9 +33,10 @@ export class PageNotFoundComponent implements OnInit {
 
   ngOnInit(): void {
     this.contractType = JSON.parse(this.storageService.getItem(AppSettings.CONTRACT_TYPE));
-    this.gerritId = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_ID));
+    this.hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
 
-    if (this.gerritId) {
+    if (this.hasGerrit) {
       this.message = 'You are being redirected to the ' + this.contractType + ' console.';
     } else {
       this.message = 'The page you are looking for was not found.';
@@ -43,7 +44,8 @@ export class PageNotFoundComponent implements OnInit {
 
     setTimeout(() => {
       if (this.authService.isAuthenticated()) {
-        this.getGerrit();
+        this.getGerritProjectInfo();
+        this.getUserInfo();
       } else {
         this.message = 'The page you are looking for was not found.';
       }
@@ -61,21 +63,6 @@ export class PageNotFoundComponent implements OnInit {
       (exception) => {
         this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
         this.alertService.error(exception.error);
-      }
-    );
-  }
-
-  getGerrit() {
-    this.claContributorService.getGerrit(this.gerritId).subscribe(
-      (response: GerritModel) => {
-        this.projectId = response.project_id;
-        this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
-        this.getGerritProjectInfo();
-        this.getUserInfo();
-      },
-      (exception) => {
-        this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
-        this.claContributorService.handleError(exception);
       }
     );
   }

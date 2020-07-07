@@ -27,8 +27,8 @@ export class ProjectTitleComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const gerritId = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_ID));
-    if (gerritId) {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    if (hasGerrit) {
       this.project.project_name = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_NAME));
     } else {
       this.validateGithubFlow();

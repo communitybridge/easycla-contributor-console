@@ -10,7 +10,7 @@ export class AppSettings {
     public static GERRIT = 'Gerrit';
     public static GITHUB = 'Github';
     public static PROJECT_ID = 'projectId';
-    public static GERRIT_ID = 'gerritId';
+    public static HAS_GERRIT = 'hasGerrit';
     public static PROJECT_NAME = 'projectName';
     public static USER = 'user';
     public static PROJECT = 'project';
