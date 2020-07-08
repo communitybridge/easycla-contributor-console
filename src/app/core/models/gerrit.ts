@@ -18,16 +18,3 @@ export class GerritUserModel {
     version: string;
 }
 
-export class GerritModel {
-    date_created: Date;
-    date_modified: Date;
-    gerrit_id: string;
-    gerrit_name: string;
-    gerrit_url: string;
-    group_id_ccla: string;
-    group_id_icla: string;
-    group_name_ccla: string;
-    group_name_icla: string;
-    project_id: string;
-    version: string;
-}
