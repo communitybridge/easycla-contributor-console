@@ -17,7 +17,7 @@ import { CLAManagersModel } from '../models/cla-manager';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { GerritUserModel, GerritModel } from '../models/gerrit';
+import { GerritUserModel } from '../models/gerrit';
 
 @Injectable({
   providedIn: 'root'
@@ -71,11 +71,6 @@ export class ClaContributorService {
   getLastIndividualSignature(userId: string, projectId: string): Observable<any> {
     const url = this.baseURL + 'v2/user/' + userId + '/project/' + projectId + '/last-signature';
     return this.httpClient.get<InviteCompanyModel>(url);
-  }
-
-  getGerrit(gerritId: string): Observable<GerritModel> {
-    const url = this.baseURL + 'v2/gerrit/' + gerritId;
-    return this.httpClient.get<GerritModel>(url, this.getHeaders());
   }
 
   getGerritUserInfo(): Observable<GerritUserModel> {
