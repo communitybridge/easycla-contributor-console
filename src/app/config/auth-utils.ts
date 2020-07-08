@@ -3,7 +3,7 @@
 
 import { AppSettings } from './app-settings';
 
-export const AUTH_ROUTE = '#/auth';
+export const AUTH_ROUTE = 'auth';
 
 const HTTP_PORT = '80';
 const HTTPS_PORT = '443';
