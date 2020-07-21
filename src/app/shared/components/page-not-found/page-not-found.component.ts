@@ -22,6 +22,7 @@ export class PageNotFoundComponent implements OnInit {
   projectId: string;
   hasGerrit: string;
   userId: string;
+  actionType: string;
 
   constructor(
     private authService: AuthService,
@@ -34,22 +35,44 @@ export class PageNotFoundComponent implements OnInit {
   ngOnInit(): void {
     this.contractType = JSON.parse(this.storageService.getItem(AppSettings.CONTRACT_TYPE));
     this.hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    this.actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
     this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
+    this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
 
-    if (this.hasGerrit) {
-      this.message = 'You are being redirected to the ' + this.contractType + ' console.';
-    } else {
-      this.message = 'The page you are looking for was not found.';
-    }
+    this.setMessage();
 
     setTimeout(() => {
       if (this.authService.isAuthenticated()) {
-        this.getGerritProjectInfo();
-        this.getUserInfo();
+        this.performActionAsPerType();
       } else {
         this.message = 'The page you are looking for was not found.';
       }
     }, 2000);
+  }
+
+  setMessage() {
+    if (this.actionType === AppSettings.ADD_ORGANIZATION) {
+      this.message = 'Wait... we are completing authentication process.';
+    } else if (this.actionType === AppSettings.SIGN_CLA) {
+      this.message = 'Wait... You are being redirected to the the Corporate Console.';
+    } else if (this.hasGerrit) {
+      this.message = 'You are being redirected to the ' + this.contractType + ' console.';
+    } else {
+      this.message = 'The page you are looking for was not found.';
+    }
+  }
+
+  performActionAsPerType() {
+    if (this.actionType === AppSettings.ADD_ORGANIZATION) {
+      // Create organization and redirect to the CLA not found page.
+      const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
+      this.router.navigate([url], { queryParams: { view: AppSettings.ADD_ORGANIZATION } });
+    } else if (this.actionType === AppSettings.SIGN_CLA) {
+      // redirect to the LFX corporate console link.
+    } else if (this.hasGerrit) {
+      this.getGerritProjectInfo();
+      this.getUserInfo();
+    }
   }
 
   getUserInfo() {

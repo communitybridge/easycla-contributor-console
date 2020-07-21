@@ -55,11 +55,15 @@ export class StorageService {
     localStorage.removeItem(AppSettings.ID_TOKEN);
     localStorage.removeItem(AppSettings.CONTRACT_TYPE);
     localStorage.removeItem(AppSettings.SELECTED_COMPANY);
+    localStorage.removeItem(AppSettings.ACTION_TYPE);
+    localStorage.removeItem(AppSettings.ACTION_DATA);
   }
 
   removeGithubItems<T>() {
     localStorage.removeItem(AppSettings.USER);
     localStorage.removeItem(AppSettings.SELECTED_COMPANY);
+    localStorage.removeItem(AppSettings.ACTION_TYPE);
+    localStorage.removeItem(AppSettings.ACTION_DATA);
   }
 
   removeAll<T>() {

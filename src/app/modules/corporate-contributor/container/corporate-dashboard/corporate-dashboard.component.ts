@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,6 +20,8 @@ import { AppSettings } from 'src/app/config/app-settings';
 })
 export class CorporateDashboardComponent {
   @ViewChild('dropdown') dropdown: ElementRef;
+  @ViewChild('addCompany') addCompany: TemplateRef<any>;
+
   selectedCompany: string;
   searchBoxValue: string;
   searchTimeout = null;
@@ -37,6 +39,7 @@ export class CorporateDashboardComponent {
   hasError: boolean;
   title: string;
   message: string;
+  openView: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,6 +53,7 @@ export class CorporateDashboardComponent {
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
+    this.openView = this.route.snapshot.queryParamMap.get('view');
     this.searchBoxValue = '';
     this.location.onPopState(() => this.modalService.dismissAll());
   }
@@ -65,11 +69,21 @@ export class CorporateDashboardComponent {
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
     });
+
+    this.openAddOrganizationModal();
   }
 
   onClickProceed(signedCLANotFoundModal: any, successModal: any) {
     this.hasShowContactAdmin = true;
     this.getOrganizationInformation(signedCLANotFoundModal, successModal)
+  }
+
+  openAddOrganizationModal() {
+    setTimeout(() => {
+      if (this.openView === AppSettings.ADD_ORGANIZATION) {
+        this.open(this.addCompany);
+      }
+    }, 250);
   }
 
   onSelectCompany(organization) {

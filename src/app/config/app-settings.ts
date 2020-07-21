@@ -20,6 +20,10 @@ export class AppSettings {
     public static SELECTED_COMPANY = 'selectedCompany';
     public static REDIRECT = 'redirect';
     public static GERRIT_USER = 'gerritUser';
+    public static ACTION_TYPE = 'actionType';
+    public static ACTION_DATA = 'actionData';
+    public static ADD_ORGANIZATION = 'addOrganization';
+    public static SIGN_CLA = 'signCLA';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';
     public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';
@@ -27,3 +31,5 @@ export class AppSettings {
     public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
     public static URL_PATTERN = '^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[0-9a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$';
 }
+
+

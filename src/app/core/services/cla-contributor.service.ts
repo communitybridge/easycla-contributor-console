@@ -119,6 +119,17 @@ export class ClaContributorService {
     return { headers: this.getHttpClientHeaders() };
   }
 
+  getUserLFID(): string {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_USER));
+    if (hasGerrit) {
+      return gerritUserModel.lf_username;
+    } else {
+      return userModel.lf_username;
+    }
+  }
+
   private getHttpClientHeaders(): HttpHeaders {
     const tokenId = this.authService.getIdToken();
     if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
