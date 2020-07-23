@@ -3,6 +3,7 @@
 export class ProjectModel {
     date_created: Date;
     date_modified: Date;
+    foundation_sfid: string;
     project_acl: string[];
     project_ccla_enabled: boolean;
     project_ccla_requires_icla_signature: boolean;

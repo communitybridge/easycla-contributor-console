@@ -130,6 +130,12 @@ export class ClaContributorService {
     }
   }
 
+  getLFXCorporateURL(): string {
+    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
+    const url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_id + '/cla';
+    return url;
+  }
+
   private getHttpClientHeaders(): HttpHeaders {
     const tokenId = this.authService.getIdToken();
     if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {

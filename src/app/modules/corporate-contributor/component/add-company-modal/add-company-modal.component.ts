@@ -17,6 +17,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 })
 export class AddCompanyModalComponent implements OnInit {
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
   @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   checkboxText1: string;
@@ -64,15 +65,28 @@ export class AddCompanyModalComponent implements OnInit {
       companyWebsite: this.form.controls.companyWebsite.value
     };
     if (!this.authService.isAuthenticated()) {
-      this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.ADD_ORGANIZATION);
-      this.storageService.setItem(AppSettings.ACTION_DATA, data);
-      this.authService.login();
+      this.openDialog(this.WarningModal);
     } else {
       this.addOrganization();
     }
   }
 
+  onClickProccedWithLFLogin() {
+    this.redirectToLFLogin();
+  }
+
+  redirectToLFLogin() {
+    const data = {
+      companyName: this.form.controls.companyName.value,
+      companyWebsite: this.form.controls.companyWebsite.value
+    };
+    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.ADD_ORGANIZATION);
+    this.storageService.setItem(AppSettings.ACTION_DATA, data);
+    this.authService.login();
+  }
+
   openDialog(content) {
+    this.modalService.dismissAll();
     this.modelRef = this.modalService.open(content, {
       centered: true,
       backdrop: 'static'
@@ -104,7 +118,9 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     if (!this.hasError) {
-      this.ProccedCLAEmitter.emit(false);
+      // this.ProccedCLAEmitter.emit(false);
+      const url = this.claContributorService.getLFXCorporateURL();
+      window.open(url, '_self');
     } else {
       this.modelRef.close();
     }

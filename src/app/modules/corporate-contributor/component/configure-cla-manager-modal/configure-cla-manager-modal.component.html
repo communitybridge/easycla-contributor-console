@@ -17,9 +17,31 @@
 
     <div class="row justify-content-center mt-20">
         <div class="col-5">
-            <button tabindex="-1" type="button" class="btn" [ngClass]="{'active':isProcessed}" (click)="onClickProceedBtn()">
+            <button tabindex="-1" type="button" class="btn" [ngClass]="{'active':isProcessed}"
+                (click)="onClickProceedBtn()">
                 Procced
             </button>
         </div>
     </div>
 </div>
+
+<ng-template #WarningModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <div class="row justify-content-center success-dialog">
+                <div class="col-auto">
+                    <i class="fas fa-exclamation-triangle logo orange"></i>
+                </div>
+                <div class="col-12 title">LF Login Required</div>
+                <p class="col-11 success-message">You are missing a LF Login to proceed to next step. We will be
+                    redirecting you to LF Login screen, once you have created a LF Login you will be redirected to
+                    complete CLA process</p>
+                <div class="col-4">
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickProccedWithLFLogin()">
+                        Procced
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

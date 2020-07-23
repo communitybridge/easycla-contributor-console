@@ -69,6 +69,8 @@ export class PageNotFoundComponent implements OnInit {
       this.router.navigate([url], { queryParams: { view: AppSettings.ADD_ORGANIZATION } });
     } else if (this.actionType === AppSettings.SIGN_CLA) {
       // redirect to the LFX corporate console link.
+      const url = this.claContributorService.getLFXCorporateURL();
+      window.open(url, '_self');
     } else if (this.hasGerrit) {
       this.getGerritProjectInfo();
       this.getUserInfo();

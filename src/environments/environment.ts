@@ -8,6 +8,7 @@
 export const environment = {
   production: false,
   baseUrl: 'https://api.dev.lfcla.com/',
+  lfxCorporateUrl: 'https://lfx.dev.platform.linuxfoundation.org/',
   v4BaseUrl: 'https://api-gw.dev.platform.linuxfoundation.org/cla-service/'
 };
 
