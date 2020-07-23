@@ -11,6 +11,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
 import { OrganizationModel, OrganizationListModel } from '../models/organization';
+import { EmployeeSignatureModel } from '../models/employee-signature';
 import { InviteCompanyModel } from '../models/invite-company';
 import { AddCompanyModel } from '../models/add-company';
 import { CLAManagersModel } from '../models/cla-manager';
@@ -66,6 +67,11 @@ export class ClaContributorService {
   CheckPreparedEmployeeSignature(data: any): Observable<any> {
     const url = this.baseURL + 'v2/check-prepare-employee-signature';
     return this.httpClient.post<any>(url, data);
+  }
+
+  postEmployeeSignatureRequest(signatureRequest: any): Observable<EmployeeSignatureModel> {
+    const url: string = this.baseURL + 'v2/request-employee-signature';
+    return this.httpClient.post<EmployeeSignatureModel>(url, signatureRequest);
   }
 
   getLastIndividualSignature(userId: string, projectId: string): Observable<any> {
