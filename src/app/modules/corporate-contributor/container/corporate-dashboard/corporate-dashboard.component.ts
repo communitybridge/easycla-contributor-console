@@ -12,7 +12,6 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AppSettings } from 'src/app/config/app-settings';
-import { EmployeeSignatureModel } from 'src/app/core/models/employee-signature';
 
 @Component({
   selector: 'app-corporate-dashboard',
