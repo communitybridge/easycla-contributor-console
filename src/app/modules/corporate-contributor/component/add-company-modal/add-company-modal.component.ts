@@ -60,10 +60,6 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onClickProceed() {
-    const data = {
-      companyName: this.form.controls.companyName.value,
-      companyWebsite: this.form.controls.companyWebsite.value
-    };
     if (!this.authService.isAuthenticated()) {
       this.openDialog(this.WarningModal);
     } else {
