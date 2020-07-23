@@ -124,8 +124,26 @@ export class CorporateDashboardComponent {
       this.checkIndividualLastSignature(successModal);
     } else {
       //Show success and redirect to github.
-      this.showSuccessAndRedirectToGit(successModal);
+      this.postEmployeeSignatureRequest(successModal);
     }
+  }
+
+  postEmployeeSignatureRequest(successModal) {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const signatureRequest = {
+      project_id: this.projectId,
+      company_id: this.organization.companyID,
+      user_id: this.userId,
+      return_url_type: hasGerrit ? AppSettings.GERRIT : AppSettings.GITHUB
+    };
+    this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
+      () => {
+        this.showSuccessAndRedirectToGit(successModal);
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   checkIndividualLastSignature(successModal) {
