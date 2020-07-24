@@ -158,7 +158,7 @@ export class CorporateDashboardComponent {
             this.showICLASignModal(successModal);
           } else {
             // show success and redirect to github.
-            this.showSuccessAndRedirectToGit(successModal);
+            this.postEmployeeSignatureRequest(successModal);
           }
         }
       },
