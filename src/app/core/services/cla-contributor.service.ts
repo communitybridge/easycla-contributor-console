@@ -137,8 +137,13 @@ export class ClaContributorService {
   }
 
   getLFXCorporateURL(): string {
+    let url = '';
     const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
-    const url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_id + '/cla';
+    if (project.foundation_sfid) {
+      url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_id + '/cla';
+    } else {
+      url = environment.lfxCorporateUrl + 'project/' + project.project_id + '/cla';
+    }
     return url;
   }
 

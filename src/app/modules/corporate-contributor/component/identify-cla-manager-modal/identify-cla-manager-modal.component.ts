@@ -18,7 +18,6 @@ import { EmailValidator } from 'src/app/shared/validators/email-validator';
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
-  @Input() hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
   title: string;

@@ -28,7 +28,6 @@ export class CorporateDashboardComponent {
   projectId: string;
   userId: string;
   hasShowNoSignedCLAFoundDialog: boolean;
-  hasShowContactAdmin: boolean;
   hasShowDropdown: boolean;
   organization = new OrganizationModel();
   organizationList = new OrganizationListModel();
@@ -61,7 +60,6 @@ export class CorporateDashboardComponent {
   ngOnInit(): void {
     this.selectedCompany = '';
     this.hasShowDropdown = false;
-    this.hasShowContactAdmin = true;
     this.emptySearchError = true;
     this.noCompanyFound = false;
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
@@ -74,7 +72,6 @@ export class CorporateDashboardComponent {
   }
 
   onClickProceed(signedCLANotFoundModal: any, successModal: any) {
-    this.hasShowContactAdmin = true;
     this.getOrganizationInformation(signedCLANotFoundModal, successModal)
   }
 
@@ -283,11 +280,6 @@ export class CorporateDashboardComponent {
   openWithDismiss(content) {
     this.modalService.dismissAll();
     this.open(content);
-  }
-
-  onClickAddNewCompany(signedCLANotFoundModal) {
-    this.hasShowContactAdmin = false;
-    this.openWithDismiss(signedCLANotFoundModal);
   }
 
   onClickClose() {

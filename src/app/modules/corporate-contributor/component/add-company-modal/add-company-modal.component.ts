@@ -18,7 +18,6 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class AddCompanyModalComponent implements OnInit {
   @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
-  @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
   checkboxText1: string;
   checkboxText2: string;
@@ -114,7 +113,6 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     if (!this.hasError) {
-      // this.ProccedCLAEmitter.emit(false);
       const url = this.claContributorService.getLFXCorporateURL();
       window.open(url, '_self');
     } else {
