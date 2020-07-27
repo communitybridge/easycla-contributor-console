@@ -39,6 +39,11 @@ export class ClaContributorService {
     return this.httpClient.get<UserModel>(url);
   }
 
+  updateUser(data: any): Observable<UserModel> {
+    const url = this.baseURL + 'v3/users';
+    return this.httpClient.put<UserModel>(url, data, this.getHeaders());
+  }
+
   getProject(projectId: string): Observable<ProjectModel> {
     const url = this.baseURL + 'v2/project/' + projectId;
     return this.httpClient.get<ProjectModel>(url);
@@ -123,6 +128,28 @@ export class ClaContributorService {
 
   getHeaders() {
     return { headers: this.getHttpClientHeaders() };
+  }
+
+  getUserLFID(): string {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    if (hasGerrit) {
+      return gerritUserModel.lf_username;
+    } else {
+      return userModel.lf_username;
+    }
+  }
+
+  getLFXCorporateURL(): string {
+    let url = '';
+    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
+    if (project.foundation_sfid) {
+      url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_id + '/cla';
+    } else {
+      url = environment.lfxCorporateUrl + 'project/' + project.project_id + '/cla';
+    }
+    return url;
   }
 
   private getHttpClientHeaders(): HttpHeaders {

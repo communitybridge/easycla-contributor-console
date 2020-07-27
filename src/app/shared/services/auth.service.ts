@@ -46,7 +46,7 @@ export class AuthService {
   public isAuthenticated(): boolean {
     // Check whether the current time is past the
     // access token's expiry time
-    const gerritUser = JSON.parse(this.storageService.getItem(AppSettings.GERRIT_USER));
+    const gerritUser = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     if (gerritUser) {
       return new Date().getTime() < gerritUser.expires_at;
     }
@@ -55,7 +55,7 @@ export class AuthService {
 
   public logout(): void {
     // Remove tokens and expiry time from localStorage
-    this.storageService.removeItem(AppSettings.GERRIT_USER);
+    this.storageService.removeItem(AppSettings.AUTH_DATA);
   }
 
   public getIdToken(): string {
@@ -99,6 +99,6 @@ export class AuthService {
       user_name: authResult.idTokenPayload.name
     }
     this.storageService.setItem(AppSettings.ID_TOKEN, authResult.idToken);
-    this.storageService.setItem(AppSettings.GERRIT_USER, sessionData);
+    this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
   }
 }
