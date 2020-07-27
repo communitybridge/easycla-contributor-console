@@ -19,7 +19,7 @@ export class AppSettings {
     public static ID_TOKEN = 'id_token';
     public static SELECTED_COMPANY = 'selectedCompany';
     public static REDIRECT = 'redirect';
-    public static GERRIT_USER = 'gerritUser';
+    public static AUTH_DATA = 'authData';
     public static ACTION_TYPE = 'actionType';
     public static ACTION_DATA = 'actionData';
     public static ADD_ORGANIZATION = 'addOrganization';

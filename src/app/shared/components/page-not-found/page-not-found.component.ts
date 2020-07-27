@@ -43,6 +43,7 @@ export class PageNotFoundComponent implements OnInit {
 
     setTimeout(() => {
       if (this.authService.isAuthenticated()) {
+        // this.updateUserInfo();  // Temparory commented due to API having an issue. 
         this.performActionAsPerType();
       } else {
         this.message = 'The page you are looking for was not found.';
@@ -88,6 +89,23 @@ export class PageNotFoundComponent implements OnInit {
       (exception) => {
         this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
         this.alertService.error(exception.error);
+      }
+    );
+  }
+
+  updateUserInfo() {
+    const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    const data = {
+      lfEmail: autData.user_email,
+      lfUsername: autData.user_name
+    }
+    this.claContributorService.updateUser(data).subscribe(
+      () => {
+        this.performActionAsPerType();
+      },
+      (exception) => {
+        this.alertService.error(exception.error.Message);
+        this.message = 'Error occured during updating user info. Please contact to your administrator.';
       }
     );
   }

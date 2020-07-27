@@ -89,10 +89,12 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   addOrganization() {
-    const userId = JSON.parse(this.storageService.getItem('userId'));
+    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
+    const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     const data = {
       companyName: this.form.controls.companyName.value,
-      companyWebsite: this.form.controls.companyWebsite.value
+      companyWebsite: this.form.controls.companyWebsite.value,
+      userEmail: autData.user_email
     };
 
     this.claContributorService.addCompany(userId, data).subscribe(
