@@ -120,23 +120,13 @@ export class CorporateDashboardComponent {
             this.router.navigate([url]);
           }
         } else {
-          this.hasCCLARequiredICLA(successModal);
+          this.postEmployeeSignatureRequest(successModal);
         }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
       }
     );
-  }
-
-  hasCCLARequiredICLA(successModal) {
-    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
-    if (project.project_ccla_requires_icla_signature) {
-      this.checkIndividualLastSignature(successModal);
-    } else {
-      //Show success and redirect to github.
-      this.postEmployeeSignatureRequest(successModal);
-    }
   }
 
   postEmployeeSignatureRequest(successModal) {
@@ -149,7 +139,12 @@ export class CorporateDashboardComponent {
     };
     this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
       () => {
-        this.showSuccessAndRedirectToGit(successModal);
+        const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+        if (project.project_ccla_requires_icla_signature) {
+          this.checkIndividualLastSignature(successModal);
+        } else {
+          this.showSuccessAndRedirectToGit(successModal);
+        }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
