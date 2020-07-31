@@ -9,6 +9,10 @@
   margin: 20px 0;
 }
 
+.element {
+  margin-bottom: 15px;
+}
+
 input {
   height: 28px;
   color: #8492a6;
@@ -18,6 +22,7 @@ input {
   background: #ffffff;
   border: 1px solid #8492a6;
   border-radius: 0px;
+  margin-bottom: 3px;
 }
 
 .error {
@@ -68,7 +73,7 @@ input {
   background: #0099cc;
   border: 0px solid #000000;
   border-radius: 50px;
-  margin: 30px 0 10px 0;
+  margin: 10px 0;
   padding: 6px 0;
   width: 100%;
 

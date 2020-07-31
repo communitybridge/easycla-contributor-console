@@ -2,22 +2,42 @@
  SPDX-License-Identifier: MIT -->
 
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-12 message">
-            Please enter the email address of the person from your organization who will be the CLA Manager for this
-            project
-        </div>
+    <form [formGroup]="form">
+        <div class="row justify-content-center">
+            <div class="col-12 message">
+                Please enter the name and email address of the person from your organization who will be the CLA Manager
+                for this project
+            </div>
+            <div class="col-10 element">
+                <input type="text" name="name" placeholder="Enter Name" formControlName="name" class="form-control"
+                    tabindex="-1" />
+                <div *ngIf="form.controls.name.errors  && (form.controls.name.dirty || form.controls.name.touched)">
+                    <div [hidden]="!form.controls.name.errors.required" class="error">
+                        Name is required.
+                    </div>
+                    <div [hidden]="!form.controls.name.errors.minlength" class="error">
+                        Name should be at least 2 characters.
+                    </div>
+                    <div [hidden]="!form.controls.name.errors.maxlength" class="error">
+                        Name should not exceed 255 characters.
+                    </div>
+                </div>
+            </div>
 
-        <div class="col-10 emailbox">
-            <form [formGroup]="form">
+            <div class="col-10 element">
                 <input type="text" name="email" placeholder="Enter Email Address" formControlName="email"
                     class="form-control" tabindex="-1" />
-                <div *ngIf="!form.controls.email.valid && form.controls.email.touched">
-                    <span class="error">Email address is required.</span>
+                <div *ngIf="form.controls.email.errors  && (form.controls.email.dirty || form.controls.email.touched)">
+                    <div [hidden]="!form.controls.email.errors.maxlength" class="error">
+                        Email address should not exceed 255 characters.
+                    </div>
+                    <div *ngIf="!form.controls.email.valid" class="error">
+                        <span class="error">Email address is invalid</span>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 
     <div class="row justify-content-center">
         <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
