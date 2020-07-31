@@ -21,6 +21,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 export class CorporateDashboardComponent {
   @ViewChild('dropdown') dropdown: ElementRef;
   @ViewChild('addCompany') addCompany: TemplateRef<any>;
+  @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -68,19 +69,21 @@ export class CorporateDashboardComponent {
       companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
     });
 
-    this.openAddOrganizationModal();
+    this.openAuthRedirectionModal();
+  }
+
+  openAuthRedirectionModal() {
+    setTimeout(() => {
+      if (this.openView === AppSettings.ADD_ORGANIZATION) {
+        this.open(this.addCompany);
+      } else if (this.openView === AppSettings.SIGN_CLA) {
+        this.open(this.configureCLAManager);
+      }
+    }, 250);
   }
 
   onClickProceed(signedCLANotFoundModal: any, successModal: any) {
     this.getOrganizationInformation(signedCLANotFoundModal, successModal)
-  }
-
-  openAddOrganizationModal() {
-    setTimeout(() => {
-      if (this.openView === AppSettings.ADD_ORGANIZATION) {
-        this.open(this.addCompany);
-      }
-    }, 250);
   }
 
   onSelectCompany(organization) {

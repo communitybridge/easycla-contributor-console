@@ -3,11 +3,11 @@
 
 import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { OrganizationModel } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -17,7 +17,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class ConfigureClaManagerModalComponent {
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
   @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
-  isProcessed: boolean;
+  title: string;
+  message: string;
+  hasError: boolean;
+  company: OrganizationModel;
+  hasCLAManagerDesignee: boolean;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -25,23 +29,74 @@ export class ConfigureClaManagerModalComponent {
     private storageService: StorageService,
     private modalService: NgbModal
   ) {
-    this.isProcessed = false;
+    this.hasCLAManagerDesignee = false;
+    this.hasError = false;
     setTimeout(() => {
-      this.isProcessed = true;
-    }, 2000);
+      this.manageAuthRedirection();
+    }, 100);
   }
 
-  onClickProceedBtn() {
-    if (this.claContributorService.getUserLFID()) {
-      window.open(environment.lfxCorporateUrl, '_self');
+  manageAuthRedirection() {
+    const actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
+    if (actionType === AppSettings.SIGN_CLA) {
+      this.addAsCLAManagerDesignee();
     } else {
+      this.validateUserLFID();
+    }
+  }
+
+  validateUserLFID() {
+    if (this.claContributorService.getUserLFID()) {
+      this.storageService.removeItem(AppSettings.ACTION_TYPE);
+      this.addAsCLAManagerDesignee();
+    } else {
+      this.title = 'LF Login Required';
+      this.message = 'You are missing a LF Login to proceed to next step.' +
+        ' We will be redirecting you to LF Login screen, once you have created' +
+        ' a LF Login you will be redirected to complete CLA process';
       this.openDialog(this.WarningModal);
     }
   }
 
-  onClickProccedWithLFLogin() {
-    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
-    this.authService.login();
+  addAsCLAManagerDesignee() {
+    this.hasCLAManagerDesignee = false;
+    this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
+    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    const data = {
+      userEmail: authData.user_email
+    };
+    this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
+      () => {
+        this.storageService.removeItem(AppSettings.ACTION_TYPE);
+        this.hasError = false;
+        this.hasCLAManagerDesignee = true;
+      },
+      (exception) => {
+        this.title = 'Request Failed';
+        this.hasError = true;
+        if (exception.status === 0) {
+          this.message = 'It seems like the user is not authorized for company ' + this.company.companyName;
+        } else {
+          this.message = 'Error occured during adding CLA Manager designee.';
+        }
+        this.openDialog(this.WarningModal);
+      }
+    );
+  }
+
+  onClickProceedBtn() {
+    const url = this.claContributorService.getLFXCorporateURL();
+    window.open(url, '_self');
+  }
+
+  onClickProccedModalBtn() {
+    if (this.hasError) {
+      this.modalService.dismissAll();
+    } else {
+      this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
+      this.authService.login();
+    }
   }
 
   openDialog(content) {

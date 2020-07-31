@@ -109,6 +109,11 @@ export class ClaContributorService {
     return this.httpClient.post<AddCompanyModel>(url, data);
   }
 
+  addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
+    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
+    return this.httpClient.post<any>(url, data, this.getHeaders());
+  }
+
   notifyCLAMangers(data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/notify-cla-managers';
     return this.httpClient.post<any>(url, data);

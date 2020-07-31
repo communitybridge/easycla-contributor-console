@@ -4,20 +4,20 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-auto pr-0 icon mt-20">
-            <i *ngIf="!isProcessed" class="fas fa-spinner"></i>
-            <i *ngIf="isProcessed" class="fas fa-check-circle green"></i>
+            <i *ngIf="!hasCLAManagerDesignee" class="fas fa-spinner"></i>
+            <i *ngIf="hasCLAManagerDesignee" class="fas fa-check-circle green"></i>
         </div>
-        <div *ngIf="!isProcessed" class="col-10 mt-20 message">
+        <div *ngIf="!hasCLAManagerDesignee" class="col-10 mt-20 message">
             Please wait while we configure the initial CLA Manager settings for this CLA.
         </div>
-        <div *ngIf="isProcessed" class="col-10 mt-20 message">
+        <div *ngIf="hasCLAManagerDesignee" class="col-10 mt-20 message">
             When this CLA is signed, you will be the initial CLA Manager. Please click below to proceed.
         </div>
     </div>
 
     <div class="row justify-content-center mt-20">
         <div class="col-5">
-            <button tabindex="-1" type="button" class="btn" [ngClass]="{'active':isProcessed}"
+            <button tabindex="-1" type="button" class="btn" [ngClass]="{'active':hasCLAManagerDesignee}"
                 (click)="onClickProceedBtn()">
                 Procced
             </button>
@@ -30,15 +30,14 @@
         <div class="modal-body">
             <div class="row justify-content-center success-dialog">
                 <div class="col-auto">
-                    <i class="fas fa-exclamation-triangle logo orange"></i>
+                    <i *ngIf="!hasError" class="fas fa-exclamation-triangle logo orange"></i>
+                    <i *ngIf="hasError" class="fas fa-exclamation-circle logo red"></i>
                 </div>
-                <div class="col-12 title">LF Login Required</div>
-                <p class="col-11 success-message">You are missing a LF Login to proceed to next step. We will be
-                    redirecting you to LF Login screen, once you have created a LF Login you will be redirected to
-                    complete CLA process</p>
+                <div class="col-12 title">{{title}}</div>
+                <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickProccedWithLFLogin()">
-                        Procced
+                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickProccedModalBtn()">
+                        {{!hasError?'Procced':'Go Back'}}
                     </button>
                 </div>
             </div>
