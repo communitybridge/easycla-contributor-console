@@ -33,7 +33,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required, EmailValidator.isValid])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(255)])],
+      email: ['', Validators.compose([Validators.required, EmailValidator.isValid, Validators.maxLength(255)])],
     });
   }
 
@@ -52,6 +53,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       companyID: company.companyID,
       contactAdmin: hasCompanyAdmin,
       claGroupID: project.project_id,
+      name: hasCompanyAdmin ? '' : this.form.controls.name.value,
       userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
     }
     this.callInviteManagerAPI(data, hasCompanyAdmin, content);
