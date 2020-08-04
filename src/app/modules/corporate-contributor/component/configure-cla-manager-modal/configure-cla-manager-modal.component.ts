@@ -75,11 +75,7 @@ export class ConfigureClaManagerModalComponent {
       (exception) => {
         this.title = 'Request Failed';
         this.hasError = true;
-        if (exception.status === 0) {
-          this.message = 'It seems like the user is not authorized for company ' + this.company.companyName;
-        } else {
-          this.message = 'Error occured during adding CLA Manager designee.';
-        }
+        this.message = exception.error.Message;
         this.openDialog(this.WarningModal);
       }
     );

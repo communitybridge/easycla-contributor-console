@@ -9,6 +9,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AlertService } from '../../services/alert.service';
+import { UserModel, UpdateUserModel } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-page-not-found',
@@ -98,7 +99,7 @@ export class PageNotFoundComponent implements OnInit {
 
   updateUserInfo() {
     const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
-    const user = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     const data = {
       lfEmail: autData.user_email,
       lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
@@ -106,7 +107,11 @@ export class PageNotFoundComponent implements OnInit {
       githubID: user.user_github_id
     }
     this.claContributorService.updateUser(data).subscribe(
-      () => {
+      (response: UpdateUserModel) => {
+        // Update new values in local storage.
+        user.lf_username = response.lfUsername;
+        user.lf_email = response.lfEmail;
+        this.storageService.setItem(AppSettings.USER, user);
         this.performActionAsPerType();
       },
       (exception) => {
