@@ -218,7 +218,7 @@ export class CorporateDashboardComponent {
         clearTimeout(this.searchTimeout);
       }
       this.searchTimeout = setTimeout(() => {
-        this.searchOrganization(value);
+        this.searchOrganization(encodeURIComponent(value));
       }, 300);
     } else {
       this.organizationList.list = [];
