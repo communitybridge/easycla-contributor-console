@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ProjectModel } from '../models/project';
-import { UserModel } from '../models/user';
+import { UserModel, UpdateUserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
@@ -39,9 +39,9 @@ export class ClaContributorService {
     return this.httpClient.get<UserModel>(url);
   }
 
-  updateUser(data: any): Observable<UserModel> {
+  updateUser(data: any): Observable<UpdateUserModel> {
     const url = this.baseURL + 'v3/users';
-    return this.httpClient.put<UserModel>(url, data, this.getHeaders());
+    return this.httpClient.put<UpdateUserModel>(url, data, this.getHeaders());
   }
 
   getProject(projectId: string): Observable<ProjectModel> {
@@ -107,6 +107,11 @@ export class ClaContributorService {
   addCompany(userId: string, data: any): Observable<AddCompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
     return this.httpClient.post<AddCompanyModel>(url, data);
+  }
+
+  addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
+    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
+    return this.httpClient.post<any>(url, data, this.getHeaders());
   }
 
   notifyCLAMangers(data: any): Observable<any> {

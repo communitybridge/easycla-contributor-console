@@ -9,6 +9,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AlertService } from '../../services/alert.service';
+import { UserModel, UpdateUserModel } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-page-not-found',
@@ -43,8 +44,11 @@ export class PageNotFoundComponent implements OnInit {
 
     setTimeout(() => {
       if (this.authService.isAuthenticated()) {
-        // this.updateUserInfo();  // Temparory commented due to API having an issue. 
-        this.performActionAsPerType();
+        if (this.hasGerrit) {
+          this.performActionAsPerType();
+        } else {
+          this.updateUserInfo();
+        }
       } else {
         this.message = 'The page you are looking for was not found.';
       }
@@ -65,13 +69,13 @@ export class PageNotFoundComponent implements OnInit {
 
   performActionAsPerType() {
     if (this.actionType === AppSettings.ADD_ORGANIZATION) {
-      // Create organization and redirect to the CLA not found page.
+      // Redirect to Add Organization.
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url], { queryParams: { view: AppSettings.ADD_ORGANIZATION } });
     } else if (this.actionType === AppSettings.SIGN_CLA) {
-      // redirect to the LFX corporate console link.
-      const url = this.claContributorService.getLFXCorporateURL();
-      window.open(url, '_self');
+      // redirect to CLA not Sign.
+      const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
+      this.router.navigate([url], { queryParams: { view: AppSettings.SIGN_CLA } });
     } else if (this.hasGerrit) {
       this.getGerritProjectInfo();
       this.getUserInfo();
@@ -95,12 +99,19 @@ export class PageNotFoundComponent implements OnInit {
 
   updateUserInfo() {
     const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     const data = {
       lfEmail: autData.user_email,
-      lfUsername: autData.user_name
+      lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
+      githubUsername: user.user_github_username,
+      githubID: user.user_github_id
     }
     this.claContributorService.updateUser(data).subscribe(
-      () => {
+      (response: UpdateUserModel) => {
+        // Update new values in local storage.
+        user.lf_username = response.lfUsername;
+        user.lf_email = response.lfEmail;
+        this.storageService.setItem(AppSettings.USER, user);
         this.performActionAsPerType();
       },
       (exception) => {

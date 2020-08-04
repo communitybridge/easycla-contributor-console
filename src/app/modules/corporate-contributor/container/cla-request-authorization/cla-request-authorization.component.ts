@@ -157,7 +157,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.claContributorService.getProjectCLAManagers(this.projectId, this.selectedCompany).subscribe(
       (response: CLAManagersModel) => {
         this.managers = response;
-        if (this.managers.list.length === 0) {
+        if (!this.managers.list) {
           this.claManagerError = 'No CLA manager found.';
         }
       },

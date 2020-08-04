@@ -115,8 +115,8 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     if (!this.hasError) {
-      const url = this.claContributorService.getLFXCorporateURL();
-      window.open(url, '_self');
+    const url = this.claContributorService.getLFXCorporateURL();
+    window.open(url, '_self');
     } else {
       this.modelRef.close();
     }
