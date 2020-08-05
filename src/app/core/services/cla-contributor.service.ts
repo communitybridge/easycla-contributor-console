@@ -149,10 +149,16 @@ export class ClaContributorService {
   getLFXCorporateURL(): string {
     let url = '';
     const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
-    if (project.foundation_sfid) {
-      url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_id + '/cla';
+    const projectDetails = project.projects;
+    if (projectDetails.length > 0) {
+      if (project.foundation_sfid) {
+        url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
+      } else {
+        url = environment.lfxCorporateUrl + 'project/' + projectDetails[0].project_sfid + '/cla';
+      }
     } else {
-      url = environment.lfxCorporateUrl + 'project/' + project.project_id + '/cla';
+      // Redirect to corporate console dashboard.
+      url = environment.lfxCorporateUrl + 'company/dashboard';
     }
     return url;
   }
