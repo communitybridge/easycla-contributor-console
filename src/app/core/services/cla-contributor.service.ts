@@ -150,15 +150,15 @@ export class ClaContributorService {
     let url = '';
     const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     const projectDetails = project.projects;
-    if (projectDetails.length > 0) {
-      if (project.foundation_sfid) {
-        url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
-      } else {
-        url = environment.lfxCorporateUrl + 'project/' + projectDetails[0].project_sfid + '/cla';
-      }
-    } else {
-      // Redirect to corporate console dashboard.
+    if (projectDetails.length === 0) {
+      // No SFID associated with project so redirect at corporate console dashboard.
       url = environment.lfxCorporateUrl + 'company/dashboard';
+    } else if (projectDetails.length === 1) {
+      // If projectDetails length is 1 then CLA sign at foundation level.
+      url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
+    } else if (projectDetails.length > 1) {
+      // If projectDetails length is greater than 1 then CLA sign at project level.
+      url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
     }
     return url;
   }
