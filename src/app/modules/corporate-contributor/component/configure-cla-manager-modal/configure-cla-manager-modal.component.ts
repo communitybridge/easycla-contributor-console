@@ -16,7 +16,6 @@ import { OrganizationModel } from 'src/app/core/models/organization';
 })
 export class ConfigureClaManagerModalComponent {
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
-  @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   title: string;
   message: string;
   hasError: boolean;

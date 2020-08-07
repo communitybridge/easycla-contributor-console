@@ -56,9 +56,7 @@ export class PageNotFoundComponent implements OnInit {
   }
 
   setMessage() {
-    if (this.actionType === AppSettings.ADD_ORGANIZATION) {
-      this.message = 'Wait... we are completing authentication process.';
-    } else if (this.actionType === AppSettings.SIGN_CLA) {
+    if (this.actionType === AppSettings.SIGN_CLA) {
       this.message = 'Wait... You are being redirected to the the Corporate Console.';
     } else if (this.hasGerrit) {
       this.message = 'You are being redirected to the ' + this.contractType + ' console.';
@@ -68,11 +66,7 @@ export class PageNotFoundComponent implements OnInit {
   }
 
   performActionAsPerType() {
-    if (this.actionType === AppSettings.ADD_ORGANIZATION) {
-      // Redirect to Add Organization.
-      const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
-      this.router.navigate([url], { queryParams: { view: AppSettings.ADD_ORGANIZATION } });
-    } else if (this.actionType === AppSettings.SIGN_CLA) {
+    if (this.actionType === AppSettings.SIGN_CLA) {
       // redirect to CLA not Sign.
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url], { queryParams: { view: AppSettings.SIGN_CLA } });

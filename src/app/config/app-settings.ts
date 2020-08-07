@@ -22,8 +22,8 @@ export class AppSettings {
     public static AUTH_DATA = 'authData';
     public static ACTION_TYPE = 'actionType';
     public static ACTION_DATA = 'actionData';
-    public static ADD_ORGANIZATION = 'addOrganization';
     public static SIGN_CLA = 'signCLA';
+    public static CLA_NOT_SIGN = 'CLANotSign';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';
     public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';

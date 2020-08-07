@@ -6,6 +6,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-10 element">
+                    <input type="text" name="companyWebsite"
+                        placeholder="Enter Organization Website (http://www.example.com)"
+                        formControlName="companyWebsite" tabindex="-1" class="form-control" />
+                    <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
+                        <span class="error">Organization website is invalid</span>
+                    </div>
+                </div>
+
+                <div class="col-10 element">
                     <input type="text" name="companyName" placeholder="Enter Organization Name"
                         formControlName="companyName" tabindex="-1" class="form-control" />
                     <div
@@ -22,14 +31,6 @@
                         <div [hidden]="!form.controls.companyName.errors.pattern" class="error">
                             Organization name is invalid
                         </div>
-                    </div>
-                </div>
-                <div class="col-10 element">
-                    <input type="text" name="companyWebsite"
-                        placeholder="Enter Organization Website (http://www.example.com)"
-                        formControlName="companyWebsite" tabindex="-1" class="form-control" />
-                    <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
-                        <span class="error">Organization website is invalid</span>
                     </div>
                 </div>
 
@@ -77,28 +78,6 @@
                 </div>
             </div>
 
-        </div>
-    </div>
-</ng-template>
-
-
-<ng-template #WarningModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <div class="row justify-content-center success-dialog">
-                <div class="col-auto">
-                    <i class="fas fa-exclamation-triangle logo orange"></i>
-                </div>
-                <div class="col-12 title">LF Login Required</div>
-                <p class="col-11 success-message">You are missing a LF Login to proceed to next step. We will be
-                    redirecting you to LF Login screen, once you have created a LF Login you will be redirected to
-                    complete CLA process</p>
-                <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickProccedWithLFLogin()">
-                        Procced
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 </ng-template>

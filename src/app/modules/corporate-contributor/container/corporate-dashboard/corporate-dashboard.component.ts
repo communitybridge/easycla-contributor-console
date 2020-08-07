@@ -20,8 +20,8 @@ import { AppSettings } from 'src/app/config/app-settings';
 })
 export class CorporateDashboardComponent {
   @ViewChild('dropdown') dropdown: ElementRef;
-  @ViewChild('addCompany') addCompany: TemplateRef<any>;
   @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
+  @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -40,6 +40,7 @@ export class CorporateDashboardComponent {
   title: string;
   message: string;
   openView: string;
+  hasShowContactAdmin: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -63,6 +64,7 @@ export class CorporateDashboardComponent {
     this.hasShowDropdown = false;
     this.emptySearchError = true;
     this.noCompanyFound = false;
+    this.hasShowContactAdmin = true;
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
@@ -74,15 +76,17 @@ export class CorporateDashboardComponent {
 
   openAuthRedirectionModal() {
     setTimeout(() => {
-      if (this.openView === AppSettings.ADD_ORGANIZATION) {
-        this.open(this.addCompany);
-      } else if (this.openView === AppSettings.SIGN_CLA) {
+      if (this.openView === AppSettings.SIGN_CLA) {
         this.open(this.configureCLAManager);
+      }else if (this.openView === AppSettings.CLA_NOT_SIGN) {
+        this.hasShowContactAdmin = false;
+        this.open(this.signedCLANotFoundModal);
       }
     }, 250);
   }
 
   onClickProceed(signedCLANotFoundModal: any, successModal: any) {
+    this.hasShowContactAdmin = true;
     this.getOrganizationInformation(signedCLANotFoundModal, successModal)
   }
 
@@ -286,13 +290,5 @@ export class CorporateDashboardComponent {
 
   onClickNoBtn(content) {
     this.modalService.open(content);
-  }
-
-  onClickSubmitRequestToAdmin() {
-
-  }
-
-  onClickProceedCLAManagerSetting() {
-
   }
 }
