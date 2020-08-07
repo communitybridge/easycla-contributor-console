@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
+  @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
   form: FormGroup;
@@ -47,7 +48,6 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   openDialog(content) {
-    this.modalService.dismissAll();
     this.modelRef = this.modalService.open(content, {
       centered: true,
       backdrop: 'static'
@@ -56,7 +56,6 @@ export class AddCompanyModalComponent implements OnInit {
 
   addOrganization() {
     const publicEmail = this.claContributorService.getUserPublicEmail();
-    console.log(publicEmail);
     if (publicEmail !== null) {
       this.callAddOrganizationAPI(publicEmail);
     } else {
@@ -92,16 +91,8 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onClickDialogBtn() {
-    this.modelRef.close();
     if (!this.hasError) {
-      this.openCLANotSignModal();
+      this.CLANotSignEmitter.emit();
     }
-  }
-
-  openCLANotSignModal() {
-    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-    const url = '/corporate-dashboard/' + projectId + '/' + userId;
-    this.router.navigate([url], { queryParams: { view: AppSettings.CLA_NOT_SIGN } });
   }
 }

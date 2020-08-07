@@ -78,9 +78,6 @@ export class CorporateDashboardComponent {
     setTimeout(() => {
       if (this.openView === AppSettings.SIGN_CLA) {
         this.open(this.configureCLAManager);
-      }else if (this.openView === AppSettings.CLA_NOT_SIGN) {
-        this.hasShowContactAdmin = false;
-        this.open(this.signedCLANotFoundModal);
       }
     }, 250);
   }
@@ -95,6 +92,11 @@ export class CorporateDashboardComponent {
     this.selectedCompany = organization.organization_id;
     this.searchBoxValue = organization.organization_name;
     this.form.controls.companyName.setValue(organization.organization_name);
+  }
+
+  openCLANotSignModal(claNotSignModal: any) {
+    this.hasShowContactAdmin = false;
+    this.openWithDismiss(claNotSignModal);
   }
 
   getOrganizationInformation(signedCLANotFoundModal, successModal) {
