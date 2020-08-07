@@ -96,6 +96,7 @@ export class AddCompanyModalComponent implements OnInit {
     if (!this.hasError) {
       this.openCLANotSignModal();
     }
+    this.openCLANotSignModal();
   }
 
   openCLANotSignModal() {
