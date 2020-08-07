@@ -153,11 +153,11 @@ export class ClaContributorService {
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
       url = environment.lfxCorporateUrl + 'company/dashboard';
-    } else if (projectDetails.length === 1) {
-      // If projectDetails length is 1 then CLA sign at foundation level.
+    } else if (project.signed_at_foundation_level) {
+      // Signed at foundation level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
-    } else if (projectDetails.length > 1) {
-      // If projectDetails length is greater than 1 then CLA sign at project level.
+    } else {
+      // Signed at project level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
     }
     return url;

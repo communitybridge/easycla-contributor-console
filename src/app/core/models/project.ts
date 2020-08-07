@@ -17,6 +17,7 @@ export class ProjectModel {
     version: string;
     logoUrl: string;
     projects: Project[];
+    signed_at_foundation_level: boolean;
 }
 
 export class ProjectCorporateDocument {
