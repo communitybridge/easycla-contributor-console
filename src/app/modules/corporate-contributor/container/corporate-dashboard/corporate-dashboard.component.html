@@ -87,7 +87,8 @@
         <div class="modal-body">
             <app-modal-header title="Enter Organization Details" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-add-company-modal></app-add-company-modal>
+            <app-add-company-modal (CLANotSignEmitter)="openCLANotSignModal(signedCLANotFoundModal)">
+            </app-add-company-modal>
         </div>
     </div>
 </ng-template>
@@ -107,7 +108,7 @@
     <div class="model">
         <div class="modal-body">
             <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="onClickClose()"></app-modal-header>
-            <app-identify-cla-manager-modal (submitEmitter)="onClickSubmitRequestToAdmin()">
+            <app-identify-cla-manager-modal [hasShowContactAdmin]="hasShowContactAdmin">
             </app-identify-cla-manager-modal>
         </div>
     </div>
@@ -118,8 +119,7 @@
         <div class="modal-body">
             <app-modal-header title="Configuring CLA Manager Settings" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-configure-cla-manager-modal (proceedEmitter)="onClickProceedCLAManagerSetting()">
-            </app-configure-cla-manager-modal>
+            <app-configure-cla-manager-modal></app-configure-cla-manager-modal>
         </div>
     </div>
 </ng-template>

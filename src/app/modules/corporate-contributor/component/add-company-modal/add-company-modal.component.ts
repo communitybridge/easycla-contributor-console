@@ -1,14 +1,15 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
-import { AuthService } from 'src/app/shared/services/auth.service';
+import { UserModel } from 'src/app/core/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -16,6 +17,7 @@ import { AuthService } from 'src/app/shared/services/auth.service';
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
+  @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
   form: FormGroup;
@@ -31,7 +33,7 @@ export class AddCompanyModalComponent implements OnInit {
     private modalService: NgbModal,
     private claContributorService: ClaContributorService,
     private storageService: StorageService,
-    private authService: AuthService
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -39,49 +41,13 @@ export class AddCompanyModalComponent implements OnInit {
       companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
       companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
     });
-
-    this.validateLFLoginResponse();
-  }
-
-  validateLFLoginResponse() {
-    const actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
-    const actionData = JSON.parse(this.storageService.getItem(AppSettings.ACTION_DATA));
-    if (actionType && actionData) {
-      // preserve value and call add organization method.
-      this.form.controls.companyName.setValue(actionData.companyName);
-      this.form.controls.companyWebsite.setValue(actionData.companyWebsite);
-      setTimeout(() => {
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.storageService.removeItem(AppSettings.ACTION_DATA);
-        this.addOrganization();
-      }, 500);
-    }
   }
 
   onClickProceed() {
-    if (!this.authService.isAuthenticated()) {
-      this.openDialog(this.WarningModal);
-    } else {
-      this.addOrganization();
-    }
-  }
-
-  onClickProccedWithLFLogin() {
-    this.redirectToLFLogin();
-  }
-
-  redirectToLFLogin() {
-    const data = {
-      companyName: this.form.controls.companyName.value,
-      companyWebsite: this.form.controls.companyWebsite.value
-    };
-    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.ADD_ORGANIZATION);
-    this.storageService.setItem(AppSettings.ACTION_DATA, data);
-    this.authService.login();
+    this.addOrganization();
   }
 
   openDialog(content) {
-    this.modalService.dismissAll();
     this.modelRef = this.modalService.open(content, {
       centered: true,
       backdrop: 'static'
@@ -89,15 +55,26 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   addOrganization() {
-    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-    const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    const publicEmail = this.claContributorService.getUserPublicEmail();
+    if (publicEmail !== null) {
+      this.callAddOrganizationAPI(publicEmail);
+    } else {
+      // Show warning that user email is not public.
+      this.hasError = true;
+      this.title = 'Email Not Public';
+      this.message = 'It\'s look like your Github account email is not public please make it public and try again.';
+      this.openDialog(this.successModal);
+    }
+  }
+
+  callAddOrganizationAPI(publicEmail) {
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     const data = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
-      userEmail: autData.user_email
+      userEmail: publicEmail
     };
-
-    this.claContributorService.addCompany(userId, data).subscribe(
+    this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       () => {
         this.hasError = false;
         this.title = 'Successfully Added';
@@ -115,11 +92,7 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     if (!this.hasError) {
-    const url = this.claContributorService.getLFXCorporateURL();
-    window.open(url, '_self');
-    } else {
-      this.modelRef.close();
+      this.CLANotSignEmitter.emit();
     }
   }
-
 }

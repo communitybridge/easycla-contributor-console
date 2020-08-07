@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -18,6 +18,7 @@ import { EmailValidator } from 'src/app/shared/validators/email-validator';
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
+  @Input() hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
   title: string;

@@ -22,7 +22,6 @@ export class AppSettings {
     public static AUTH_DATA = 'authData';
     public static ACTION_TYPE = 'actionType';
     public static ACTION_DATA = 'actionData';
-    public static ADD_ORGANIZATION = 'addOrganization';
     public static SIGN_CLA = 'signCLA';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';

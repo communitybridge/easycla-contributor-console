@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, EventEmitter, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AppSettings } from 'src/app/config/app-settings';
@@ -16,7 +16,6 @@ import { OrganizationModel } from 'src/app/core/models/organization';
 })
 export class ConfigureClaManagerModalComponent {
   @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
-  @Output() ProccedCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
   title: string;
   message: string;
   hasError: boolean;
