@@ -157,6 +157,31 @@ export class ClaContributorService {
     return url;
   }
 
+  getUserPublicEmail(): string {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    let emails;
+    if (hasGerrit) {
+      return gerritUserModel.lf_email;
+    } else {
+      if (userModel.lf_email) {
+        return userModel.lf_email;
+      }
+      emails = userModel.user_emails;
+    }
+    return this.findPublicEmail(emails);
+  }
+
+  findPublicEmail(emails) {
+    for (const email of emails) {
+      if (email.indexOf('noreply.github.com') < 0) {
+        return email;
+      }
+    }
+    return null;
+  }
+
   private getHttpClientHeaders(): HttpHeaders {
     const tokenId = this.authService.getIdToken();
     if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {

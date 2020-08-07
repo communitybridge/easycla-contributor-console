@@ -55,13 +55,26 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   addOrganization() {
+    const publicEmail = this.claContributorService.getUserPublicEmail();
+    console.log(publicEmail);
+    if (publicEmail !== null) {
+      this.callAddOrganizationAPI(publicEmail);
+    } else {
+      // Show warning that user email is not public.
+      this.hasError = true;
+      this.title = 'Email Not Public';
+      this.message = 'It\'s look like your Github account email is not public please make it public and try again.';
+      this.openDialog(this.successModal);
+    }
+  }
+
+  callAddOrganizationAPI(publicEmail) {
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     const data = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
-      userEmail: ''
+      userEmail: publicEmail
     };
-
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       () => {
         this.hasError = false;
@@ -80,7 +93,6 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     this.modelRef.close();
-    this.openCLANotSignModal();
     if (!this.hasError) {
       this.openCLANotSignModal();
     }
