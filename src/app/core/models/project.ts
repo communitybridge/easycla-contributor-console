@@ -16,6 +16,8 @@ export class ProjectModel {
     project_name_lower: string;
     version: string;
     logoUrl: string;
+    projects: Project[];
+    signed_at_foundation_level: boolean;
 }
 
 export class ProjectCorporateDocument {
@@ -46,4 +48,19 @@ export class ProjectIndividualDocument {
     document_legal_entity_name: string;
     document_s3_url: string;
     document_tabs: string[][];
+}
+
+
+export class Project {
+    cla_group_id: string;
+    cla_group_name: string;
+    date_created: Date;
+    date_modified: Date;
+    foundation_name?: any;
+    foundation_sfid: string;
+    note?: any;
+    project_name: string;
+    project_sfid: string;
+    repositories_count: string;
+    version: string;
 }
