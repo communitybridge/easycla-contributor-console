@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ViewChild, ElementRef, TemplateRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, TemplateRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,7 @@ import { AppSettings } from 'src/app/config/app-settings';
   templateUrl: './corporate-dashboard.component.html',
   styleUrls: ['./corporate-dashboard.component.scss']
 })
-export class CorporateDashboardComponent {
+export class CorporateDashboardComponent implements OnInit {
   @ViewChild('dropdown') dropdown: ElementRef;
   @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
@@ -243,6 +243,10 @@ export class CorporateDashboardComponent {
 
   toggleDropdown() {
     this.hasShowDropdown = !this.hasShowDropdown;
+  }
+
+  openCLANotfound(CLANotFound) {
+    this.openWithDismiss(CLANotFound);
   }
 
   searchOrganization(searchText: string) {

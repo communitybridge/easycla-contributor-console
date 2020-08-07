@@ -39,7 +39,13 @@
         </div>
     </form>
 
-    <div class="row justify-content-center">
+    <div class="row justify-content-center buttons">
+        <div *ngIf="!hasShowContactAdmin" class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+            <button tabindex="-1" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
+                Go Back
+            </button>
+        </div>
+
         <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
             <button tabindex="-1" type="button" class="btn inactive" [ngClass]="{'active':form.valid}"
                 [disabled]="!form.valid" (click)="onClickSubmit(successModal)">
@@ -65,6 +71,27 @@
             </div>
             <div class="col-auto contact-admin" (click)="onClickContactAdmin(successModal)">Contact Company Admin </div>
         </div>
+
+        <div class="or-container row justify-content-center align-items-center">
+            <div class="col-5">
+                <div class="seperator"></div>
+            </div>
+            <div class="col-auto or">OR</div>
+            <div class="col-5">
+                <div class="seperator"></div>
+            </div>
+        </div>
+
+        <div class="col-12 buttons">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-6">
+                    <button tabindex="-1" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
