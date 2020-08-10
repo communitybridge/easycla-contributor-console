@@ -80,8 +80,7 @@ export class ConfigureClaManagerModalComponent {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
-      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>' +
-      '<p>Your GitHub session has been opened in a current tab so that you can come back to GitHub and submit your code contribution</p>'
+      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>';
     this.openDialog(this.warningModal);
   }
 
