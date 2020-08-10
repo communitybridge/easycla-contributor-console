@@ -101,6 +101,10 @@ export class ConfigureClaManagerModalComponent {
     this.backBtnEmitter.emit();
   }
 
+  onClickClose() {
+    this.modalService.dismissAll();
+  }
+
   openDialog(content) {
     this.modalService.open(content, {
       centered: true,
