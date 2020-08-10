@@ -120,7 +120,8 @@
         <div class="modal-body">
             <app-modal-header title="Configuring CLA Manager Settings" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-configure-cla-manager-modal></app-configure-cla-manager-modal>
+            <app-configure-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)">
+            </app-configure-cla-manager-modal>
         </div>
     </div>
 </ng-template>

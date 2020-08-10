@@ -89,8 +89,10 @@ input {
   }
 
   &.back {
+    font-family: "SourceSansPro";
     background: #fff !important;
     color: #0099cc;
     border: 1px solid #0099cc;
+    font-style: normal;
   }
 }
