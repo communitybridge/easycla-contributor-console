@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AppSettings } from 'src/app/config/app-settings';
@@ -15,10 +15,12 @@ import { OrganizationModel } from 'src/app/core/models/organization';
   styleUrls: ['./configure-cla-manager-modal.component.scss']
 })
 export class ConfigureClaManagerModalComponent {
-  @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
+  @ViewChild('errorModal') errorModal: TemplateRef<any>;
+  @ViewChild('warningModal') warningModal: TemplateRef<any>;
+  @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
+
   title: string;
   message: string;
-  hasError: boolean;
   company: OrganizationModel;
   hasCLAManagerDesignee: boolean;
 
@@ -29,7 +31,6 @@ export class ConfigureClaManagerModalComponent {
     private modalService: NgbModal
   ) {
     this.hasCLAManagerDesignee = false;
-    this.hasError = false;
     setTimeout(() => {
       this.manageAuthRedirection();
     }, 100);
@@ -49,11 +50,10 @@ export class ConfigureClaManagerModalComponent {
       this.storageService.removeItem(AppSettings.ACTION_TYPE);
       this.addAsCLAManagerDesignee();
     } else {
-      this.title = 'LF Login Required';
-      this.message = 'You are missing a LF Login to proceed to next step.' +
-        ' We will be redirecting you to LF Login screen, once you have created' +
-        ' a LF Login you will be redirected to complete CLA process';
-      this.openDialog(this.WarningModal);
+      this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
+        '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
+        ' into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>';
+      this.openDialog(this.warningModal);
     }
   }
 
@@ -68,34 +68,42 @@ export class ConfigureClaManagerModalComponent {
     this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
       () => {
         this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.hasError = false;
         this.hasCLAManagerDesignee = true;
       },
       (exception) => {
         this.title = 'Request Failed';
-        this.hasError = true;
         this.message = exception.error.Message;
-        this.openDialog(this.WarningModal);
+        this.openDialog(this.errorModal);
       }
     );
   }
 
   onClickProceedBtn() {
-    const url = this.claContributorService.getLFXCorporateURL();
-    window.open(url, '_self');
+    this.modalService.dismissAll();
+    this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
+      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>'
+    this.openDialog(this.warningModal);
   }
 
   onClickProccedModalBtn() {
-    if (this.hasError) {
-      this.modalService.dismissAll();
-    } else {
+    if (!this.hasCLAManagerDesignee) {
       this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
       this.authService.login();
+    } else {
+      const url = this.claContributorService.getLFXCorporateURL();
+      window.open(url, '_self');
     }
   }
 
-  openDialog(content) {
+  onClickBackBtn() {
+    this.backBtnEmitter.emit();
+  }
+
+  onClickClose() {
     this.modalService.dismissAll();
+  }
+
+  openDialog(content) {
     this.modalService.open(content, {
       centered: true,
       backdrop: 'static'

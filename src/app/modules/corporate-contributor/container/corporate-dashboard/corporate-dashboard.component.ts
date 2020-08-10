@@ -127,6 +127,8 @@ export class CorporateDashboardComponent implements OnInit {
           } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);
+          } else {
+            this.alertService.error(response.errors.project_id);
           }
         } else {
           this.postEmployeeSignatureRequest(successModal);
