@@ -61,9 +61,8 @@ export class ConfigureClaManagerModalComponent {
     this.hasCLAManagerDesignee = false;
     this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     const data = {
-      userEmail: authData.user_email
+      userEmail: this.claContributorService.getUserPublicEmail()
     };
     this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
       () => {
@@ -81,7 +80,8 @@ export class ConfigureClaManagerModalComponent {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
-      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>'
+      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>' +
+      '<p>Your GitHub session has been opened in a current tab so that you can come back to GitHub and submit your code contribution</p>'
     this.openDialog(this.warningModal);
   }
 
@@ -90,8 +90,10 @@ export class ConfigureClaManagerModalComponent {
       this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
       this.authService.login();
     } else {
-      const url = this.claContributorService.getLFXCorporateURL();
-      window.open(url, '_self');
+      const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+      const corporateUrl = this.claContributorService.getLFXCorporateURL();
+      window.open(corporateUrl, '_blank');
+      window.open(redirectUrl, '_self');
     }
   }
 
