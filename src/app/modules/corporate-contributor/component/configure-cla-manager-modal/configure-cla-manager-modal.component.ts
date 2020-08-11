@@ -8,6 +8,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrganizationModel } from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -28,7 +29,8 @@ export class ConfigureClaManagerModalComponent {
     private claContributorService: ClaContributorService,
     private authService: AuthService,
     private storageService: StorageService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private alertService: AlertService
   ) {
     this.hasCLAManagerDesignee = false;
     setTimeout(() => {
@@ -52,7 +54,7 @@ export class ConfigureClaManagerModalComponent {
     } else {
       this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
         '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
-        ' into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>';
+        ' into the company dashboard where you can sign the CLAs and approve contributors on behalf of your company.</p>';
       this.openDialog(this.warningModal);
     }
   }
@@ -80,7 +82,7 @@ export class ConfigureClaManagerModalComponent {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
-      '</b> into the company dashboard where you can setup CLAs and approve contributors on behalf of your company.</p>';
+      '</b> into the company dashboard where you can sign the CLAs and approve contributors on behalf of your company.</p>';
     this.openDialog(this.warningModal);
   }
 
@@ -89,10 +91,16 @@ export class ConfigureClaManagerModalComponent {
       this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
       this.authService.login();
     } else {
-      const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
-      const corporateUrl = this.claContributorService.getLFXCorporateURL();
-      window.open(corporateUrl, '_blank');
-      window.open(redirectUrl, '_self');
+      this.modalService.dismissAll();
+      const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+      const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
+      this.alertService.success(flashMsg);
+      setTimeout(() => {
+        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+        const corporateUrl = this.claContributorService.getLFXCorporateURL();
+        window.open(corporateUrl, '_blank');
+        window.open(redirectUrl, '_self');
+      }, 5000);
     }
   }
 
