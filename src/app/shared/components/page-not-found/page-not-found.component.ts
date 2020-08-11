@@ -57,7 +57,7 @@ export class PageNotFoundComponent implements OnInit {
 
   setMessage() {
     if (this.actionType === AppSettings.SIGN_CLA) {
-      this.message = 'Wait... You are being redirected to the the Corporate Console.';
+      this.message = 'Wait... You are being redirected to the Configure CLA Manager.';
     } else if (this.hasGerrit) {
       this.message = 'You are being redirected to the ' + this.contractType + ' console.';
     } else {
