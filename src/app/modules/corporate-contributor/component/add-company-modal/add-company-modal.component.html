@@ -3,7 +3,10 @@
 
 <div class="add-company-container">
 
-    <div *ngIf="hasOrganizationExist" class="col-12 error">{{serverErrorMessage}}</div>
+    <div *ngIf="hasOrganizationExist" class="col-12 error">
+        Your Organization already exists in our database. Please goback to the search stage in order to find your
+        Organization.
+    </div>
 
     <form [formGroup]="form">
         <div class="container">

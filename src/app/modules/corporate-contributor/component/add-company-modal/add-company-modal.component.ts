@@ -27,7 +27,6 @@ export class AddCompanyModalComponent implements OnInit {
   hasOrganizationExist: boolean;
   modelRef: NgbModalRef;
   searchTimeout = null;
-  serverErrorMessage: string;
   hasAutofilledContent: boolean;
 
   constructor(
@@ -103,7 +102,6 @@ export class AddCompanyModalComponent implements OnInit {
       (response) => {
         if (response.list.length > 0) {
           this.hasAutofilledContent = true;
-          this.serverErrorMessage = 'Organization name already exist.';
           this.hasOrganizationExist = true;
           const organization = response.list[0];
           this.form.controls.companyWebsite.setValue(organization.organization_website);
@@ -121,7 +119,6 @@ export class AddCompanyModalComponent implements OnInit {
       (response) => {
         if (response.list.length > 0) {
           this.hasAutofilledContent = true;
-          this.serverErrorMessage = 'Organization website already exist.';
           this.hasOrganizationExist = true;
           const organization = response.list[0];
           this.form.controls.companyName.setValue(organization.organization_name);
