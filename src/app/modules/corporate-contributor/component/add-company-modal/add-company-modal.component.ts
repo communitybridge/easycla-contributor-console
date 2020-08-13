@@ -114,7 +114,8 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   validateOrganizationWebsite() {
-    const companyWebsite = (new URL(this.form.controls.companyWebsite.value)).hostname;
+    let companyWebsite = (new URL(this.form.controls.companyWebsite.value)).hostname;
+    companyWebsite = companyWebsite.toLowerCase().replace('www.', '');
     this.claContributorService.hasOrganizationExist(null, companyWebsite).subscribe(
       (response) => {
         if (response.list.length > 0) {

@@ -65,7 +65,7 @@ export class ClaContributorService {
       url += '$filter=name eq ' + organizationName;
     }
     if (organizationWebsite) {
-      url += 'websiteName=' + organizationWebsite;
+      url += '$filter=website eq ' + organizationWebsite;
     }
     return this.httpClient.get<OrganizationListModel>(url);
   }
