@@ -54,8 +54,19 @@ export class ClaContributorService {
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
-  searchOrganization(searchText: string): Observable<OrganizationListModel> {
-    const url = this.baseURL + 'v3/organization/search?companyName=' + searchText;
+  searchOrganization(organizationName: string): Observable<OrganizationListModel> {
+    const url = this.baseURL + 'v3/organization/search?companyName=' + organizationName
+    return this.httpClient.get<OrganizationListModel>(url);
+  }
+
+  hasOrganizationExist(organizationName: string, organizationWebsite: string): Observable<OrganizationListModel> {
+    let url = this.baseURL + 'v3/organization/search?';
+    if (organizationName) {
+      url += '$filter=name eq ' + organizationName;
+    }
+    if (organizationWebsite) {
+      url += 'websiteName=' + organizationWebsite;
+    }
     return this.httpClient.get<OrganizationListModel>(url);
   }
 

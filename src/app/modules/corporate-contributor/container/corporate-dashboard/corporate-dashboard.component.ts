@@ -221,15 +221,15 @@ export class CorporateDashboardComponent implements OnInit {
     this.noCompanyFound = false;
     this.emptySearchError = false;
     if (this.form.valid) {
-      const value = event.target.value;
-      if (this.selectedCompany !== value) {
+      const companyName = event.target.value;
+      if (this.selectedCompany !== companyName) {
         this.selectedCompany = '';
       }
       if (this.searchTimeout !== null) {
         clearTimeout(this.searchTimeout);
       }
       this.searchTimeout = setTimeout(() => {
-        this.searchOrganization(encodeURIComponent(value));
+        this.searchOrganization(encodeURIComponent(companyName));
       }, 300);
     } else {
       this.organizationList.list = [];
@@ -251,10 +251,10 @@ export class CorporateDashboardComponent implements OnInit {
     this.openWithDismiss(CLANotFound);
   }
 
-  searchOrganization(searchText: string) {
+  searchOrganization(companyName: string) {
     this.alertService.clearAlert();
     this.organizationList.list = [];
-    this.claContributorService.searchOrganization(searchText).subscribe(
+    this.claContributorService.searchOrganization(companyName).subscribe(
       (response) => {
         this.organizationList = response;
         if (this.organizationList.list.length <= 0) {

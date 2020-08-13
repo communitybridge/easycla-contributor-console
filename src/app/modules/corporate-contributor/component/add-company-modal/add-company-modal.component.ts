@@ -9,7 +9,6 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -19,24 +18,27 @@ import { Router } from '@angular/router';
 export class AddCompanyModalComponent implements OnInit {
   @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
-  @ViewChild('WarningModal') WarningModal: TemplateRef<any>;
   form: FormGroup;
   checkboxText1: string;
   checkboxText2: string;
   message: string;
   title: string;
   hasError: boolean;
+  hasOrganizationExist: boolean;
   modelRef: NgbModalRef;
+  searchTimeout = null;
+  serverErrorMessage: string;
+  hasAutofilledContent: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private claContributorService: ClaContributorService,
-    private storageService: StorageService,
-    private router: Router
+    private storageService: StorageService
   ) { }
 
   ngOnInit(): void {
+    this.hasAutofilledContent = false;
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
       companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
@@ -52,6 +54,83 @@ export class AddCompanyModalComponent implements OnInit {
       centered: true,
       backdrop: 'static'
     });
+  }
+
+  onWebsiteKeypress() {
+    this.hasOrganizationExist = false;
+    if (this.form.controls.companyWebsite.valid) {
+      this.checkOrganization('ORGANIZATION_WEBSITE');
+    }
+  }
+
+  onNameKeypress() {
+    this.hasOrganizationExist = false;
+    if (this.form.controls.companyName.valid) {
+      this.checkOrganization('ORGANIZATION_NAME');
+    }
+  }
+
+  checkOrganization(action) {
+    if (this.searchTimeout !== null) {
+      clearTimeout(this.searchTimeout);
+    }
+    this.searchTimeout = setTimeout(() => {
+      // Added seperate method for autofilled companyName or companyWebsite.
+      this.removedAutofilled(action);
+      if (action === 'ORGANIZATION_WEBSITE') {
+        this.validateOrganizationWebsite();
+      } else {
+        this.validateOrganizationName();
+      }
+    }, 500);
+  }
+
+  removedAutofilled(action) {
+    // Removed autofilled content if user start editing it again.
+    if (this.hasAutofilledContent) {
+      this.hasAutofilledContent = false;
+      if (action === 'ORGANIZATION_WEBSITE') {
+        this.form.controls.companyName.setValue('');
+      } else {
+        this.form.controls.companyWebsite.setValue('');
+      }
+    }
+  }
+
+  validateOrganizationName() {
+    const companyName = this.form.controls.companyName.value;
+    this.claContributorService.hasOrganizationExist(companyName, null).subscribe(
+      (response) => {
+        if (response.list.length > 0) {
+          this.hasAutofilledContent = true;
+          this.serverErrorMessage = 'Organization name already exist.';
+          this.hasOrganizationExist = true;
+          const organization = response.list[0];
+          this.form.controls.companyWebsite.setValue(organization.organization_website);
+        }
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
+  }
+
+  validateOrganizationWebsite() {
+    const companyWebsite = this.form.controls.companyWebsite.value;
+    this.claContributorService.hasOrganizationExist(null, companyWebsite).subscribe(
+      (response) => {
+        if (response.list.length > 0) {
+          this.hasAutofilledContent = true;
+          this.serverErrorMessage = 'Organization website already exist.';
+          this.hasOrganizationExist = true;
+          const organization = response.list[0];
+          this.form.controls.companyName.setValue(organization.organization_name);
+        }
+      },
+      (exception) => {
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   addOrganization() {
@@ -94,5 +173,17 @@ export class AddCompanyModalComponent implements OnInit {
     if (!this.hasError) {
       this.CLANotSignEmitter.emit();
     }
+  }
+
+  onClickNoBtn() {
+
+  }
+
+  onClickYesBtn() {
+
+  }
+
+  onClickClose() {
+    this.modalService.dismissAll();
   }
 }
