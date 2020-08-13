@@ -2,11 +2,17 @@
  SPDX-License-Identifier: MIT -->
 
 <div class="add-company-container">
+
+    <div *ngIf="hasOrganizationExist" class="col-12 error">
+        Your Organization already exists in our database. Please goback to the search stage in order to find your
+        Organization.
+    </div>
+
     <form [formGroup]="form">
         <div class="container">
             <div class="row">
                 <div class="col-10 element">
-                    <input type="text" name="companyWebsite"
+                    <input type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
                         placeholder="Enter Organization Website (http://www.example.com)"
                         formControlName="companyWebsite" tabindex="-1" class="form-control" />
                     <div *ngIf="!form.controls.companyWebsite.valid && form.controls.companyWebsite.touched">
@@ -16,7 +22,7 @@
 
                 <div class="col-10 element">
                     <input type="text" name="companyName" placeholder="Enter Organization Name"
-                        formControlName="companyName" tabindex="-1" class="form-control" />
+                        (input)="onNameKeypress()" formControlName="companyName" tabindex="-1" class="form-control" />
                     <div
                         *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
                         <div [hidden]="!form.controls.companyName.errors.required" class="error">
@@ -52,8 +58,9 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button tabindex="-1" type="button" class="btn inactive" [disabled]="!form.valid"
-                    [ngClass]="{'active':form.valid}" (click)="onClickProceed()">
+                <button tabindex="-1" type="button" class="btn inactive"
+                    [disabled]="!form.valid || hasOrganizationExist"
+                    [ngClass]="{'active':(form.valid && !hasOrganizationExist)}" (click)="onClickProceed()">
                     Next
                 </button>
             </div>

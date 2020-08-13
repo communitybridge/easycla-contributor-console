@@ -1,7 +1,7 @@
 /* Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT */
 
- .add-company-container {
+.add-company-container {
   padding: 10px 10px 0 10px;
   font-family: "SourceSansPro";
 
@@ -18,8 +18,13 @@
     padding-right: 0;
   }
 
-  .pad-left-5{
+  .pad-left-5 {
     padding-left: 5px;
+  }
+
+  .error {
+    color: red;
+    font-size: 12px;
   }
 
   i {
