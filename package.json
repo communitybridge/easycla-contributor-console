@@ -30,7 +30,10 @@
     "deploy:cloudfront:prod": "SLS_DEBUG=* ROOT_DOMAIN=communitybridge.org PRODUCT_DOMAIN=easycla.communitybridge.org yarn sls deploy --stage='prod' --cloudfront=true --verbose",
     "deploy:frontend:prod": "SLS_DEBUG=* ROOT_DOMAIN=communitybridge.org PRODUCT_DOMAIN=easycla.communitybridge.org yarn sls client deploy --stage='prod' --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose",
     "deploy:invalidate:prod": "SLS_DEBUG=* ROOT_DOMAIN=communitybridge.org PRODUCT_DOMAIN=easycla.communitybridge.org yarn sls cloudfrontInvalidate --stage='prod' --region='us-east-1' --cloudfront='true' --verbose",
-    "remove:prod": "SLS_DEBUG=* yarn sls remove --stage='prod' --region='us-east-1' --verbose"
+    "remove:prod": "SLS_DEBUG=* yarn sls remove --stage='prod' --region='us-east-1' --verbose",
+    "prebuild:dev": "STAGE_ENV=dev node ./src/app/config/scripts/prefetch-ssm.js",
+    "prebuild:staging": "STAGE_ENV=staging node ./src/app/config/scripts/prefetch-ssm.js",
+    "prebuild:prod": "STAGE_ENV=prod node ./src/app/config/scripts/prefetch-ssm.js"
   },
   "private": true,
   "dependencies": {
@@ -49,6 +52,7 @@
     "@types/auth0-js": "^8.11.7",
     "@types/node": "^12.11.1",
     "auth0-js": "^9.13.2",
+    "aws-sdk": "^2.733.0",
     "bootstrap": "^4.4.0",
     "rxjs": "~6.5.4",
     "serverless": "^1.69.0",

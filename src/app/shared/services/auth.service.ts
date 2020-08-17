@@ -7,7 +7,8 @@ import * as jwt_decode from 'jwt-decode';
 import { getAuthURLFromWindow } from 'src/app/config/auth-utils';
 import { StorageService } from './storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
-import { ClaConfiguration } from 'src/app/config/cla-config';
+import * as env from 'src/app/config/cla-env-config.json'
+export const EnvConfig = env as any;
 
 (window as any).global = window;
 
@@ -15,8 +16,8 @@ import { ClaConfiguration } from 'src/app/config/cla-config';
 export class AuthService {
 
   auth0 = new auth0.WebAuth({
-    clientID: ClaConfiguration.auth0_clientId,
-    domain: ClaConfiguration.auth0_domain,
+    clientID: EnvConfig['auth0-clientId'],
+    domain: EnvConfig['auth0-domain'],
     responseType: 'token id_token',
     redirectUri: getAuthURLFromWindow(),
     scope: 'openid email profile'
