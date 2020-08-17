@@ -107,7 +107,7 @@
 <ng-template #identifyCLAManager let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="onClickClose()"></app-modal-header>
+            <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="openCLANotfound(signedCLANotFoundModal)"></app-modal-header>
             <app-identify-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)"
                 [hasShowContactAdmin]="hasShowContactAdmin">
             </app-identify-cla-manager-modal>

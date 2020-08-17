@@ -11,6 +11,7 @@ import { ProjectModel } from 'src/app/core/models/project';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -35,7 +36,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(255)])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(255), Validators.pattern(AppSettings.NON_WHITE_SPACE_REGEX)])],
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid, Validators.maxLength(255)])],
     });
   }
