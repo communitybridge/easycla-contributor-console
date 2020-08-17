@@ -29,6 +29,8 @@ export class AppSettings {
     public static USERNAME_REGEX = '/^[a-zA-Z0-9_]{1,15}$/';
     public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
     public static URL_PATTERN = '^((ht|f)tp(s?))\://([0-9a-zA-Z\-]+\.)+[0-9a-zA-Z]{2,6}(\:[0-9]+)?(/\S*)?$';
+    public static  NON_WHITE_SPACE_REGEX: RegExp = new RegExp('.*S.*');
+
 }
 
 
