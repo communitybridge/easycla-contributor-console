@@ -12,6 +12,7 @@ import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
+import { CompanyAdminDesigneeModel } from 'src/app/core/models/company-admin-designee';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -67,8 +68,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const user: UserModel = JSON.parse(this.storageService.getItem('user'));
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
-        () => {
-          this.handleSuccess(hasCompanyAdmin, content);
+        (response: CompanyAdminDesigneeModel) => {
+          this.handleSuccess(hasCompanyAdmin, content, response);
         },
         (exception) => {
           console.log(exception);
@@ -78,13 +79,20 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     }
   }
 
-  handleSuccess(hasCompanyAdmin, content) {
+  handleSuccess(hasCompanyAdmin: boolean, content: any, response: CompanyAdminDesigneeModel) {
     this.hasError = false;
     this.title = 'Notification Sent';
     this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
     if (hasCompanyAdmin) {
       this.title = 'Request Submitted to Company Admin';
-      this.message = 'Your Company Admin has been contacted, you will need to follow up with them to process your CLA request.';
+      this.message = 'Your Company Admin ';
+      for (const [index, admin] of response.list.entries()) {
+        this.message += admin.name;
+        if (index !== response.list.length - 1) {
+          this.message += ', ';
+        }
+      }
+      this.message += ' has been contacted, you will need to follow up with them to process your CLA request.';
     }
     this.openDialogModal(content);
   }
