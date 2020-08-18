@@ -21,6 +21,10 @@
                     <div [hidden]="!form.controls.name.errors.maxlength" class="error">
                         Name should not exceed 255 characters.
                     </div>
+                    <div *ngIf="form.controls.name.value.length > 1" [hidden]="!form.controls.name.errors.pattern"
+                        class="error">
+                        Only whitespace(s) not allowed.
+                    </div>
                 </div>
             </div>
 

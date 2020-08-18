@@ -19,6 +19,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { GerritUserModel } from '../models/gerrit';
+import { CompanyAdminDesigneeModel } from '../models/company-admin-designee';
 
 @Injectable({
   providedIn: 'root'
@@ -105,9 +106,9 @@ export class ClaContributorService {
     return this.httpClient.get<ProjectModel>(url, this.getHeaders());
   }
 
-  inviteManager(userLFID: string, data: any): Observable<InviteCompanyModel> {
+  inviteManager(userLFID: string, data: any): Observable<CompanyAdminDesigneeModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
-    return this.httpClient.post<InviteCompanyModel>(url, data);
+    return this.httpClient.post<CompanyAdminDesigneeModel>(url, data);
   }
 
   getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
