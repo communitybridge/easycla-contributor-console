@@ -37,7 +37,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      name: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(255), Validators.pattern(AppSettings.NON_WHITE_SPACE_REGEX)])],
+      name: ['', Validators.compose([Validators.required, Validators.minLength(2), Validators.maxLength(255), Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))])],
       email: ['', Validators.compose([Validators.required, EmailValidator.isValid, Validators.maxLength(255)])],
     });
   }
@@ -88,7 +88,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       this.message = 'Your Company Admin ';
       for (const [index, admin] of response.list.entries()) {
         this.message += admin.name;
-        if (index !== response.list.length - 1) {
+        if (index !== response.list.length - 1 && admin.name.length > 0) {
           this.message += ', ';
         }
       }
