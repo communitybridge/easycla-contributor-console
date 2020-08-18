@@ -1,6 +1,9 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "outDir": "../out-tsc/e2e",
     "module": "commonjs",
     "target": "es2018",
