@@ -15,7 +15,6 @@ async function retrieveSSMValues(variables, stage, region, profile) {
     const scopedVariables = variables.map((param) => {
         return `cla-${param}-${stage}`;
     });
-
     const result = await requestSSMParameters(scopedVariables, stage, region, profile);
     const parameters = result.Parameters;
     const error = result.$response.error;
@@ -49,15 +48,13 @@ async function retrieveSSMValues(variables, stage, region, profile) {
  * @param {string} region
  */
 function requestSSMParameters(variables, stage, region, profile) {
-    console.log(profile);
     AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile });
     const ssm = new AWS.SSM({ region: region });
-
     const ps = {
         Names: variables,
         WithDecryption: true
     };
-
+    console.log(AWS.config.credentials);
     return ssm.getParameters(ps).promise();
 }
 
