@@ -170,7 +170,8 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   showDialogModal(content) {
     this.modalService.open(content, {
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
   }
 }

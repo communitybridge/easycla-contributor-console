@@ -122,7 +122,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     this.modalService.dismissAll();
     this.modalService.open(content, {
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
   }
 

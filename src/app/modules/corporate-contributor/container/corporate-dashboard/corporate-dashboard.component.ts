@@ -283,7 +283,8 @@ export class CorporateDashboardComponent implements OnInit {
   open(content) {
     this.modalService.open(content, {
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
   }
 
