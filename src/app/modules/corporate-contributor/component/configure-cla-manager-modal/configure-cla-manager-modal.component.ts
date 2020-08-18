@@ -50,7 +50,11 @@ export class ConfigureClaManagerModalComponent {
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
       this.storageService.removeItem(AppSettings.ACTION_TYPE);
-      this.addAsCLAManagerDesignee();
+      if (this.authService.isAuthenticated()) {
+        this.addAsCLAManagerDesignee();
+      } else {
+        this.redirectToAuth0();
+      }
     } else {
       this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
         '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
@@ -88,8 +92,7 @@ export class ConfigureClaManagerModalComponent {
 
   onClickProccedModalBtn() {
     if (!this.hasCLAManagerDesignee) {
-      this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
-      this.authService.login();
+      this.redirectToAuth0();
     } else {
       this.modalService.dismissAll();
       const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
@@ -104,6 +107,11 @@ export class ConfigureClaManagerModalComponent {
     }
   }
 
+  redirectToAuth0() {
+    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
+    this.authService.login();
+  }
+
   onClickBackBtn() {
     this.backBtnEmitter.emit();
   }
@@ -115,7 +123,8 @@ export class ConfigureClaManagerModalComponent {
   openDialog(content) {
     this.modalService.open(content, {
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
   }
 

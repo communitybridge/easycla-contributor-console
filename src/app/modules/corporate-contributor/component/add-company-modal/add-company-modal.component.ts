@@ -51,7 +51,8 @@ export class AddCompanyModalComponent implements OnInit {
   openDialog(content) {
     this.modelRef = this.modalService.open(content, {
       centered: true,
-      backdrop: 'static'
+      backdrop: 'static',
+      keyboard: false
     });
   }
 
