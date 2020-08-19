@@ -56,7 +56,7 @@ jobs:
       - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
 
-  build:
+  build: &buildAnchor
     <<: *defaults
     steps:
       - checkout
@@ -64,11 +64,25 @@ jobs:
           at: /tmp/workspace
       - restore_cache: *restore-cache
       - run:
+          name: Setup AWS key
+          command: |
+            echo "export AWS_ACCESS_KEY_ID=${!AWS_ACCESS_KEY_ID_ENV_VAR}" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" >> ${BASH_ENV}
+      - run:
+          name: Install AWS Profile
+          command: |
+            echo "PROJECT_DIR=${PROJECT_DIR}"
+            echo "Installing Profile '${AWS_PROFILE}'..."
+            mkdir -p ~/.aws
+            printf "[profile ${AWS_PROFILE}]\nregion=${AWS_REGION}\noutput=json" > ~/.aws/config
+            printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
+            echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
+      - run:
           name: Building Source
           command: |
             echo "Node version is: $(node --version)"
-            echo "Running yarn build..."
-            yarn build
+            echo "Running yarn build:${STAGE}..."
+            yarn build:${STAGE}
           no_output_timeout: 10m
       - run:
           name: Build Edge
@@ -81,6 +95,39 @@ jobs:
           no_output_timeout: 10m
       - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
+
+  buildDev:
+    <<: *buildAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_DEV
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_DEV
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
+      STAGE: dev
+      ROOT_DOMAIN: dev.communitybridge.org
+      PRODUCT_DOMAIN: easycla.dev.communitybridge.org
+
+  buildStaging:
+    <<: *buildAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
+      STAGE: staging
+      ROOT_DOMAIN: staging.communitybridge.org
+      PRODUCT_DOMAIN: easycla.staging.communitybridge.org
+
+  buildProd:
+    <<: *buildAnchor
+    environment:
+      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_PROD
+      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_PROD
+      AWS_PROFILE: easycla
+      AWS_REGION: us-east-1
+      STAGE: prod
+      ROOT_DOMAIN: communitybridge.org
+      PRODUCT_DOMAIN: easycla.communitybridge.org
 
   lint:
     <<: *defaults
@@ -181,7 +228,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - build:
+      - buildDev:
           requires:
             - setup
           filters:
@@ -189,19 +236,13 @@ workflows:
               only: /.*/
       - lint:
           requires:
-            - build
+            - buildDev
           filters:
             tags:
               only: /.*/
-      #- test:
-      #    requires:
-      #      - build
-      #    filters:
-      #      tags:
-      #        only: /.*/
       - deployContributorConsoleDev:
           requires:
-            - build
+            - buildDev
             - lint
             #- test
           filters:
@@ -212,11 +253,17 @@ workflows:
                 - master
 
       # Deploy Staging
+      - buildStaging:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
       - approve_staging:
           type: approval
           requires:
-            - build
-            - lint
+            - buildStaging
           filters:
             branches:
               ignore: /.*/
@@ -234,9 +281,17 @@ workflows:
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
       # Deploy Prod
+      - buildProd:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              # see semver examples https://regex101.com/r/Ly7O1x/201/
+              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
       - approve_prod:
           type: approval
           requires:
+            - buildProd
             - deployContributorConsoleStaging
           filters:
             branches:
@@ -253,4 +308,3 @@ workflows:
             tags:
               # see semver examples https://regex101.com/r/Ly7O1x/201/
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-

@@ -10,15 +10,18 @@ const stageEnv = process.env.STAGE_ENV;
 const AWS_SSM_JSON_PATH = './src/app/config/cla-env-config.json';
 
 async function prefetchSSM() {
-  let result = {};
   console.log(`Start to fetch SSM values at ${stageEnv}...`);
-  result = await RetrieveSSMValues(configVarArray, stageEnv, region, profile);
+  const result = await RetrieveSSMValues(configVarArray, stageEnv, region, profile);
+  console.log('Fetching completed.');
 
   //test for local
   // result['cla-api-url'] = 'http://localhost:5000';
+  console.log(`Saving configuration to file: ${AWS_SSM_JSON_PATH}...`);
   fs.writeFile(AWS_SSM_JSON_PATH, JSON.stringify(result), function (err) {
-    if (err) throw new Error(`Couldn't save SSM paramters to disk with error ${err}`);
-    console.log('Fetching completed...');
+    if (err) {
+      throw new Error(`Couldn't save SSM parameters to disk with error ${err}`);
+    }
+    console.log('Save complete.');
   });
 }
 
