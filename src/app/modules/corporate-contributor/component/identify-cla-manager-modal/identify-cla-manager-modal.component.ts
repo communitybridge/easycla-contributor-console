@@ -72,7 +72,6 @@ export class IdentifyClaManagerModalComponent implements OnInit {
           this.handleSuccess(hasCompanyAdmin, content, response);
         },
         (exception) => {
-          console.log(exception);
           this.handleError(exception, content);
         }
       );
@@ -81,8 +80,6 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   handleSuccess(hasCompanyAdmin: boolean, content: any, response: CompanyAdminDesigneeModel) {
     this.hasError = false;
-    this.title = 'Notification Sent';
-    this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
     if (hasCompanyAdmin) {
       this.title = 'Request Submitted to Company Admin';
       this.message = 'Your Company Admin ';
@@ -93,6 +90,18 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         }
       }
       this.message += ' has been contacted, you will need to follow up with them to process your CLA request.';
+    } else {
+      // Two diffrent success message as per from which screen he came
+      // Add Organization or from Company search page.
+      if (this.hasShowContactAdmin) {
+        // Came from Search organization flow.
+        this.title = 'Request Submitted';
+        this.message = 'Your authorized representative has been contacted. You will need to follow up with them to process your CLA request.';
+      } else {
+        // Came from Add organization flow.
+        this.title = 'Notification Sent';
+        this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
+      }
     }
     this.openDialogModal(content);
   }
