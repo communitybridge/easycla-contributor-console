@@ -12,9 +12,7 @@ const AWS = require('aws-sdk');
  * @returns {Promise<{ [key:string]: string}>}
  */
 async function retrieveSSMValues(variables, stage, region, profile) {
-    const scopedVariables = variables.map((param) => {
-        return `cla-${param}-${stage}`;
-    });
+    const scopedVariables = variables.map((param) => `cla-${param}-${stage}`);
     const result = await requestSSMParameters(scopedVariables, stage, region, profile);
     const parameters = result.Parameters;
     const error = result.$response.error;
@@ -24,8 +22,9 @@ async function retrieveSSMValues(variables, stage, region, profile) {
         );
     }
     const scopedParams = createParameterMap(parameters, stage);
-    let params;
+    const params = new Map();
     Object.keys(scopedParams).forEach((key) => {
+        // console.log(`processing ${key}`);
         const param = scopedParams[key];
         key = key.replace('cla-', '');
         key = key.replace(`-${stage}`, '');
@@ -39,23 +38,30 @@ async function retrieveSSMValues(variables, stage, region, profile) {
             );
         }
     });
+
     return params;
 }
 
 /**
+ * Performs a bulk request of the specified SSM parameters.
  * @param {string[]} variables
  * @param {string} stage
  * @param {string} region
+ * @param {string} profile
  */
-function requestSSMParameters(variables, stage, region, profile) {
+async function requestSSMParameters(variables, stage, region, profile) {
+    console.log(`Loading AWS credentials from profile: ${profile}`)
     AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile });
-    const ssm = new AWS.SSM({ region: region });
+    const ssm = new AWS.SSM({ region });
     const ps = {
         Names: variables,
         WithDecryption: true
     };
-    console.log(AWS.config.credentials);
-    return ssm.getParameters(ps).promise();
+    // console.log(AWS.config.credentials);
+    // console.log(`fetching ssm parameters: ${variables}`);
+    const response = await ssm.getParameters(ps).promise();
+    // console.log(response);
+    return response;
 }
 
 /**
