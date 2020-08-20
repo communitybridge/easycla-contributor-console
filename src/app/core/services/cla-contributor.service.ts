@@ -200,6 +200,10 @@ export class ClaContributorService {
     return null;
   }
 
+  downloadFile(url: string):Observable<Blob>{    
+    return this.httpClient.get(url, { responseType: "blob" } );
+  }
+
   private getHttpClientHeaders(): HttpHeaders {
     const tokenId = this.authService.getIdToken();
     if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
