@@ -201,7 +201,7 @@ export class ClaContributorService {
   }
 
   downloadFile(url: string):Observable<Blob>{    
-    return this.httpClient.get(url, { responseType: "blob" } );
+    return this.httpClient.get(url, { responseType: 'blob' } );
   }
 
   private getHttpClientHeaders(): HttpHeaders {
