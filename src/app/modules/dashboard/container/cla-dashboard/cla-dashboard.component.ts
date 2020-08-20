@@ -7,6 +7,7 @@ import { ProjectModel } from 'src/app/core/models/project';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AppSettings } from 'src/app/config/app-settings';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -27,7 +28,8 @@ export class ClaDashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private storageService: StorageService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private claContributorService: ClaContributorService
   ) {
     this.storageService.removeGerritItems();
     this.storageService.setItem(AppSettings.HAS_GERRIT, false);
@@ -89,6 +91,26 @@ export class ClaDashboardComponent implements OnInit {
     } else {
       const error = 'Unable to fetch redirect URL.';
       this.alertService.error(error);
+    }
+  }
+
+  onClickPreviewPDF(consoleType: string) {
+    let documents = [];
+    if (consoleType === 'CORPORATE') {
+      documents = this.project.project_corporate_documents;
+    } else {
+      documents = this.project.project_individual_documents;
+    }
+    if (documents.length > 0) {
+      const latestDoc = documents[documents.length - 1].document_s3_url;
+      const filename = documents[documents.length - 1].document_name;
+      if (latestDoc) {
+        this.claContributorService.downloadFile(latestDoc, filename);
+      } else {
+        this.alertService.error('Document link missing please co-ordinate with your administrator.')
+      }
+    } else {
+      this.alertService.error('No document found to download.')
     }
   }
 

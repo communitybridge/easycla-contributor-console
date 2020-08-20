@@ -20,6 +20,8 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { GerritUserModel } from '../models/gerrit';
 import { CompanyAdminDesigneeModel } from '../models/company-admin-designee';
+declare const require: any
+const FileSaver = require('file-saver');
 
 @Injectable({
   providedIn: 'root'
@@ -198,6 +200,10 @@ export class ClaContributorService {
       }
     }
     return null;
+  }
+
+  downloadFile(url: string, pdfName: string) {
+    FileSaver.saveAs(url, pdfName);
   }
 
   private getHttpClientHeaders(): HttpHeaders {
