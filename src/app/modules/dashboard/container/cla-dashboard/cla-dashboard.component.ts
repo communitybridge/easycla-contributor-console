@@ -106,7 +106,7 @@ export class ClaDashboardComponent implements OnInit {
       const filename = documents[documents.length - 1].document_name;
       if (latestDoc) {
         this.claContributorService.downloadFile(latestDoc, filename);
-      }else{
+      } else {
         this.alertService.error('Document link missing please co-ordinate with your administrator.')
       }
     } else {
