@@ -103,7 +103,12 @@ export class ClaDashboardComponent implements OnInit {
     }
     if (documents.length > 0) {
       const latestDoc = documents[documents.length - 1].document_s3_url;
-      this.claContributorService.downloadFile(latestDoc);
+      const filename = documents[documents.length - 1].document_name;
+      if (latestDoc) {
+        this.claContributorService.downloadFile(latestDoc, filename);
+      }else{
+        this.alertService.error('Document link missing please co-ordinate with your administrator.')
+      }
     } else {
       this.alertService.error('No document found to download.')
     }

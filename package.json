@@ -57,6 +57,7 @@
     "auth0-js": "^9.13.2",
     "aws-sdk": "^2.733.0",
     "bootstrap": "^4.4.0",
+    "file-saver": "^2.0.2",
     "rxjs": "~6.5.4",
     "serverless": "^1.69.0",
     "serverless-cloudfront-invalidate": "^1.4.0",
