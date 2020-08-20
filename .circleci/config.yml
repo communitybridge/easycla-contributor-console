@@ -93,6 +93,10 @@ jobs:
             yarn build
             popd
           no_output_timeout: 10m
+      - run:
+          name: Check License Headers
+          command: |
+            ./check-headers.sh
       - save_cache: *save-cache
       - persist_to_workspace: *persist_to_workspace
 
@@ -244,7 +248,6 @@ workflows:
           requires:
             - buildDev
             - lint
-            #- test
           filters:
             tags:
               ignore: /.*/

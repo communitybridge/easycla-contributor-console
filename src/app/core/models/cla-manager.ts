@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 export class CLAManagerModel {
     approved_on: Date;
     cla_group_name: string;
