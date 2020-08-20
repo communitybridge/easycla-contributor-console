@@ -1,4 +1,5 @@
-// Copyright The Linux Foundation and each contributor to CommunityBridge.// SPDX-License-Identifier: MIT
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
 
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';

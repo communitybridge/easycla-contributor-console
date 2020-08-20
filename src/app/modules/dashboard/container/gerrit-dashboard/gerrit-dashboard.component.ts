@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';

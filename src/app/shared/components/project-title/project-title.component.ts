@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';

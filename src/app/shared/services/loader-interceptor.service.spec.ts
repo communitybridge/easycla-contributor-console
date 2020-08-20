@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { TestBed } from '@angular/core/testing';
 import { LoaderInterceptorService } from './loader-interceptor.service';
 import { RouterTestingModule } from '@angular/router/testing';
