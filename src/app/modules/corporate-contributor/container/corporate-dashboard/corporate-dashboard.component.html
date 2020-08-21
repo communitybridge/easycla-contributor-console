@@ -28,17 +28,13 @@
 
                                         <div class="col-12"
                                             *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
-                                            <span *ngIf="form.controls.companyName.errors.required"
+                                            <span *ngIf="!form.controls.companyName.errors.required"
                                                 class="error">{{minLengthValidationMsg}}
                                             </span>
-                                            <span *ngIf="form.controls.companyName.errors.minlength"
-                                                class="error">{{minLengthValidationMsg}}
-                                            </span>
-                                            <span
-                                                *ngIf="form.controls.companyName.errors.pattern && !form.controls.companyName.errors.minlength"
-                                                class="error">
-                                                Only whitespaces not allowed.
-                                            </span>
+                                        </div>
+
+                                        <!--Repeated error message but it is requirement when no search text is present-->
+                                        <div class="col-12 error" *ngIf="emptySearchError">{{minLengthValidationMsg}}
                                         </div>
 
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching

@@ -51,10 +51,9 @@ export class ConfigureClaManagerModalComponent {
   }
 
   validateUserLFID() {
-    console.log(this.claContributorService.getUserLFID());
     if (this.claContributorService.getUserLFID()) {
       this.storageService.removeItem(AppSettings.ACTION_TYPE);
-      if (this.authService.isAuthenticated()) {
+      if (this.claContributorService.hasTokenValid()) {
         this.addAsCLAManagerDesignee();
       } else {
         this.redirectToAuth0();
@@ -62,7 +61,7 @@ export class ConfigureClaManagerModalComponent {
     } else {
       this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
         '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
-        ' into the company dashboard where you can sign the CLAs and approve contributors on behalf of your company.</p>';
+        ' into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
       this.openDialog(this.warningModal);
     }
   }
@@ -92,7 +91,7 @@ export class ConfigureClaManagerModalComponent {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
-      '</b> into the company dashboard where you can sign the CLAs and approve contributors on behalf of your company.</p>';
+      '</b> into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
     this.openDialog(this.warningModal);
   }
 

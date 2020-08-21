@@ -35,6 +35,7 @@ export class CorporateDashboardComponent implements OnInit {
   form: FormGroup;
   noCompanyFound: boolean;
   minLengthValidationMsg: string;
+  emptySearchError: boolean;
   hasError: boolean;
   title: string;
   message: string;
@@ -56,12 +57,15 @@ export class CorporateDashboardComponent implements OnInit {
     this.userId = this.route.snapshot.paramMap.get('userId');
     this.openView = this.route.snapshot.queryParamMap.get('view');
     this.searchBoxValue = '';
-    this.location.onPopState(() => this.modalService.dismissAll());
+    this.location.onPopState(() => {
+      this.modalService.dismissAll()
+    });
   }
 
   ngOnInit(): void {
     this.selectedCompany = '';
     this.hasShowDropdown = false;
+    this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hasShowContactAdmin = true;
     this.hideDialogCloseBtn = false;
@@ -95,6 +99,7 @@ export class CorporateDashboardComponent implements OnInit {
   onSelectCompany(organization) {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
+    console.log(this.selectedCompany);
     this.searchBoxValue = organization.organization_name;
     this.form.controls.companyName.setValue(organization.organization_name);
   }
@@ -224,6 +229,7 @@ export class CorporateDashboardComponent implements OnInit {
   onCompanyKeypress(event) {
     this.hasShowDropdown = true;
     this.noCompanyFound = false;
+    this.emptySearchError = false;
     if (this.form.valid) {
       const companyName = event.target.value;
       if (this.selectedCompany !== companyName) {
@@ -237,6 +243,13 @@ export class CorporateDashboardComponent implements OnInit {
       }, 400);
     } else {
       this.organizationList.list = [];
+      this.resetEmptySearchMessage();
+    }
+  }
+
+  resetEmptySearchMessage() {
+    if (this.form.controls.companyName.value === '') {
+      this.emptySearchError = true;
     }
   }
 
@@ -267,6 +280,7 @@ export class CorporateDashboardComponent implements OnInit {
           this.noCompanyFound = false;
           this.organizationList.list = [];
         }
+        this.resetEmptySearchMessage();
       },
       (exception) => {
         this.noCompanyFound = true;
