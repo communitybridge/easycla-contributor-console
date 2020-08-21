@@ -40,6 +40,7 @@ export class CorporateDashboardComponent implements OnInit {
   message: string;
   openView: string;
   hasShowContactAdmin: boolean;
+  hideDialogCloseBtn: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -63,6 +64,8 @@ export class CorporateDashboardComponent implements OnInit {
     this.hasShowDropdown = false;
     this.noCompanyFound = false;
     this.hasShowContactAdmin = true;
+    this.hideDialogCloseBtn = false;
+
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
@@ -231,7 +234,7 @@ export class CorporateDashboardComponent implements OnInit {
       }
       this.searchTimeout = setTimeout(() => {
         this.searchOrganization(encodeURIComponent(companyName));
-      }, 300);
+      }, 400);
     } else {
       this.organizationList.list = [];
     }
@@ -243,6 +246,11 @@ export class CorporateDashboardComponent implements OnInit {
 
   openCLANotfound(CLANotFound) {
     this.openWithDismiss(CLANotFound);
+  }
+
+  hideShowCloseBtn(isHide: boolean) {
+    console.log(isHide);
+    this.hideDialogCloseBtn = isHide;
   }
 
   searchOrganization(companyName: string) {

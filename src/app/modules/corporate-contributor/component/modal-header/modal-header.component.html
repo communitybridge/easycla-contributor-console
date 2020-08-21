@@ -4,7 +4,7 @@
 <div class="row dialog-header justify-content-between">
     <div class="col-1"></div>
     <div class="col">{{title}}</div>
-    <div class="col-1">
+    <div *ngIf="showCloseBtn" class="col-1">
         <i class="fas fa-times close-btn" title="Close" (click)="onClickClose()"></i>
     </div>
 </div>

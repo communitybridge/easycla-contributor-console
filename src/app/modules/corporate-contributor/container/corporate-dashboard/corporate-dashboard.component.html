@@ -90,7 +90,8 @@
 <ng-template #addCompany let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Enter Organization Details" (closeDialogEmitter)="onClickClose()">
+            <app-modal-header title="Enter Organization Details" showCloseBtn="true"
+                (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
             <app-add-company-modal (CLANotSignEmitter)="openCLANotSignModal(signedCLANotFoundModal)">
             </app-add-company-modal>
@@ -101,7 +102,8 @@
 <ng-template #signedCLANotFoundModal let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="No Signed CLA Found" (closeDialogEmitter)="onClickClose()"></app-modal-header>
+            <app-modal-header title="No Signed CLA Found" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
+            </app-modal-header>
             <app-cla-not-signed-modal (yesEmitter)="openWithDismiss(configureCLAManager)"
                 (noEmitter)="openWithDismiss(identifyCLAManager)">
             </app-cla-not-signed-modal>
@@ -112,8 +114,8 @@
 <ng-template #identifyCLAManager let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Identify CLA Manager"
-                (closeDialogEmitter)="openCLANotfound(signedCLANotFoundModal)"></app-modal-header>
+            <app-modal-header title="Identify CLA Manager" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
+            </app-modal-header>
             <app-identify-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)"
                 [hasShowContactAdmin]="hasShowContactAdmin">
             </app-identify-cla-manager-modal>
@@ -124,14 +126,15 @@
 <ng-template #configureCLAManager let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Configuring CLA Manager Settings" (closeDialogEmitter)="onClickClose()">
+            <app-modal-header title="Configuring CLA Manager Settings" [showCloseBtn]="hideDialogCloseBtn"
+                (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-configure-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)">
+            <app-configure-cla-manager-modal (showCloseBtnEmitter)="hideShowCloseBtn($event)"
+                (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)">
             </app-configure-cla-manager-modal>
         </div>
     </div>
 </ng-template>
-
 
 <ng-template #successModal let-modal>
     <div class="model">

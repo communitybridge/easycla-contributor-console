@@ -110,6 +110,11 @@ body {
       border: 1px solid #0099cc;
       font-style: normal;
     }
+
+    &:focus {
+      outline: 0;
+      box-shadow: none !important;
+    }
   }
 }
 

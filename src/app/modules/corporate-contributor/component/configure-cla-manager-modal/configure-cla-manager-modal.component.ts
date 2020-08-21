@@ -19,6 +19,7 @@ export class ConfigureClaManagerModalComponent {
   @ViewChild('errorModal') errorModal: TemplateRef<any>;
   @ViewChild('warningModal') warningModal: TemplateRef<any>;
   @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() showCloseBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   title: string;
   message: string;
@@ -33,6 +34,8 @@ export class ConfigureClaManagerModalComponent {
     private alertService: AlertService
   ) {
     this.hasCLAManagerDesignee = false;
+    this.showCloseBtnEmitter.emit(false);
+
     setTimeout(() => {
       this.manageAuthRedirection();
     }, 100);
@@ -48,6 +51,7 @@ export class ConfigureClaManagerModalComponent {
   }
 
   validateUserLFID() {
+    console.log(this.claContributorService.getUserLFID());
     if (this.claContributorService.getUserLFID()) {
       this.storageService.removeItem(AppSettings.ACTION_TYPE);
       if (this.authService.isAuthenticated()) {
@@ -74,9 +78,11 @@ export class ConfigureClaManagerModalComponent {
       () => {
         this.storageService.removeItem(AppSettings.ACTION_TYPE);
         this.hasCLAManagerDesignee = true;
+        this.showCloseBtnEmitter.emit(true);
       },
       (exception) => {
         this.title = 'Request Failed';
+        this.storageService.removeItem(AppSettings.ACTION_TYPE);
         this.message = exception.error.Message;
         this.openDialog(this.errorModal);
       }
