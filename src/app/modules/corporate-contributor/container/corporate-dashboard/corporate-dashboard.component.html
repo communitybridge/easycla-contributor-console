@@ -28,12 +28,17 @@
 
                                         <div class="col-12"
                                             *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
-                                            <span *ngIf="!form.controls.companyName.errors.required"
+                                            <span *ngIf="form.controls.companyName.errors.required"
                                                 class="error">{{minLengthValidationMsg}}
                                             </span>
-                                        </div>
-                                        <!--Repeated error message but it is requirement when no search text is present-->
-                                        <div class="col-12 error" *ngIf="emptySearchError">{{minLengthValidationMsg}}
+                                            <span *ngIf="form.controls.companyName.errors.minlength"
+                                                class="error">{{minLengthValidationMsg}}
+                                            </span>
+                                            <span
+                                                *ngIf="form.controls.companyName.errors.pattern && !form.controls.companyName.errors.minlength"
+                                                class="error">
+                                                Only whitespaces not allowed.
+                                            </span>
                                         </div>
 
                                         <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
@@ -107,7 +112,8 @@
 <ng-template #identifyCLAManager let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Identify CLA Manager" (closeDialogEmitter)="openCLANotfound(signedCLANotFoundModal)"></app-modal-header>
+            <app-modal-header title="Identify CLA Manager"
+                (closeDialogEmitter)="openCLANotfound(signedCLANotFoundModal)"></app-modal-header>
             <app-identify-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)"
                 [hasShowContactAdmin]="hasShowContactAdmin">
             </app-identify-cla-manager-modal>

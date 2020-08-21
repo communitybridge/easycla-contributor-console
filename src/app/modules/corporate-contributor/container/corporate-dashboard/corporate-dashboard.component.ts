@@ -35,7 +35,6 @@ export class CorporateDashboardComponent implements OnInit {
   form: FormGroup;
   noCompanyFound: boolean;
   minLengthValidationMsg: string;
-  emptySearchError: boolean;
   hasError: boolean;
   title: string;
   message: string;
@@ -62,13 +61,16 @@ export class CorporateDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.selectedCompany = '';
     this.hasShowDropdown = false;
-    this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hasShowContactAdmin = true;
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      companyName: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))
+      ])],
     });
 
     this.openAuthRedirectionModal();
@@ -219,7 +221,6 @@ export class CorporateDashboardComponent implements OnInit {
   onCompanyKeypress(event) {
     this.hasShowDropdown = true;
     this.noCompanyFound = false;
-    this.emptySearchError = false;
     if (this.form.valid) {
       const companyName = event.target.value;
       if (this.selectedCompany !== companyName) {
@@ -233,13 +234,6 @@ export class CorporateDashboardComponent implements OnInit {
       }, 300);
     } else {
       this.organizationList.list = [];
-      this.resetEmptySearchMessage();
-    }
-  }
-
-  resetEmptySearchMessage() {
-    if (this.form.controls.companyName.value === '') {
-      this.emptySearchError = true;
     }
   }
 
@@ -265,7 +259,6 @@ export class CorporateDashboardComponent implements OnInit {
           this.noCompanyFound = false;
           this.organizationList.list = [];
         }
-        this.resetEmptySearchMessage();
       },
       (exception) => {
         this.noCompanyFound = true;
