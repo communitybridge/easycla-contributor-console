@@ -206,6 +206,14 @@ export class ClaContributorService {
     FileSaver.saveAs(url, pdfName);
   }
 
+  hasTokenValid() {
+    const tokenId = this.authService.getIdToken();
+    if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
   private getHttpClientHeaders(): HttpHeaders {
     const tokenId = this.authService.getIdToken();
     if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {

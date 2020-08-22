@@ -41,6 +41,7 @@ export class CorporateDashboardComponent implements OnInit {
   message: string;
   openView: string;
   hasShowContactAdmin: boolean;
+  hideDialogCloseBtn: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,7 +57,9 @@ export class CorporateDashboardComponent implements OnInit {
     this.userId = this.route.snapshot.paramMap.get('userId');
     this.openView = this.route.snapshot.queryParamMap.get('view');
     this.searchBoxValue = '';
-    this.location.onPopState(() => this.modalService.dismissAll());
+    this.location.onPopState(() => {
+      this.modalService.dismissAll()
+    });
   }
 
   ngOnInit(): void {
@@ -65,10 +68,16 @@ export class CorporateDashboardComponent implements OnInit {
     this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hasShowContactAdmin = true;
+    this.hideDialogCloseBtn = false;
+
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+      companyName: ['', Validators.compose([
+        Validators.required,
+        Validators.minLength(3),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))
+      ])],
     });
 
     this.openAuthRedirectionModal();
@@ -90,6 +99,7 @@ export class CorporateDashboardComponent implements OnInit {
   onSelectCompany(organization) {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
+    console.log(this.selectedCompany);
     this.searchBoxValue = organization.organization_name;
     this.form.controls.companyName.setValue(organization.organization_name);
   }
@@ -230,7 +240,7 @@ export class CorporateDashboardComponent implements OnInit {
       }
       this.searchTimeout = setTimeout(() => {
         this.searchOrganization(encodeURIComponent(companyName));
-      }, 300);
+      }, 400);
     } else {
       this.organizationList.list = [];
       this.resetEmptySearchMessage();
@@ -249,6 +259,11 @@ export class CorporateDashboardComponent implements OnInit {
 
   openCLANotfound(CLANotFound) {
     this.openWithDismiss(CLANotFound);
+  }
+
+  hideShowCloseBtn(isHide: boolean) {
+    console.log(isHide);
+    this.hideDialogCloseBtn = isHide;
   }
 
   searchOrganization(companyName: string) {

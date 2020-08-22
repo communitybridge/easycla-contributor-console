@@ -46,7 +46,7 @@
 <ng-template #warningModal let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="" (closeDialogEmitter)="onClickClose()">
+            <app-modal-header title="" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
             <div class="row justify-content-center success-dialog">
                 <div class="col-11 warning-message" [innerHTML]="message"></div>

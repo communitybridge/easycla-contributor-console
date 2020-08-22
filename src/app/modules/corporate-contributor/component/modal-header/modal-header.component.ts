@@ -10,6 +10,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 })
 export class ModalHeaderComponent {
   @Input() title: string;
+  @Input() showCloseBtn: boolean;
   @Output() closeDialogEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
