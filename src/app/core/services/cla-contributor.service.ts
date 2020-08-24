@@ -194,9 +194,9 @@ export class ClaContributorService {
     return this.findPublicEmail(emails);
   }
 
-  findPublicEmail(emails) {
-    for (const email of emails) {
-      if (email.indexOf('noreply.github.com') < 0) {
+  findPublicEmail(emailArray) {
+    for (const email of emailArray) {
+      if (email.indexOf(AppSettings.GITHUB_EMAIL_CONTENT) < 0) {
         return email;
       }
     }

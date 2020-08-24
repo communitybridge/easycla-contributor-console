@@ -89,8 +89,7 @@ export class ConfigureClaManagerModalComponent {
 
   onClickProceedBtn() {
     this.modalService.dismissAll();
-    this.message = '<p>You will be redirected to sign in with your SSO account <b>' + this.claContributorService.getUserLFID() +
-      '</b> into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
+    this.message = '<p>You will be redirected to the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
     this.openDialog(this.warningModal);
   }
 
