@@ -20,7 +20,6 @@ import { CompanyAdminDesigneeModel } from 'src/app/core/models/company-admin-des
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
-  @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Input() hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
@@ -147,7 +146,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickBackToCLANotFound() {
-    this.backBtnEmitter.emit();
+    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
   }
 
 }
