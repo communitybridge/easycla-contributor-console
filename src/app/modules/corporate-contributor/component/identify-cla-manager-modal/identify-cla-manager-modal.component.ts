@@ -149,4 +149,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
   }
 
+  onClickGoBackToIdentifyCLAManger() {
+    this.claContributorService.openDialogModalEvent.next('IDENTIFY_CLA_MANAGER');
+  }
 }
