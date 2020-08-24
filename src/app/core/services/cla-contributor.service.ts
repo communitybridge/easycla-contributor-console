@@ -3,7 +3,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ProjectModel } from '../models/project';
 import { UserModel, UpdateUserModel } from '../models/user';
@@ -27,6 +27,7 @@ const FileSaver = require('file-saver');
   providedIn: 'root'
 })
 export class ClaContributorService {
+  public openDialogModalEvent = new Subject<any>();
   baseURL = environment.baseUrl;
   v4BaseUrl = environment.v4BaseUrl;
 

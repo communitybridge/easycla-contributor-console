@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -20,7 +20,6 @@ import { CompanyAdminDesigneeModel } from 'src/app/core/models/company-admin-des
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
-  @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Input() hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
@@ -147,7 +146,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickBackToCLANotFound() {
-    this.backBtnEmitter.emit();
+    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
   }
 
 }

@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ViewChild, ElementRef, TemplateRef, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, TemplateRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,7 @@ import { AppSettings } from 'src/app/config/app-settings';
   templateUrl: './corporate-dashboard.component.html',
   styleUrls: ['./corporate-dashboard.component.scss']
 })
-export class CorporateDashboardComponent implements OnInit {
+export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('dropdown') dropdown: ElementRef;
   @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
@@ -42,6 +42,7 @@ export class CorporateDashboardComponent implements OnInit {
   openView: string;
   hasShowContactAdmin: boolean;
   hideDialogCloseBtn: boolean;
+  mySubscription: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +60,11 @@ export class CorporateDashboardComponent implements OnInit {
     this.searchBoxValue = '';
     this.location.onPopState(() => {
       this.modalService.dismissAll()
+    });
+    this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
+      if (result === 'CLA_NOT_SIGN') {
+        this.openWithDismiss(this.signedCLANotFoundModal)
+      }
     });
   }
 
@@ -83,6 +89,12 @@ export class CorporateDashboardComponent implements OnInit {
     this.openAuthRedirectionModal();
   }
 
+  ngOnDestroy() {
+    if (this.mySubscription !== undefined && this.mySubscription !== null) {
+      this.mySubscription.unsubscribe();
+    }
+  }
+
   openAuthRedirectionModal() {
     setTimeout(() => {
       if (this.openView === AppSettings.SIGN_CLA) {
@@ -99,7 +111,6 @@ export class CorporateDashboardComponent implements OnInit {
   onSelectCompany(organization) {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
-    console.log(this.selectedCompany);
     this.searchBoxValue = organization.organization_name;
     this.form.controls.companyName.setValue(organization.organization_name);
   }
@@ -257,12 +268,7 @@ export class CorporateDashboardComponent implements OnInit {
     this.hasShowDropdown = !this.hasShowDropdown;
   }
 
-  openCLANotfound(CLANotFound) {
-    this.openWithDismiss(CLANotFound);
-  }
-
   hideShowCloseBtn(isHide: boolean) {
-    console.log(isHide);
     this.hideDialogCloseBtn = isHide;
   }
 

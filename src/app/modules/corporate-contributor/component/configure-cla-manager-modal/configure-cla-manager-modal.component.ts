@@ -18,7 +18,6 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 export class ConfigureClaManagerModalComponent {
   @ViewChild('errorModal') errorModal: TemplateRef<any>;
   @ViewChild('warningModal') warningModal: TemplateRef<any>;
-  @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() showCloseBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   title: string;
@@ -103,9 +102,12 @@ export class ConfigureClaManagerModalComponent {
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
       setTimeout(() => {
-        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
         const corporateUrl = this.claContributorService.getLFXCorporateURL();
         window.open(corporateUrl, '_blank');
+      }, 4500);
+
+      setTimeout(() => {
+        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
         window.open(redirectUrl, '_self');
       }, 5000);
     }
@@ -117,7 +119,7 @@ export class ConfigureClaManagerModalComponent {
   }
 
   onClickBackBtn() {
-    this.backBtnEmitter.emit();
+    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
   }
 
   onClickClose() {
