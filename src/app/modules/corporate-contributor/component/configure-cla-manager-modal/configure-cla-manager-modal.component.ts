@@ -18,7 +18,6 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 export class ConfigureClaManagerModalComponent {
   @ViewChild('errorModal') errorModal: TemplateRef<any>;
   @ViewChild('warningModal') warningModal: TemplateRef<any>;
-  @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() showCloseBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   title: string;
@@ -118,7 +117,7 @@ export class ConfigureClaManagerModalComponent {
   }
 
   onClickBackBtn() {
-    this.backBtnEmitter.emit();
+    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
   }
 
   onClickClose() {
