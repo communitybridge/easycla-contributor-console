@@ -112,8 +112,8 @@
         <div class="modal-body">
             <app-modal-header title="Identify CLA Manager" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-identify-cla-manager-modal (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)"
-                [hasShowContactAdmin]="hasShowContactAdmin">
+            <app-identify-cla-manager-modal (backToIdentifyCLAManagerEmitter)="openWithDismiss('identifyCLAManager')"
+                (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)" [hasShowContactAdmin]="hasShowContactAdmin">
             </app-identify-cla-manager-modal>
         </div>
     </div>
