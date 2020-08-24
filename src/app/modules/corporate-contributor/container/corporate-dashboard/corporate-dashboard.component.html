@@ -125,8 +125,7 @@
             <app-modal-header title="Configuring CLA Manager Settings" [showCloseBtn]="hideDialogCloseBtn"
                 (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-configure-cla-manager-modal (showCloseBtnEmitter)="hideShowCloseBtn($event)"
-                (backBtnEmitter)="openCLANotfound(signedCLANotFoundModal)">
+            <app-configure-cla-manager-modal (showCloseBtnEmitter)="hideShowCloseBtn($event)">
             </app-configure-cla-manager-modal>
         </div>
     </div>

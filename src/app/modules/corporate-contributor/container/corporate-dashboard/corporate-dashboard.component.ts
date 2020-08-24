@@ -268,12 +268,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.hasShowDropdown = !this.hasShowDropdown;
   }
 
-  openCLANotfound(CLANotFound) {
-    this.openWithDismiss(CLANotFound);
-  }
-
   hideShowCloseBtn(isHide: boolean) {
-    console.log(isHide);
     this.hideDialogCloseBtn = isHide;
   }
 
