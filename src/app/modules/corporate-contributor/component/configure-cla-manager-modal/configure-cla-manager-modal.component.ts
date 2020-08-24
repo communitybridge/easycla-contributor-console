@@ -103,9 +103,12 @@ export class ConfigureClaManagerModalComponent {
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
       setTimeout(() => {
-        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
         const corporateUrl = this.claContributorService.getLFXCorporateURL();
         window.open(corporateUrl, '_blank');
+      }, 4500);
+
+      setTimeout(() => {
+        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
         window.open(redirectUrl, '_self');
       }, 5000);
     }
