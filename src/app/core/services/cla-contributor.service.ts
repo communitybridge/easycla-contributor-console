@@ -66,10 +66,10 @@ export class ClaContributorService {
   hasOrganizationExist(organizationName: string, organizationWebsite: string): Observable<OrganizationListModel> {
     let url = this.baseURL + 'v3/organization/search?';
     if (organizationName) {
-      url += '$filter=name eq ' + organizationName;
+      url += 'companyName=' + organizationName;
     }
     if (organizationWebsite) {
-      url += '$filter=website eq ' + organizationWebsite;
+      url += 'websiteName=' + organizationWebsite;
     }
     return this.httpClient.get<OrganizationListModel>(url);
   }

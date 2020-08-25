@@ -4,11 +4,11 @@
 import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
+import { OrganizationListModel } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -19,15 +19,14 @@ export class AddCompanyModalComponent implements OnInit {
   @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
   form: FormGroup;
-  checkboxText1: string;
-  checkboxText2: string;
   message: string;
   title: string;
   hasError: boolean;
   hasOrganizationExist: boolean;
   modelRef: NgbModalRef;
   searchTimeout = null;
-  hasAutofilledContent: boolean;
+  organizationList = new OrganizationListModel();
+  searchType: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,10 +36,19 @@ export class AddCompanyModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.hasAutofilledContent = false;
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
-      companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
+      companyName: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
+        Validators.minLength(2),
+        Validators.maxLength(60)
+      ])],
+      companyWebsite: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.URL_PATTERN),
+        Validators.minLength(8),
+        Validators.maxLength(255)
+      ])],
     });
   }
 
@@ -48,36 +56,28 @@ export class AddCompanyModalComponent implements OnInit {
     this.addOrganization();
   }
 
-  openDialog(content) {
-    this.modelRef = this.modalService.open(content, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false
-    });
-  }
-
   onWebsiteKeypress() {
     this.hasOrganizationExist = false;
+    this.searchType = 'ORGANIZATION_WEBSITE';
     if (this.form.controls.companyWebsite.valid) {
-      this.checkOrganization('ORGANIZATION_WEBSITE');
+      this.checkOrganization();
     }
   }
 
   onNameKeypress() {
     this.hasOrganizationExist = false;
+    this.searchType = 'ORGANIZATION_NAME';
     if (this.form.controls.companyName.valid) {
-      this.checkOrganization('ORGANIZATION_NAME');
+      this.checkOrganization();
     }
   }
 
-  checkOrganization(action) {
+  checkOrganization() {
     if (this.searchTimeout !== null) {
       clearTimeout(this.searchTimeout);
     }
     this.searchTimeout = setTimeout(() => {
-      // Added seperate method for autofilled companyName or companyWebsite.
-      this.removedAutofilled(action);
-      if (action === 'ORGANIZATION_WEBSITE') {
+      if (this.searchType === 'ORGANIZATION_WEBSITE') {
         this.validateOrganizationWebsite();
       } else {
         this.validateOrganizationName();
@@ -85,28 +85,11 @@ export class AddCompanyModalComponent implements OnInit {
     }, 500);
   }
 
-  removedAutofilled(action) {
-    // Removed autofilled content if user start editing it again.
-    if (this.hasAutofilledContent) {
-      this.hasAutofilledContent = false;
-      if (action === 'ORGANIZATION_WEBSITE') {
-        this.form.controls.companyName.setValue('');
-      } else {
-        this.form.controls.companyWebsite.setValue('');
-      }
-    }
-  }
-
   validateOrganizationName() {
     const companyName = this.form.controls.companyName.value;
     this.claContributorService.hasOrganizationExist(companyName, null).subscribe(
       (response) => {
-        if (response.list.length > 0) {
-          this.hasAutofilledContent = true;
-          this.hasOrganizationExist = true;
-          const organization = response.list[0];
-          this.form.controls.companyWebsite.setValue(organization.organization_website);
-        }
+        this.organizationList = response;
       },
       (exception) => {
         this.claContributorService.handleError(exception);
@@ -119,12 +102,7 @@ export class AddCompanyModalComponent implements OnInit {
     companyWebsite = companyWebsite.toLowerCase().replace('www.', '');
     this.claContributorService.hasOrganizationExist(null, companyWebsite).subscribe(
       (response) => {
-        if (response.list.length > 0) {
-          this.hasAutofilledContent = true;
-          this.hasOrganizationExist = true;
-          const organization = response.list[0];
-          this.form.controls.companyName.setValue(organization.organization_name);
-        }
+        this.organizationList = response;
       },
       (exception) => {
         this.claContributorService.handleError(exception);
@@ -166,6 +144,21 @@ export class AddCompanyModalComponent implements OnInit {
         this.openDialog(this.successModal);
       }
     );
+  }
+
+  onSelectOrganization(organization) {
+    this.hasOrganizationExist = true;
+    this.form.controls.companyName.setValue(organization.organization_name);
+    this.form.controls.companyWebsite.setValue(organization.organization_website);
+    this.organizationList= new OrganizationListModel;
+  }
+
+  openDialog(content) {
+    this.modelRef = this.modalService.open(content, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    });
   }
 
   onClickDialogBtn() {
