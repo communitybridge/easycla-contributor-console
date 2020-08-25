@@ -41,7 +41,7 @@ export class AddCompanyModalComponent implements OnInit {
         Validators.required,
         Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
         Validators.minLength(2),
-        Validators.maxLength(60)
+        Validators.maxLength(255)
       ])],
       companyWebsite: ['', Validators.compose([
         Validators.required,
@@ -61,6 +61,8 @@ export class AddCompanyModalComponent implements OnInit {
     this.searchType = 'ORGANIZATION_WEBSITE';
     if (this.form.controls.companyWebsite.valid) {
       this.checkOrganization();
+    } else {
+      this.resetOrganizationList();
     }
   }
 
@@ -69,6 +71,8 @@ export class AddCompanyModalComponent implements OnInit {
     this.searchType = 'ORGANIZATION_NAME';
     if (this.form.controls.companyName.valid) {
       this.checkOrganization();
+    } else {
+      this.resetOrganizationList();
     }
   }
 
@@ -77,19 +81,33 @@ export class AddCompanyModalComponent implements OnInit {
       clearTimeout(this.searchTimeout);
     }
     this.searchTimeout = setTimeout(() => {
-      if (this.searchType === 'ORGANIZATION_WEBSITE') {
-        this.validateOrganizationWebsite();
-      } else {
-        this.validateOrganizationName();
-      }
+      this.searchOrganization();
     }, 500);
   }
 
-  validateOrganizationName() {
-    const companyName = this.form.controls.companyName.value;
-    this.claContributorService.hasOrganizationExist(companyName, null).subscribe(
+  searchOrganization() {
+    let companyName = null;
+    let companyWebsite = null;
+    if (this.searchType === 'ORGANIZATION_NAME') {
+      companyName = this.form.controls.companyName.value;
+    } else {
+      companyWebsite = this.form.controls.companyWebsite.value;
+    }
+    this.claContributorService.searchOrganization(companyName, companyWebsite).subscribe(
       (response) => {
         this.organizationList = response;
+        if (this.organizationList.list.length === 0) {
+          this.resetOrganizationList();
+        }
+        if (this.searchType === 'ORGANIZATION_NAME') {
+          if (!this.form.controls.companyName.valid) {
+            this.resetOrganizationList();
+          }
+        } else {
+          if (!this.form.controls.companyWebsite.valid) {
+            this.resetOrganizationList();
+          }
+        }
       },
       (exception) => {
         this.claContributorService.handleError(exception);
@@ -97,17 +115,8 @@ export class AddCompanyModalComponent implements OnInit {
     );
   }
 
-  validateOrganizationWebsite() {
-    let companyWebsite = (new URL(this.form.controls.companyWebsite.value)).hostname;
-    companyWebsite = companyWebsite.toLowerCase().replace('www.', '');
-    this.claContributorService.hasOrganizationExist(null, companyWebsite).subscribe(
-      (response) => {
-        this.organizationList = response;
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+  resetOrganizationList() {
+    this.organizationList = new OrganizationListModel();
   }
 
   addOrganization() {
@@ -150,7 +159,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.hasOrganizationExist = true;
     this.form.controls.companyName.setValue(organization.organization_name);
     this.form.controls.companyWebsite.setValue(organization.organization_website);
-    this.organizationList= new OrganizationListModel;
+    this.organizationList = new OrganizationListModel;
   }
 
   openDialog(content) {
