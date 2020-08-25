@@ -153,6 +153,10 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     }
   }
 
+  goback() {
+    this.modalService.dismissAll();
+  }
+
   getCLAManagers() {
     this.claContributorService.getProjectCLAManagers(this.projectId, this.selectedCompany).subscribe(
       (response: CLAManagersModel) => {

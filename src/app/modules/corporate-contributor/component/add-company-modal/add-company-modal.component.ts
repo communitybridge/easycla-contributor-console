@@ -171,15 +171,9 @@ export class AddCompanyModalComponent implements OnInit {
   onClickDialogBtn() {
     if (!this.hasError) {
       this.CLANotSignEmitter.emit();
+    } else {
+      this.claContributorService.openDialogModalEvent.next('ADD_ORGANIZATION');
     }
-  }
-
-  onClickNoBtn() {
-
-  }
-
-  onClickYesBtn() {
-
   }
 
   onClickClose() {

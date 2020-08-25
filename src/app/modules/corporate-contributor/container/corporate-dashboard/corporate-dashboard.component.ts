@@ -21,6 +21,8 @@ import { AppSettings } from 'src/app/config/app-settings';
 export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('dropdown') dropdown: ElementRef;
   @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
+  @ViewChild('identifyCLAManager') identifyCLAManager: TemplateRef<any>;
+  @ViewChild('addCompany') addCompany: TemplateRef<any>;
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
 
   selectedCompany: string;
@@ -63,7 +65,11 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
       if (result === 'CLA_NOT_SIGN') {
-        this.openWithDismiss(this.signedCLANotFoundModal)
+        this.openWithDismiss(this.signedCLANotFoundModal);
+      } else if (result === 'IDENTIFY_CLA_MANAGER') {
+        this.openWithDismiss(this.identifyCLAManager);
+      } else if (result === 'ADD_ORGANIZATION') {
+        this.openWithDismiss(this.addCompany);
       }
     });
   }
