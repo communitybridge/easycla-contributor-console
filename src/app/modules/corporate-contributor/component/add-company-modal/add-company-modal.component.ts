@@ -1,14 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, Renderer2, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
-import { OrganizationListModel } from 'src/app/core/models/organization';
+import { OrganizationListModel, Organization } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -18,6 +18,9 @@ import { OrganizationListModel } from 'src/app/core/models/organization';
 export class AddCompanyModalComponent implements OnInit {
   @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('organizationName') organizationName: ElementRef;
+  @ViewChild('organizationWebsite') organizationWebsite: ElementRef;
+
   form: FormGroup;
   message: string;
   title: string;
@@ -27,19 +30,29 @@ export class AddCompanyModalComponent implements OnInit {
   searchTimeout = null;
   organizationList = new OrganizationListModel();
   searchType: string;
+  hasShowDropdown: boolean;
+  selectedOrganization: Organization;
 
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private claContributorService: ClaContributorService,
-    private storageService: StorageService
-  ) { }
+    private storageService: StorageService,
+    private renderer: Renderer2
+  ) {
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (!this.organizationName.nativeElement.contains(e.target) && !this.organizationWebsite.nativeElement.contains(e.target)) {
+        this.hasShowDropdown = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
         Validators.minLength(2),
         Validators.maxLength(255)
       ])],
@@ -53,7 +66,12 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onClickProceed() {
-    this.addOrganization();
+    if (this.hasOrganizationExist) {
+      this.modalService.dismissAll();
+      this.claContributorService.proccedWithExistingOrganizationEvent.next(this.selectedOrganization);
+    } else {
+      this.addOrganization();
+    }
   }
 
   onWebsiteKeypress() {
@@ -96,6 +114,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.claContributorService.searchOrganization(companyName, companyWebsite).subscribe(
       (response) => {
         this.organizationList = response;
+        this.hasShowDropdown = true;
         if (this.organizationList.list.length === 0) {
           this.resetOrganizationList();
         }
@@ -116,7 +135,8 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   resetOrganizationList() {
-    this.organizationList = new OrganizationListModel();
+    this.hasShowDropdown = false;
+    this.organizationList.list = [];
   }
 
   addOrganization() {
@@ -157,6 +177,7 @@ export class AddCompanyModalComponent implements OnInit {
 
   onSelectOrganization(organization) {
     this.hasOrganizationExist = true;
+    this.selectedOrganization = organization;
     this.form.controls.companyName.setValue(organization.organization_name);
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.organizationList = new OrganizationListModel;
