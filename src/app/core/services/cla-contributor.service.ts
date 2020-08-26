@@ -28,6 +28,8 @@ const FileSaver = require('file-saver');
 })
 export class ClaContributorService {
   public openDialogModalEvent = new Subject<any>();
+  public proccedWithExistingOrganizationEvent = new Subject<any>();
+
   baseURL = environment.baseUrl;
   v4BaseUrl = environment.v4BaseUrl;
 
@@ -58,8 +60,14 @@ export class ClaContributorService {
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
-  searchOrganization(organizationName: string): Observable<OrganizationListModel> {
-    const url = this.baseURL + 'v3/organization/search?companyName=' + organizationName
+  searchOrganization(organizationName: string, organizationWebsite?: string): Observable<OrganizationListModel> {
+    let url = this.baseURL + 'v3/organization/search?';
+    if (organizationName) {
+      url += 'companyName=' + organizationName;
+    }
+    if (organizationWebsite) {
+      url += 'websiteName=' + organizationWebsite;
+    }
     return this.httpClient.get<OrganizationListModel>(url);
   }
 

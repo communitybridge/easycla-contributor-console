@@ -50,6 +50,38 @@
     }
   }
 
+  .dropdown-container {
+    position: relative;
+    display: inline-block;
+
+    .dropdown-content {
+      position: absolute;
+      background-color: #f1f1f1;
+      padding: 8px 0;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      height: 115px;
+      margin-top: -16px;
+      width: 345px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 1;
+
+      .item {
+        padding: 2px 10px;
+        text-decoration: none;
+        display: block;
+
+        .ellipsis {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #424242;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
   .buttons {
     margin-top: 25px;
     .btn {

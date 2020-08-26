@@ -1,14 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, Renderer2, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { UrlValidator } from 'src/app/shared/validators/website-validator';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
+import { OrganizationListModel, Organization } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -18,94 +18,114 @@ import { UserModel } from 'src/app/core/models/user';
 export class AddCompanyModalComponent implements OnInit {
   @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('organizationName') organizationName: ElementRef;
+  @ViewChild('organizationWebsite') organizationWebsite: ElementRef;
+
   form: FormGroup;
-  checkboxText1: string;
-  checkboxText2: string;
   message: string;
   title: string;
   hasError: boolean;
   hasOrganizationExist: boolean;
   modelRef: NgbModalRef;
   searchTimeout = null;
-  hasAutofilledContent: boolean;
+  organizationList = new OrganizationListModel();
+  searchType: string;
+  hasShowDropdown: boolean;
+  selectedOrganization: Organization;
 
   constructor(
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
     private claContributorService: ClaContributorService,
-    private storageService: StorageService
-  ) { }
+    private storageService: StorageService,
+    private renderer: Renderer2
+  ) {
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (!this.organizationName.nativeElement.contains(e.target) && !this.organizationWebsite.nativeElement.contains(e.target)) {
+        this.hasShowDropdown = false;
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.hasAutofilledContent = false;
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([Validators.required, Validators.pattern(AppSettings.COMPANY_NAME_REGEX), Validators.minLength(2), Validators.maxLength(60)])],
-      companyWebsite: ['', Validators.compose([Validators.required, UrlValidator.isValid, Validators.maxLength(255)])],
+      companyName: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
+        Validators.minLength(2),
+        Validators.maxLength(255)
+      ])],
+      companyWebsite: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.URL_PATTERN),
+        Validators.minLength(8),
+        Validators.maxLength(255)
+      ])],
     });
   }
 
   onClickProceed() {
-    this.addOrganization();
-  }
-
-  openDialog(content) {
-    this.modelRef = this.modalService.open(content, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false
-    });
+    if (this.hasOrganizationExist) {
+      this.modalService.dismissAll();
+      this.claContributorService.proccedWithExistingOrganizationEvent.next(this.selectedOrganization);
+    } else {
+      this.addOrganization();
+    }
   }
 
   onWebsiteKeypress() {
     this.hasOrganizationExist = false;
+    this.searchType = 'ORGANIZATION_WEBSITE';
     if (this.form.controls.companyWebsite.valid) {
-      this.checkOrganization('ORGANIZATION_WEBSITE');
+      this.checkOrganization();
+    } else {
+      this.resetOrganizationList();
     }
   }
 
   onNameKeypress() {
     this.hasOrganizationExist = false;
+    this.searchType = 'ORGANIZATION_NAME';
     if (this.form.controls.companyName.valid) {
-      this.checkOrganization('ORGANIZATION_NAME');
+      this.checkOrganization();
+    } else {
+      this.resetOrganizationList();
     }
   }
 
-  checkOrganization(action) {
+  checkOrganization() {
     if (this.searchTimeout !== null) {
       clearTimeout(this.searchTimeout);
     }
     this.searchTimeout = setTimeout(() => {
-      // Added seperate method for autofilled companyName or companyWebsite.
-      this.removedAutofilled(action);
-      if (action === 'ORGANIZATION_WEBSITE') {
-        this.validateOrganizationWebsite();
-      } else {
-        this.validateOrganizationName();
-      }
+      this.searchOrganization();
     }, 500);
   }
 
-  removedAutofilled(action) {
-    // Removed autofilled content if user start editing it again.
-    if (this.hasAutofilledContent) {
-      this.hasAutofilledContent = false;
-      if (action === 'ORGANIZATION_WEBSITE') {
-        this.form.controls.companyName.setValue('');
-      } else {
-        this.form.controls.companyWebsite.setValue('');
-      }
+  searchOrganization() {
+    let companyName = null;
+    let companyWebsite = null;
+    if (this.searchType === 'ORGANIZATION_NAME') {
+      companyName = this.form.controls.companyName.value;
+    } else {
+      companyWebsite = this.form.controls.companyWebsite.value;
     }
-  }
-
-  validateOrganizationName() {
-    const companyName = this.form.controls.companyName.value;
-    this.claContributorService.hasOrganizationExist(companyName, null).subscribe(
+    this.claContributorService.searchOrganization(companyName, companyWebsite).subscribe(
       (response) => {
-        if (response.list.length > 0) {
-          this.hasAutofilledContent = true;
-          this.hasOrganizationExist = true;
-          const organization = response.list[0];
-          this.form.controls.companyWebsite.setValue(organization.organization_website);
+        this.organizationList = response;
+        this.hasShowDropdown = true;
+        if (this.organizationList.list.length === 0) {
+          this.resetOrganizationList();
+        }
+        if (this.searchType === 'ORGANIZATION_NAME') {
+          if (!this.form.controls.companyName.valid) {
+            this.resetOrganizationList();
+          }
+        } else {
+          if (!this.form.controls.companyWebsite.valid) {
+            this.resetOrganizationList();
+          }
         }
       },
       (exception) => {
@@ -114,22 +134,9 @@ export class AddCompanyModalComponent implements OnInit {
     );
   }
 
-  validateOrganizationWebsite() {
-    let companyWebsite = (new URL(this.form.controls.companyWebsite.value)).hostname;
-    companyWebsite = companyWebsite.toLowerCase().replace('www.', '');
-    this.claContributorService.hasOrganizationExist(null, companyWebsite).subscribe(
-      (response) => {
-        if (response.list.length > 0) {
-          this.hasAutofilledContent = true;
-          this.hasOrganizationExist = true;
-          const organization = response.list[0];
-          this.form.controls.companyName.setValue(organization.organization_name);
-        }
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+  resetOrganizationList() {
+    this.hasShowDropdown = false;
+    this.organizationList.list = [];
   }
 
   addOrganization() {
@@ -166,6 +173,22 @@ export class AddCompanyModalComponent implements OnInit {
         this.openDialog(this.successModal);
       }
     );
+  }
+
+  onSelectOrganization(organization) {
+    this.hasOrganizationExist = true;
+    this.selectedOrganization = organization;
+    this.form.controls.companyName.setValue(organization.organization_name);
+    this.form.controls.companyWebsite.setValue(organization.organization_website);
+    this.organizationList = new OrganizationListModel;
+  }
+
+  openDialog(content) {
+    this.modelRef = this.modalService.open(content, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false
+    });
   }
 
   onClickDialogBtn() {
