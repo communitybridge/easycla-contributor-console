@@ -146,10 +146,18 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickBackToCLANotFound() {
-    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
+    const data = {
+      action: 'CLA_NOT_SIGN',
+      payload: false
+    }
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 
   onClickGoBackToIdentifyCLAManger() {
-    this.claContributorService.openDialogModalEvent.next('IDENTIFY_CLA_MANAGER');
+    const data = {
+      action: 'IDENTIFY_CLA_MANAGER',
+      payload: ''
+    }
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 }

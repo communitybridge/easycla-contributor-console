@@ -119,3 +119,42 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #addEmailModal let-modal>
+    <div class="model">
+        <div class="modal-body">
+            <form class="col-12" [formGroup]="publicEmailform">
+                <p class="col-11 success-message">System cannot read your email address since it is not public, please enter
+                    your email address so that we can proceed to next step</p>
+                <div class="row justify-content-center success-dialog">
+                    <div class="col-11 element">
+                        <input type="text" name="publicEmail" placeholder="Enter email address"
+                            formControlName="publicEmail" tabindex="-1" />
+                        <div
+                            *ngIf="publicEmailform.controls.publicEmail.errors  && (publicEmailform.controls.publicEmail.dirty || publicEmailform.controls.publicEmail.touched)">
+                            <div [hidden]="!publicEmailform.controls.publicEmail.errors.required" class="error">
+                                Email address is required.
+                            </div>
+                            <div [hidden]="!publicEmailform.controls.publicEmail.errors.pattern" class="error">
+                                Email address is invalid.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row justify-content-center mt-15">
+                            <div class="col-4">
+                                <button tabindex="-1" type="button" class="success-btn go-back"
+                                    (click)="backToAddOrganization()"> Go Back </button>
+                            </div>
+                            <div class="col-4">
+                                <button tabindex="-1" type="button" class="success-btn inactive"
+                                    [ngClass]="{'active':publicEmailform.valid}" [disabled]="!publicEmailform.valid"
+                                    (click)="onClickProccedEmailModal()">Procced</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

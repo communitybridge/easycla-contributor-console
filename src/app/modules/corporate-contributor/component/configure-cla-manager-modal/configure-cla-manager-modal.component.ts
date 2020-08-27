@@ -119,7 +119,11 @@ export class ConfigureClaManagerModalComponent {
   }
 
   onClickBackBtn() {
-    this.claContributorService.openDialogModalEvent.next('CLA_NOT_SIGN');
+    const data = {
+      action: 'CLA_NOT_SIGN',
+      payload: false
+    }
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 
   onClickClose() {

@@ -66,11 +66,13 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.modalService.dismissAll()
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
-      if (result === 'CLA_NOT_SIGN') {
+      console.log(result);
+      if (result.action === 'CLA_NOT_SIGN') {
+        this.hasShowContactAdmin = result.payload;
         this.openWithDismiss(this.signedCLANotFoundModal);
-      } else if (result === 'IDENTIFY_CLA_MANAGER') {
+      } else if (result.action === 'IDENTIFY_CLA_MANAGER') {
         this.openWithDismiss(this.identifyCLAManager);
-      } else if (result === 'ADD_ORGANIZATION') {
+      } else if (result.action === 'ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
       }
     });
@@ -121,16 +123,18 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.getOrganizationInformation();
   }
 
+  onClickAddOrganization() {
+    // Clear org persist data and error messages.
+    this.storageService.removeItem(AppSettings.ORGANIZATION_DETAILS);
+    this.alertService.clearAlert();
+    this.open(this.addCompany);
+  }
+
   onSelectCompany(organization) {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
     this.searchBoxValue = organization.organization_name;
     this.form.controls.companyName.setValue(organization.organization_name);
-  }
-
-  openCLANotSignModal() {
-    this.hasShowContactAdmin = false;
-    this.openWithDismiss(this.signedCLANotFoundModal);
   }
 
   getOrganizationInformation() {
