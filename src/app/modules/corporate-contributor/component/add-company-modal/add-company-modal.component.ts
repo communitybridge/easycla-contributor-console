@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, ViewChild, TemplateRef, EventEmitter, Output, Renderer2, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, Renderer2, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -16,12 +16,13 @@ import { OrganizationListModel, Organization } from 'src/app/core/models/organiz
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
-  @Output() CLANotSignEmitter: EventEmitter<any> = new EventEmitter<any>();
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('addEmailModal') addEmailModal: TemplateRef<any>;
   @ViewChild('organizationName') organizationName: ElementRef;
   @ViewChild('organizationWebsite') organizationWebsite: ElementRef;
 
   form: FormGroup;
+  publicEmailform: FormGroup;
   message: string;
   title: string;
   hasError: boolean;
@@ -63,6 +64,14 @@ export class AddCompanyModalComponent implements OnInit {
         Validators.maxLength(255)
       ])],
     });
+
+    this.publicEmailform = this.formBuilder.group({
+      publicEmail: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(new RegExp(AppSettings.EMAIL_PATTERN)),
+      ])]
+    });
+    this.setOrganizationDetails();
   }
 
   onClickProceed() {
@@ -144,12 +153,32 @@ export class AddCompanyModalComponent implements OnInit {
     if (publicEmail !== null) {
       this.callAddOrganizationAPI(publicEmail);
     } else {
-      // Show warning that user email is not public.
-      this.hasError = true;
-      this.title = 'Email Not Public';
-      this.message = 'It\'s look like your Github account email is not public please make it public and try again.';
-      this.openDialog(this.successModal);
+      this.storeOrganizationDetails();
+      this.modalService.dismissAll();
+      this.openDialog(this.addEmailModal);
     }
+  }
+
+  storeOrganizationDetails() {
+    const data = {
+      organizationName: this.form.controls.companyName.value,
+      organizationWebsite: this.form.controls.companyWebsite.value,
+    }
+    this.storageService.setItem(AppSettings.ORGANIZATION_DETAILS, data);
+  }
+
+  setOrganizationDetails() {
+    const data = JSON.parse(this.storageService.getItem(AppSettings.ORGANIZATION_DETAILS));
+    if (data !== undefined && data !== null) {
+      this.form.controls.companyName.setValue(data.organizationName);
+      this.form.controls.companyWebsite.setValue(data.organizationWebsite);
+      this.storageService.removeItem(AppSettings.ORGANIZATION_DETAILS);
+    }
+  }
+
+  onClickProccedEmailModal() {
+    const publicEmail = this.publicEmailform.controls.publicEmail.value.trim();
+    this.callAddOrganizationAPI(publicEmail);
   }
 
   callAddOrganizationAPI(publicEmail) {
@@ -193,10 +222,23 @@ export class AddCompanyModalComponent implements OnInit {
 
   onClickDialogBtn() {
     if (!this.hasError) {
-      this.CLANotSignEmitter.emit();
+      const data = {
+        action: 'CLA_NOT_SIGN',
+        payload: true
+      }
+      this.claContributorService.openDialogModalEvent.next(data);
     } else {
-      this.claContributorService.openDialogModalEvent.next('ADD_ORGANIZATION');
+      this.backToAddOrganization();
     }
+  }
+
+  backToAddOrganization() {
+    const data = {
+      action: 'ADD_ORGANIZATION',
+      payload: ''
+    }
+    this.storeOrganizationDetails();
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 
   onClickClose() {
