@@ -22,7 +22,7 @@
                                 </form>
                             </div>
 
-                            <div *ngIf="hasShowDropdown" #dropdown class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                            <div *ngIf="hasShowDropdown" class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
                                 <div class="col-12 dropdown-container">
                                     <div class="companies">
 
@@ -69,7 +69,7 @@
                             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
                                 <button tabindex="-1" type="button" [disabled]="selectedCompany ===''"
                                     class="btn inactive" [ngClass]="{'active':selectedCompany!==''}"
-                                    (click)="onClickProceed(signedCLANotFoundModal,successModal)">
+                                    (click)="onClickProceed()">
                                     Proceed
                                 </button>
                             </div>
@@ -89,7 +89,7 @@
             <app-modal-header title="Enter Organization Details" showCloseBtn="true"
                 (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
-            <app-add-company-modal (CLANotSignEmitter)="openCLANotSignModal(signedCLANotFoundModal)">
+            <app-add-company-modal (CLANotSignEmitter)="openCLANotSignModal()">
             </app-add-company-modal>
         </div>
     </div>
