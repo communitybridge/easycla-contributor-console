@@ -74,17 +74,26 @@ export class ConfigureClaManagerModalComponent {
     };
     this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
       () => {
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.hasCLAManagerDesignee = true;
-        this.showCloseBtnEmitter.emit(true);
+        this.proccedToCorporateConsole();
       },
       (exception) => {
-        this.title = 'Request Failed';
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.message = exception.error.Message;
-        this.openDialog(this.errorModal);
+        if (exception.status === 409) {
+          // User has already CLA manager designee.
+          this.proccedToCorporateConsole();
+        } else {
+          this.title = 'Request Failed';
+          this.storageService.removeItem(AppSettings.ACTION_TYPE);
+          this.message = exception.error.Message;
+          this.openDialog(this.errorModal);
+        }
       }
     );
+  }
+
+  proccedToCorporateConsole() {
+    this.storageService.removeItem(AppSettings.ACTION_TYPE);
+    this.hasCLAManagerDesignee = true;
+    this.showCloseBtnEmitter.emit(true);
   }
 
   onClickProceedBtn() {
