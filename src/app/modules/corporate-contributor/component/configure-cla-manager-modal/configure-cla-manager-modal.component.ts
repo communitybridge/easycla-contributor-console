@@ -116,7 +116,7 @@ export class ConfigureClaManagerModalComponent {
       }, 4500);
 
       setTimeout(() => {
-        const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+        const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
         window.open(redirectUrl, '_self');
       }, 5000);
     }

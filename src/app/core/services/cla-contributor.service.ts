@@ -10,10 +10,9 @@ import { UserModel, UpdateUserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { OrganizationModel, OrganizationListModel } from '../models/organization';
+import { OrganizationModel, OrganizationListModel, CompanyModel } from '../models/organization';
 import { EmployeeSignatureModel } from '../models/employee-signature';
 import { InviteCompanyModel } from '../models/invite-company';
-import { AddCompanyModel } from '../models/add-company';
 import { CLAManagersModel } from '../models/cla-manager';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
@@ -127,9 +126,9 @@ export class ClaContributorService {
     return this.httpClient.get<CLAManagersModel>(url);
   }
 
-  addCompany(userId: string, data: any): Observable<AddCompanyModel> {
+  addCompany(userId: string, data: any): Observable<CompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
-    return this.httpClient.post<AddCompanyModel>(url, data);
+    return this.httpClient.post<CompanyModel>(url, data);
   }
 
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {

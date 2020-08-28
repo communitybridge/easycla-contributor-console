@@ -19,3 +19,10 @@ export class Organization {
     organization_name: string;
     organization_website: string;
 }
+
+export class CompanyModel {
+    companyID: string;
+    companyName: string;
+    companyWebsite: string;
+    logoURL: string;
+}

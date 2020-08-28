@@ -79,13 +79,13 @@ export class ClaDashboardComponent implements OnInit {
 
   onAPILoad(APIType: string) {
     if (APIType === 'Project') {
-      this.project = JSON.parse(this.storageService.getItem('project'));
+      this.project = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     }
   }
 
 
   onExitEasyCLA() {
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {

@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlatformLocation } from '@angular/common';
-import { OrganizationModel, OrganizationListModel } from 'src/app/core/models/organization';
+import { OrganizationModel, OrganizationListModel, Organization } from 'src/app/core/models/organization';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -63,17 +63,20 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.openView = this.route.snapshot.queryParamMap.get('view');
     this.searchBoxValue = '';
     this.location.onPopState(() => {
-      this.modalService.dismissAll()
+      this.modalService.dismissAll();
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
-      console.log(result);
       if (result.action === 'CLA_NOT_SIGN') {
         this.hasShowContactAdmin = result.payload;
         this.openWithDismiss(this.signedCLANotFoundModal);
       } else if (result.action === 'IDENTIFY_CLA_MANAGER') {
         this.openWithDismiss(this.identifyCLAManager);
-      } else if (result.action === 'ADD_ORGANIZATION') {
+      } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
+      } else if (result.action === 'ADD_NEW_ORGANIZATION') {
+        this.hasShowContactAdmin = false;
+        this.onSelectCompany(result.payload);
+        this.getOrganizationInformation();
       }
     });
 
@@ -130,7 +133,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.open(this.addCompany);
   }
 
-  onSelectCompany(organization) {
+  onSelectCompany(organization: Organization) {
     this.hasShowDropdown = false;
     this.selectedCompany = organization.organization_id;
     this.searchBoxValue = organization.organization_name;
@@ -188,7 +191,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     };
     this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
       () => {
-        const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+        const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
         if (project.project_ccla_requires_icla_signature) {
           this.checkIndividualLastSignature();
         } else {
@@ -231,7 +234,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   showICLASignModal() {
-    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     this.hasError = true;
     this.title = 'Sign ICLA Required';
     this.message = project.project_name + ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
@@ -244,7 +247,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
     } else {
-      const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+      const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
       if (redirectUrl !== null) {
         window.open(redirectUrl, '_self');
       } else {
@@ -313,7 +316,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   onClickBack() {
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
       { queryParams: { redirect: redirectUrl } });
   }

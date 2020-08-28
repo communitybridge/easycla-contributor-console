@@ -11,6 +11,7 @@ import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { CLAManagersModel, CLAManagerModel } from 'src/app/core/models/cla-manager';
 import { ProjectModel } from 'src/app/core/models/project';
+import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-cla-request-authorization',
@@ -106,7 +107,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   notifyCLAManagers(content: any) {
-    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     const data = {
       companyName: this.company.companyName,
       claGroupName: project.project_name,
@@ -133,7 +134,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   }
 
   exitEasyCLA() {
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {
@@ -144,7 +145,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
 
   closeModal() {
     this.modalService.dismissAll();
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {
