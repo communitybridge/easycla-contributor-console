@@ -99,10 +99,12 @@ export class ConfigureClaManagerModalComponent {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message = '<p>You will be redirected to the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
+    this.message += '<p>Note: To continue please disable pop-up blocker for this site.</p>';
     this.openDialog(this.warningModal);
   }
 
   onClickProccedModalBtn() {
+    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
     if (!this.hasCLAManagerDesignee) {
       this.redirectToAuth0();
     } else {
