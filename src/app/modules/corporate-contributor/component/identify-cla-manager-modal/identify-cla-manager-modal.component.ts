@@ -60,8 +60,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   inviteCLAManager(hasCompanyAdmin: boolean, content: any) {
-    const company: OrganizationModel = JSON.parse(this.storageService.getItem('selectedCompany'));
-    const project: ProjectModel = JSON.parse(this.storageService.getItem('project'));
+    const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     const data = {
       companyID: company.companyID,
       contactAdmin: hasCompanyAdmin,
@@ -74,7 +74,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   callInviteManagerAPI(data: any, hasCompanyAdmin: boolean, content: any) {
     this.alertService.clearAlert();
-    const user: UserModel = JSON.parse(this.storageService.getItem('user'));
+    const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
         (response: CompanyAdminDesigneeModel) => {
@@ -126,7 +126,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickExitCLABtn() {
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {

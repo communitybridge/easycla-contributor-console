@@ -8,7 +8,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
-import { OrganizationListModel, Organization } from 'src/app/core/models/organization';
+import { OrganizationListModel, Organization, CompanyModel } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -189,8 +189,14 @@ export class AddCompanyModalComponent implements OnInit {
       userEmail: publicEmail
     };
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
-      () => {
+      (response: CompanyModel) => {
         this.hasError = false;
+        // chnage company model to organization model.
+        this.selectedOrganization = {
+          organization_id: response.companyID,
+          organization_name: response.companyName,
+          organization_website: response.companyWebsite
+        };
         this.title = 'Successfully Added';
         this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
         this.openDialog(this.successModal);
@@ -223,8 +229,8 @@ export class AddCompanyModalComponent implements OnInit {
   onClickDialogBtn() {
     if (!this.hasError) {
       const data = {
-        action: 'CLA_NOT_SIGN',
-        payload: true
+        action: 'ADD_NEW_ORGANIZATION',
+        payload: this.selectedOrganization
       }
       this.claContributorService.openDialogModalEvent.next(data);
     } else {
@@ -234,7 +240,7 @@ export class AddCompanyModalComponent implements OnInit {
 
   backToAddOrganization() {
     const data = {
-      action: 'ADD_ORGANIZATION',
+      action: 'BACK_TO_ADD_ORGANIZATION',
       payload: ''
     }
     this.storeOrganizationDetails();

@@ -98,7 +98,7 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   onBackClick() {
-    const redirectUrl = JSON.parse(this.storageService.getItem('redirect'));
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (!this.hasGerrit) {
       // Redirect to Github home page.
       this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
