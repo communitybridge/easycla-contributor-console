@@ -218,11 +218,11 @@ export class ClaContributorService {
   }
 
   saveAs(URLToPDF, fileName) {
-    var oReq = new XMLHttpRequest();
-    oReq.open("GET", URLToPDF, true);
-    oReq.responseType = "blob";
+    const oReq = new XMLHttpRequest();
+    oReq.open('GET', URLToPDF, true);
+    oReq.responseType = 'blob';
     oReq.onload = function () {
-      var file = new Blob([oReq.response], {
+      const file = new Blob([oReq.response], {
         type: 'application/pdf'
       });
       FileSaver.saveAs(file, fileName);
