@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -12,7 +12,7 @@ import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
-import { CompanyAdminDesigneeModel } from 'src/app/core/models/company-admin-designee';
+import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -20,7 +20,7 @@ import { CompanyAdminDesigneeModel } from 'src/app/core/models/company-admin-des
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
-  @Input() hasShowContactAdmin: boolean;
+  hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
   title: string;
@@ -35,6 +35,10 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.hasShowContactAdmin = false;
+    setTimeout(() => {
+      this.hasShowContactAdminSection();
+    }, 50);
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([
         Validators.required,
@@ -113,6 +117,21 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       }
     }
     this.openDialogModal(content);
+  }
+
+  hasShowContactAdminSection() {
+    const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    this.claContributorService.getCompanyAdminList(selectedCompany.companyExternalID).subscribe(
+      (response: CompnayAdminListModel) => {
+        if (response.list.length > 0) {
+          this.hasShowContactAdmin = true;
+        }
+      },
+      (exception) => {
+        this.hasShowContactAdmin = false;
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   handleError(exception, content) {

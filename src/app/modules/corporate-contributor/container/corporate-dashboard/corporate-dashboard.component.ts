@@ -43,7 +43,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   title: string;
   message: string;
   openView: string;
-  hasShowContactAdmin: boolean;
   hideDialogCloseBtn: boolean;
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
@@ -67,14 +66,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
       if (result.action === 'CLA_NOT_SIGN') {
-        this.hasShowContactAdmin = result.payload;
         this.openWithDismiss(this.signedCLANotFoundModal);
       } else if (result.action === 'IDENTIFY_CLA_MANAGER') {
         this.openWithDismiss(this.identifyCLAManager);
       } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
-        this.hasShowContactAdmin = false;
         this.onSelectCompany(result.payload);
         this.getOrganizationInformation();
       }
@@ -91,7 +88,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.hasShowDropdown = false;
     this.emptySearchError = true;
     this.noCompanyFound = false;
-    this.hasShowContactAdmin = true;
     this.hideDialogCloseBtn = false;
 
     this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
@@ -122,7 +118,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   onClickProceed() {
-    this.hasShowContactAdmin = true;
     this.getOrganizationInformation();
   }
 

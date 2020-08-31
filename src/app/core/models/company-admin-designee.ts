@@ -16,3 +16,14 @@ export class CompanyAdminDesignee {
 export class CompanyAdminDesigneeModel {
     list: CompanyAdminDesignee[];
 }
+
+
+export interface CompanyAdminModel {
+    email: string;
+    id: string;
+    username: string;
+}
+
+export interface CompnayAdminListModel {
+    list: CompanyAdminModel[];
+}
