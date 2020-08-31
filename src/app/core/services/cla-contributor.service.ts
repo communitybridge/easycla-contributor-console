@@ -18,7 +18,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { GerritUserModel } from '../models/gerrit';
-import { CompanyAdminDesigneeModel } from '../models/company-admin-designee';
+import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
 declare const require: any
 const FileSaver = require('file-saver');
 
@@ -129,6 +129,11 @@ export class ClaContributorService {
   addCompany(userId: string, data: any): Observable<CompanyModel> {
     const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
     return this.httpClient.post<CompanyModel>(url, data);
+  }
+
+  getCompanyAdminList(companySFID: string): Observable<CompnayAdminListModel> {
+    const url = this.v4BaseUrl + 'v4/company/' + companySFID + '/admin';
+    return this.httpClient.get<CompnayAdminListModel>(url);
   }
 
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
