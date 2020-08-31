@@ -210,8 +210,25 @@ export class ClaContributorService {
     return null;
   }
 
-  downloadFile(url: string, pdfName: string) {
-    FileSaver.saveAs(url, pdfName);
+  downloadFile(projectId: string, claType: string) {
+    const url = this.v4BaseUrl + 'v4/template/' + projectId + '/preview?watermark=true&claType=' + claType;
+    let fileName = claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
+    fileName += '_License_Agreement.pdf'
+    this.saveAs(url, fileName);
+  }
+
+  saveAs(URLToPDF, fileName) {
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", URLToPDF, true);
+    oReq.responseType = "blob";
+    oReq.onload = function () {
+      var file = new Blob([oReq.response], {
+        type: 'application/pdf'
+      });
+      FileSaver.saveAs(file, fileName);
+    };
+
+    oReq.send();
   }
 
   hasTokenValid() {
