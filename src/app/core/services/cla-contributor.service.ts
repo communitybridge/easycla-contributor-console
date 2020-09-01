@@ -18,7 +18,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { GerritUserModel } from '../models/gerrit';
-import { CompanyAdminDesigneeModel } from '../models/company-admin-designee';
+import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
 declare const require: any
 const FileSaver = require('file-saver');
 
@@ -136,6 +136,11 @@ export class ClaContributorService {
     return this.httpClient.post<CompanyModel>(url, data);
   }
 
+  getCompanyAdminList(companySFID: string): Observable<CompnayAdminListModel> {
+    const url = this.v4BaseUrl + 'v4/company/' + companySFID + '/admin';
+    return this.httpClient.get<CompnayAdminListModel>(url);
+  }
+
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
     return this.httpClient.post<any>(url, data, this.getHeaders());
@@ -215,8 +220,25 @@ export class ClaContributorService {
     return null;
   }
 
-  downloadFile(url: string, pdfName: string) {
-    FileSaver.saveAs(url, pdfName);
+  downloadFile(projectId: string, claType: string) {
+    const url = this.v4BaseUrl + 'v4/template/' + projectId + '/preview?watermark=true&claType=' + claType;
+    let fileName = claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
+    fileName += '_License_Agreement.pdf'
+    this.saveAs(url, fileName);
+  }
+
+  saveAs(URLToPDF, fileName) {
+    const oReq = new XMLHttpRequest();
+    oReq.open('GET', URLToPDF, true);
+    oReq.responseType = 'blob';
+    oReq.onload = function () {
+      const file = new Blob([oReq.response], {
+        type: 'application/pdf'
+      });
+      FileSaver.saveAs(file, fileName);
+    };
+
+    oReq.send();
   }
 
   hasTokenValid() {
