@@ -269,7 +269,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         }
       },
       (exception) => {
-        this.claContributorService.handleError(exception);
+        this.alertService.error(exception.error.Message);
       }
     );
   }
