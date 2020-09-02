@@ -52,7 +52,7 @@
                         </div>
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            Organization name should be alphanumeric characters with - , and . are allowed.
+                            Organization name may only contain alphanumeric characters or special characters -,.
                         </div>
                     </div>
                 </div>
