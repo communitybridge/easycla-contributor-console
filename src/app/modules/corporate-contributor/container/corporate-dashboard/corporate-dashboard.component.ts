@@ -46,6 +46,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   hideDialogCloseBtn: boolean;
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
+  attempt: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -187,7 +188,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
       () => {
         const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
-        if (project.project_ccla_requires_icla_signature) {
+        if (project.project_ccla_requires_icla_signature && !this.attempt) {
           this.checkIndividualLastSignature();
         } else {
           this.showSuccessAndRedirectToGit();
@@ -202,6 +203,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   checkIndividualLastSignature() {
     this.claContributorService.getLastIndividualSignature(this.userId, this.projectId).subscribe(
       (response) => {
+        this.attempt = true;
         if (response === null) {
           // User has no icla, they need one. Redirect to ICLA/
           this.showICLASignModal();
@@ -242,14 +244,29 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
     } else {
-      const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-      if (redirectUrl !== null) {
-        window.open(redirectUrl, '_self');
-      } else {
-        const error = 'Unable to fetch redirect URL.';
-        this.alertService.error(error);
-      }
+      this.completeContributorAssociation();
     }
+  }
+
+  completeContributorAssociation() {
+    const data = {
+      userEmail: this.claContributorService.getUserPublicEmail()
+    }
+    const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    this.claContributorService.setContributorAssociation(company.companyExternalID, this.projectId, data).subscribe(
+      () => {
+        const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+        if (redirectUrl !== null) {
+          window.open(redirectUrl, '_self');
+        } else {
+          const error = 'Unable to fetch redirect URL.';
+          this.alertService.error(error);
+        }
+      },
+      (exception) => {
+        this.alertService.error(exception.error.Message);
+      }
+    );
   }
 
   onCompanyKeypress(event) {
