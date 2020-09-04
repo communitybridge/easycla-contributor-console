@@ -102,6 +102,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
 
     this.openAuthRedirectionModal();
+    this.handledBrowserBack();
   }
 
   ngOnDestroy() {
@@ -352,5 +353,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
 
   onClickNoBtn(content) {
     this.modalService.open(content);
+  }
+
+  handledBrowserBack() {
+    if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+      const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+      this.selectedCompany = company.companyExternalID;
+    }
   }
 }
