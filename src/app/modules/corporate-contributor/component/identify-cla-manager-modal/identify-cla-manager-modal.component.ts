@@ -44,8 +44,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(255),
-        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)
-        )]
+        Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
+      ]
       )],
       email: ['', Validators.compose([
         Validators.required,
