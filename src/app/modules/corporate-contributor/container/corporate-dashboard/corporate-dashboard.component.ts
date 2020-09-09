@@ -286,6 +286,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.searchOrganization(encodeURIComponent(companyName));
       }, 400);
     } else {
+      this.selectedCompany = '';
       this.organizationList.list = [];
       this.resetEmptySearchMessage();
     }
