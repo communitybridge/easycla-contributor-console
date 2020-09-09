@@ -188,6 +188,7 @@ export class AddCompanyModalComponent implements OnInit {
       companyWebsite: this.form.controls.companyWebsite.value,
       userEmail: publicEmail
     };
+    console.log(data); // Required to check the payload on Gerrit flow.
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
         this.hasError = false;

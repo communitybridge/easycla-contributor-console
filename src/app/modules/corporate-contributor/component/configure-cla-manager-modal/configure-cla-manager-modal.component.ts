@@ -51,7 +51,6 @@ export class ConfigureClaManagerModalComponent {
 
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
-      this.storageService.removeItem(AppSettings.ACTION_TYPE);
       if (this.claContributorService.hasTokenValid()) {
         this.addAsCLAManagerDesignee();
       } else {
@@ -104,7 +103,6 @@ export class ConfigureClaManagerModalComponent {
   }
 
   onClickProccedModalBtn() {
-    this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
     if (!this.hasCLAManagerDesignee) {
       this.redirectToAuth0();
     } else {
@@ -113,6 +111,7 @@ export class ConfigureClaManagerModalComponent {
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
       setTimeout(() => {
+        this.storageService.removeItem(AppSettings.ACTION_TYPE);
         const corporateUrl = this.claContributorService.getLFXCorporateURL();
         window.open(corporateUrl, '_blank');
       }, 4500);
