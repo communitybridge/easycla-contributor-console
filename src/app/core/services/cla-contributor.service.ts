@@ -198,7 +198,7 @@ export class ClaContributorService {
   getUserPublicEmail(): string {
     const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
-    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     let emails;
     if (hasGerrit) {
       return gerritUserModel.lf_email;
