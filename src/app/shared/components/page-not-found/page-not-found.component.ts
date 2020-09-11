@@ -60,7 +60,7 @@ export class PageNotFoundComponent implements OnInit {
     if (this.actionType === AppSettings.SIGN_CLA) {
       this.message = 'Wait... You are being redirected to the Configure CLA Manager.';
     } else if (this.hasGerrit) {
-      this.message = 'You are being redirected to the ' + this.contractType + ' console.';
+      this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
     } else {
       this.message = 'The page you are looking for was not found.';
     }
