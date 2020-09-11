@@ -29,7 +29,7 @@ export class AppSettings {
     public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';
     public static USERNAME_REGEX = '/^[a-zA-Z0-9_]{1,15}$/';
     public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
-    public static URL_PATTERN = /^((http|https):\/\/)?(www.)?[a-zA-Z0-9]+(\.[a-zA-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+    public static URL_PATTERN = /^((http|https):\/\/)?(www.)?[a-zA-Z0-9]+(\.[a-zA-Z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
     public static NON_WHITE_SPACE_REGEX = /.*\S.*/;
     public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z])?[a-zA-Z]*)*$/;
     public static GITHUB_EMAIL_CONTENT = 'noreply.github.com';
