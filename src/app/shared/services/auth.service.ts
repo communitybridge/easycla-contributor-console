@@ -46,9 +46,9 @@ export class AuthService {
   public isAuthenticated(): boolean {
     // Check whether the current time is past the
     // access token's expiry time
-    const gerritUser = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
-    if (gerritUser) {
-      return new Date().getTime() < gerritUser.expires_at;
+    const outhData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    if (outhData) {
+      return new Date().getTime() < outhData.expires_at;
     }
     return false;
   }

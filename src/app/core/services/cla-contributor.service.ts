@@ -146,6 +146,11 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data, this.getHeaders());
   }
 
+  addAsCompanyOwner(companyId: string, data: any): Observable<any> {
+    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/company-owner';
+    return this.httpClient.post<any>(url, data, this.getHeaders());
+  }
+
   notifyCLAMangers(data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/notify-cla-managers';
     return this.httpClient.post<any>(url, data);
