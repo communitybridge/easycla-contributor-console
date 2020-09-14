@@ -129,24 +129,28 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   onClickProccedModalBtn() {
-    this.modalService.dismissAll();
-    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
-    const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
-    this.alertService.success(flashMsg);
-    setTimeout(() => {
-      this.storageService.removeItem(AppSettings.ACTION_TYPE);
-      const corporateUrl = this.claContributorService.getLFXCorporateURL();
-      window.open(corporateUrl, '_blank');
-    }, 4500);
+    if (!(this.hasCLAManagerDesignee && this.hasCompanyOwner)) {
+      this.redirectToAuth0();
+    } else {
+      this.modalService.dismissAll();
+      const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+      const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
+      this.alertService.success(flashMsg);
+      setTimeout(() => {
+        this.storageService.removeItem(AppSettings.ACTION_TYPE);
+        const corporateUrl = this.claContributorService.getLFXCorporateURL();
+        window.open(corporateUrl, '_blank');
+      }, 4500);
 
-    setTimeout(() => {
-      const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-      if (redirectUrl) {
-        window.open(redirectUrl, '_self');
-      } else {
-        this.alertService.error('Error occured while redirection please confirm you come to the contributor console by following proper steps.');
-      }
-    }, 5000);
+      setTimeout(() => {
+        const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+        if (redirectUrl) {
+          window.open(redirectUrl, '_self');
+        } else {
+          this.alertService.error('Error occured while redirection please confirm you come to the contributor console by following proper steps.');
+        }
+      }, 5000);
+    }
   }
 
   redirectToAuth0() {
