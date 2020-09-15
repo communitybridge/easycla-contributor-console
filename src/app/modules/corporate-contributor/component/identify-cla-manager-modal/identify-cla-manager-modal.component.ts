@@ -83,7 +83,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
         (response: CompanyAdminDesigneeModel) => {
-          if (this.claContributorService.getUserLFID()) {
+          if (this.claContributorService.getUserLFID() && !hasCompanyAdmin) {
             this.addAsCompanyOwner(hasCompanyAdmin, response);
           } else {
             this.handleSuccess(hasCompanyAdmin, response);
