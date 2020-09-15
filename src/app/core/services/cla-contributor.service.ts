@@ -148,7 +148,7 @@ export class ClaContributorService {
 
   addAsCompanyOwner(companyId: string, data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/company-owner';
-    return this.httpClient.post<any>(url, data, this.getHeaders());
+    return this.httpClient.post<any>(url, data);
   }
 
   notifyCLAMangers(data: any): Observable<any> {

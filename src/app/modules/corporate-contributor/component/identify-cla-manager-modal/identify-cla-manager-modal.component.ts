@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -20,6 +20,7 @@ import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/m
   styleUrls: ['./identify-cla-manager-modal.component.scss']
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
+  @ViewChild('successModal') successModal: TemplateRef<any>;
   hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
@@ -55,15 +56,15 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     });
   }
 
-  onClickSubmit(content) {
-    this.inviteCLAManager(false, content);
+  onClickSubmit() {
+    this.inviteCLAManager(false);
   }
 
-  onClickContactAdmin(content) {
-    this.inviteCLAManager(true, content);
+  onClickContactAdmin() {
+    this.inviteCLAManager(true);
   }
 
-  inviteCLAManager(hasCompanyAdmin: boolean, content: any) {
+  inviteCLAManager(hasCompanyAdmin: boolean) {
     const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     const data = {
@@ -73,25 +74,44 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       name: hasCompanyAdmin ? '' : this.form.controls.name.value,
       userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
     }
-    this.callInviteManagerAPI(data, hasCompanyAdmin, content);
+    this.callInviteManagerAPI(data, hasCompanyAdmin);
   }
 
-  callInviteManagerAPI(data: any, hasCompanyAdmin: boolean, content: any) {
+  callInviteManagerAPI(data: any, hasCompanyAdmin: boolean) {
     this.alertService.clearAlert();
     const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
         (response: CompanyAdminDesigneeModel) => {
-          this.handleSuccess(hasCompanyAdmin, content, response);
+          if (this.claContributorService.getUserLFID() && !hasCompanyAdmin) {
+            this.addAsCompanyOwner(hasCompanyAdmin, response);
+          } else {
+            this.handleSuccess(hasCompanyAdmin, response);
+          }
         },
         (exception) => {
-          this.handleError(exception, content);
+          this.handleError(exception);
         }
       );
     }
   }
 
-  handleSuccess(hasCompanyAdmin: boolean, content: any, response: CompanyAdminDesigneeModel) {
+  addAsCompanyOwner(hasCompanyAdmin, response) {
+    const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    const data = {
+      userEmail: this.claContributorService.getUserPublicEmail()
+    };
+    this.claContributorService.addAsCompanyOwner(company.companyExternalID, data).subscribe(
+      () => {
+        this.handleSuccess(hasCompanyAdmin, response);
+      },
+      (exception) => {
+        this.handleError(exception);
+      }
+    );
+  }
+
+  handleSuccess(hasCompanyAdmin: boolean, response: CompanyAdminDesigneeModel) {
     this.hasError = false;
     if (hasCompanyAdmin) {
       this.title = 'Request Submitted to Company Admin';
@@ -116,7 +136,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
       }
     }
-    this.openDialogModal(content);
+    this.openDialogModal();
   }
 
   hasShowContactAdminSection() {
@@ -134,14 +154,14 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     );
   }
 
-  handleError(exception, content) {
+  handleError(exception) {
     this.hasError = true;
     this.title = 'Request Failed';
     this.message = 'Your request is Failed due to internal server error please try later.';
     if (exception.error?.Message) {
       this.message = exception.error.Message;
     }
-    this.openDialogModal(content);
+    this.openDialogModal();
   }
 
   onClickExitCLABtn() {
@@ -155,9 +175,9 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     }
   }
 
-  openDialogModal(content) {
+  openDialogModal() {
     this.modalService.dismissAll();
-    this.modalService.open(content, {
+    this.modalService.open(this.successModal, {
       centered: true,
       backdrop: 'static',
       keyboard: false
