@@ -256,18 +256,26 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     this.claContributorService.setContributorAssociation(company.companyExternalID, this.projectId, data).subscribe(
       () => {
-        const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-        if (redirectUrl !== null) {
-          window.open(redirectUrl, '_self');
-        } else {
-          const error = 'Unable to fetch redirect URL.';
-          this.alertService.error(error);
-        }
+        this.redirectToSource();
       },
       (exception) => {
-        this.alertService.error(exception.error.Message);
+        if (exception.status === 400) {
+          this.redirectToSource();
+        } else {
+          this.alertService.error(exception.error.Message);
+        }
       }
     );
+  }
+
+  redirectToSource() {
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+    if (redirectUrl !== null) {
+      window.open(redirectUrl, '_self');
+    } else {
+      const error = 'Unable to fetch redirect URL.';
+      this.alertService.error(error);
+    }
   }
 
   onCompanyKeypress(event) {
