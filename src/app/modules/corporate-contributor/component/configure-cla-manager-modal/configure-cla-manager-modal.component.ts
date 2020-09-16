@@ -127,10 +127,15 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.proccedToCorporateConsole();
       },
       (exception) => {
-        this.title = 'Request Failed';
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.message = exception.error.Message;
-        this.openDialog(this.errorModal);
+        if (exception.status === 400) {
+          this.hasCompanyOwner = true;
+          this.proccedToCorporateConsole();
+        } else {
+          this.title = 'Request Failed';
+          this.storageService.removeItem(AppSettings.ACTION_TYPE);
+          this.message = exception.error.Message;
+          this.openDialog(this.errorModal);
+        }
       }
     );
   }

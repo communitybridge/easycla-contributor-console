@@ -106,9 +106,11 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         this.handleSuccess(hasCompanyAdmin, response);
       },
       (exception) => {
-        this.title = 'Request Failed';
-        this.message = exception.error.Message;
-        this.openDialogModal();
+        if (exception.status === 400) {
+          this.handleSuccess(hasCompanyAdmin, response);
+        }else{
+          this.handleError(exception);
+        }
       }
     );
   }
