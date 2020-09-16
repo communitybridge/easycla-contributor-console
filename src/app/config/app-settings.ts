@@ -33,4 +33,5 @@ export class AppSettings {
     public static NON_WHITE_SPACE_REGEX = /.*\S.*/;
     public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z])?[a-zA-Z]*)*$/;
     public static GITHUB_EMAIL_CONTENT = 'noreply.github.com';
+    public static NEW_ORGANIZATIONS = 'newOrganizations';
 }

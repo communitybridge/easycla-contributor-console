@@ -74,7 +74,28 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       userEmail: this.claContributorService.getUserPublicEmail()
     };
     this.addAsCLAManagerDesignee(data);
-    this.addAsCompanyOwner(data);
+
+    // Verify the user who created orgnization only can be a company owner.
+    if (this.hasAccessForCompanyOwnerRole()) {
+      this.addAsCompanyOwner(data);
+    } else {
+      // Make it true for procced to corporate console.
+      this.hasCompanyOwner = true;
+    }
+  }
+
+  hasAccessForCompanyOwnerRole() {
+    let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
+    const selectedOrganization: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
+    newOrganizations = newOrganizations === null ? [] : newOrganizations;
+
+    for (const organization of newOrganizations) {
+      if (selectedOrganization.companyExternalID === organization.organizationId && organization.createdBy === userId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   addAsCLAManagerDesignee(data: any) {
@@ -106,10 +127,15 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.proccedToCorporateConsole();
       },
       (exception) => {
-        this.title = 'Request Failed';
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        this.message = exception.error.Message;
-        this.openDialog(this.errorModal);
+        if (exception.status === 400) {
+          this.hasCompanyOwner = true;
+          this.proccedToCorporateConsole();
+        } else {
+          this.title = 'Request Failed';
+          this.storageService.removeItem(AppSettings.ACTION_TYPE);
+          this.message = exception.error.Message;
+          this.openDialog(this.errorModal);
+        }
       }
     );
   }
