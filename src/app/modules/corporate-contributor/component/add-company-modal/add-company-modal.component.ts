@@ -191,12 +191,24 @@ export class AddCompanyModalComponent implements OnInit {
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
         this.hasError = false;
+
         // chnage company model to organization model.
         this.selectedOrganization = {
           organization_id: response.companyID,
           organization_name: response.companyName,
           organization_website: response.companyWebsite
         };
+
+        // Store newly added org in local storage for assiging company owner role.
+        const newOrgData = {
+          organizationId: response.companyID,
+          createdBy: userModel.user_id
+        };
+        let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
+        newOrganizations = newOrganizations === null ? [] : newOrganizations;
+        newOrganizations.push(newOrgData);
+        this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrganizations);
+
         this.title = 'Successfully Added';
         this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
         this.openDialog(this.successModal);

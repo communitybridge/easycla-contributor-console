@@ -106,7 +106,9 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         this.handleSuccess(hasCompanyAdmin, response);
       },
       (exception) => {
-        this.handleError(exception);
+        this.title = 'Request Failed';
+        this.message = exception.error.Message;
+        this.openDialogModal();
       }
     );
   }
@@ -118,7 +120,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       this.message = 'Your Company Admin ';
       for (const [index, admin] of response.list.entries()) {
         this.message += admin.name;
-        if (index !== response.list.length - 1 && admin.name.trim().length > 0) {
+        if (index !== response.list.length - 1 && admin.name !== null && admin.name.trim().length > 0) {
           this.message += ', ';
         }
       }
