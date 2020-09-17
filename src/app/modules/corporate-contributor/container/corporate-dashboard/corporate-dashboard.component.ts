@@ -259,7 +259,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.redirectToSource();
       },
       (exception) => {
-        if (exception.status === 400) {
+        // handled conflict when contributor role already assigned. 
+        if (exception.status === 400 || exception.status === 409) {
           this.redirectToSource();
         } else {
           this.alertService.error(exception.error.Message);
