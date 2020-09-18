@@ -83,7 +83,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
         (response: any) => {
-          if ((response.Code === '200' || response.Code === '202') && !hasCompanyAdmin) {
+          if (!hasCompanyAdmin) {
             this.addAsCompanyOwner(hasCompanyAdmin, response);
           } else {
             this.handleSuccess(hasCompanyAdmin, response);
@@ -94,7 +94,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
             // user already assigned cla-manager
             this.hasError = false;
             this.title = '';
-            this.message = 'This user is already a CLA Manager for this organization and project.';
+            this.message = 'This user is already a CLA Manager for this organization and project. Please contact them to process your CLA Request.';
             this.openDialogModal();
           } else {
             this.handleError(exception);
