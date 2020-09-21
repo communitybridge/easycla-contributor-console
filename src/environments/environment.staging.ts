@@ -3,7 +3,7 @@
 
 export const environment = {
   production: true,
-  baseUrl: 'https://api.dev.lfcla.com/',
+  baseUrl: 'https://api.staging.lfcla.com/',
   lfxCorporateUrl: 'https://lfx.staging.platform.linuxfoundation.org/',
-  v4BaseUrl: 'https://api-gw.dev.platform.linuxfoundation.org/cla-service/'
+  v4BaseUrl: 'https://api-gw.staging.platform.linuxfoundation.org/cla-service/'
 };
