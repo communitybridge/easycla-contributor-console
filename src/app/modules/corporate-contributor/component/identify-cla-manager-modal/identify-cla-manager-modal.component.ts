@@ -107,7 +107,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   addAsCompanyOwner(hasCompanyAdmin, response) {
     const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     const data = {
-      userEmail: this.claContributorService.getUserPublicEmail()
+      userEmail: this.form.controls.email.value
     };
     this.claContributorService.addAsCompanyOwner(company.companyExternalID, data).subscribe(
       () => {
