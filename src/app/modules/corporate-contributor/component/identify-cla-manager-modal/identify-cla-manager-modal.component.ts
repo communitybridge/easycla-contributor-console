@@ -128,9 +128,10 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     if (hasCompanyAdmin) {
       this.title = 'Request Submitted to Company Admin';
       this.message = 'Your Company Admin ';
-      for (const [index, admin] of response.list.entries()) {
+      const adminList = response.list.filter(admin => admin.name !== '');
+      for (const [index, admin] of adminList.entries()) {
         this.message += admin.name;
-        if (index !== response.list.length - 1 && admin.name !== null && admin.name.trim().length > 0) {
+        if (index !== adminList.length - 1 && admin.name !== null) {
           this.message += ', ';
         }
       }
