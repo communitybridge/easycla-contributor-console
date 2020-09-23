@@ -25,6 +25,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('addCompany') addCompany: TemplateRef<any>;
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('warningModal') warningModal: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -144,8 +145,14 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
         this.checkEmployeeeSignature();
       },
-      (exception) => {
-        this.alertService.error(exception.error.Message);
+      () => {
+        this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
+        const companyName = this.form.controls.companyName.value;
+        this.message = 'The selected company ' + companyName + ' has not been fully setup.</br>' +
+          ' Please help us by <a href="' + AppSettings.TICKET_URL + '" target="_blank">filing a support ticket</a>' +
+          ' to get the Organization Administrator assigned. Once the Organization Administrator is assigned to ' + companyName +
+          ' you will be able to proceed with the CLA.';
+        this.openWithDismiss(this.warningModal);
       }
     );
   }
@@ -247,6 +254,11 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.completeContributorAssociation();
     }
+  }
+
+  onClickExitCLA() {
+    this.modalService.dismissAll();
+    this.redirectToSource();
   }
 
   completeContributorAssociation() {
