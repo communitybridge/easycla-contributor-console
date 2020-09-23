@@ -148,6 +148,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       () => {
         this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
         const companyName = this.form.controls.companyName.value;
+        this.title = 'Setup Required';
         this.message = 'The selected company ' + companyName + ' has not been fully setup.</br>' +
           ' Please help us by <a href="' + AppSettings.TICKET_URL + '" target="_blank">filing a support ticket</a>' +
           ' to get the Organization Administrator assigned. Once the Organization Administrator is assigned to ' + companyName +
