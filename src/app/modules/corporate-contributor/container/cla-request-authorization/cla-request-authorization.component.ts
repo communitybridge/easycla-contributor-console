@@ -118,7 +118,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
       () => {
         this.hasError = false;
         this.title = 'Request Submitted';
-        this.message = 'The CLA Manager for ' + this.company.companyName + ' will be notified of your request to be authorized for contributions.' +
+        this.message = 'The CLA Manager for <b>' + this.company.companyName + '</b> will be notified of your request to be authorized for contributions.' +
           ' You will be notified via email when the status has been approved or rejected.';
         this.showDialogModal(content);
         this.hasSelectAll = false;

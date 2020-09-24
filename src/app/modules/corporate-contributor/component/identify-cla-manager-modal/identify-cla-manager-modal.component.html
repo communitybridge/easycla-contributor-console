@@ -1,7 +1,7 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
- <div class="container">
+<div class="container">
     <form [formGroup]="form">
         <div class="row justify-content-center">
             <div class="col-12 message">
@@ -23,7 +23,8 @@
                     </div>
                     <div *ngIf="form.controls.name.value.length > 1" [hidden]="!form.controls.name.errors.pattern"
                         class="error">
-                        Name must contain only letters, space and ',. - also only letters are allowed at the start or end.
+                        Name must contain only letters, space and ',. - also only letters are allowed at the start or
+                        end.
                     </div>
                 </div>
             </div>
@@ -109,8 +110,8 @@
                     <i *ngIf="hasError" class="fas fa-exclamation-circle logo red"></i>
                 </div>
                 <div class="col-12 title">{{title}}</div>
-                <p class="col-11 success-message">{{message}}</p>
-                <div *ngIf="hasError"  class="col-4">
+                <p class="col-11 success-message" [innerHTML]="message"></p>
+                <div *ngIf="hasError" class="col-4">
                     <button tabindex="-1" type="button" class="success-btn go-back"
                         (click)="onClickGoBackToIdentifyCLAManger()">
                         Go Back

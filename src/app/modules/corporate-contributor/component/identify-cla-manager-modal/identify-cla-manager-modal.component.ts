@@ -128,11 +128,13 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     if (hasCompanyAdmin) {
       this.title = 'Request Submitted to Company Admin';
       this.message = 'Your Company Admin ';
-      const adminList = response.list.filter(admin => admin.name !== '');
-      for (const [index, admin] of adminList.entries()) {
-        this.message += admin.name;
-        if (index !== adminList.length - 1 && admin.name !== null) {
-          this.message += ', ';
+      if (response.list) {
+        const adminList = response.list.filter(admin => admin.name !== '');
+        for (const [index, admin] of adminList.entries()) {
+          this.message += '<b>' + admin.name + '</b>';
+          if (index !== adminList.length - 1 && admin.name !== null) {
+            this.message += ', ';
+          }
         }
       }
       this.message += ' has been contacted, you will need to follow up with them to process your CLA request.';
@@ -146,7 +148,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       } else {
         // Came from Add organization flow.
         this.title = 'Notification Sent';
-        this.message = 'An email has been sent to "' + this.form.controls.email.value + '" to request that they start the CLA signature process.';
+        this.message = 'An email has been sent to <b>' + this.form.controls.email.value + '</b> to request that they start the CLA signature process.';
       }
     }
     this.openDialogModal();
