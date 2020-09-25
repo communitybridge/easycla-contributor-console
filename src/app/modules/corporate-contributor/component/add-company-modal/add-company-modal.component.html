@@ -96,7 +96,7 @@
                 <p class="col-11 success-message">{{message}}</p>
                 <div class="col-4">
                     <button tabindex="-1" type="button" class="success-btn" (click)="onClickDialogBtn()">
-                        {{hasError?'Go Back':'Procced'}}
+                        {{hasError?'Go Back':'Proceed'}}
                     </button>
                 </div>
             </div>
@@ -149,7 +149,7 @@
                             <div class="col-4">
                                 <button tabindex="-1" type="button" class="success-btn inactive"
                                     [ngClass]="{'active':publicEmailform.valid}" [disabled]="!publicEmailform.valid"
-                                    (click)="onClickProccedEmailModal()">Procced</button>
+                                    (click)="onClickProccedEmailModal()">Proceed</button>
                             </div>
                         </div>
                     </div>
