@@ -101,17 +101,42 @@ export class ClaDashboardComponent implements OnInit {
     } else {
       documents = this.project.project_individual_documents;
     }
+
     if (documents.length > 0) {
-      const latestDoc = documents[documents.length - 1].document_s3_url;
-      const filename = documents[documents.length - 1].document_name;
+      this.sortData(documents);
+      const latestDoc = documents[0].document_s3_url;
+      const filename = documents[0].document_name;
+      // const latestDoc = documents[documents.length - 1].document_s3_url;
+      // const filename = documents[documents.length - 1].document_name;
       if (latestDoc) {
         this.claContributorService.downloadFile(latestDoc, filename);
       } else {
-        this.alertService.error('Document link missing please co-ordinate with your administrator.')
+        this.alertService.error('Template link is missing - please contact the support desk for assistance.');
       }
     } else {
-      this.alertService.error('No document found to download.')
+      this.alertService.error('No document found to download.');
     }
+  }
+
+  sortData(documents) {
+    this.sortByDate(documents);
+    this.sortByVersion(documents);
+  }
+
+  sortByVersion(documents) {
+    documents.sort((a, b) => {
+      const versionA = parseFloat(a.documentMajorVersion + '.' + a.documentMinorVersion).toFixed(2);
+      const versionB = parseFloat(b.documentMajorVersion + '.' + b.documentMinorVersion).toFixed(2);
+      return versionA > versionB ? -1 : versionA < versionB ? 1 : 0;
+    });
+  }
+
+  sortByDate(documents) {
+    documents.sort((a, b) => {
+      a = new Date(a.documentCreationDate);
+      b = new Date(b.documentCreationDate);
+      return a > b ? -1 : a < b ? 1 : 0;
+    });
   }
 
   hasErrorPresent(error?) {

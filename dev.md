@@ -28,21 +28,17 @@ Yarn is available for Windows, Linux and MacOS. Once you have successfully insta
 
 `yarn -v`
 
-
 Install angualar CLI
 
 `yarn global add @angular/cli`
-
 
 Install dependencies:
 
 `yarn install`
 
-
 Run Angular Project 
 
 `yarn serve`
-
 
 Run ES Lint 
 
