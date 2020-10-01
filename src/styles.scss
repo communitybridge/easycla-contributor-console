@@ -153,3 +153,11 @@ body {
     border-radius: 10px !important;
   }
 }
+
+.modal-backdrop {
+  z-index: 21000 !important;
+}
+
+.modal {
+  z-index: 21001 !important;
+}

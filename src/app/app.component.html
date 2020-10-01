@@ -1,8 +1,10 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 <app-loader></app-loader>
-<app-cla-header></app-cla-header>
-<app-alert></app-alert>
-<div class="fix-header-margin">
+<lfx-header product="LF CLA" id="lfx-header" [expanded]="hasExpanded" (toggled)="onToggled()">
+</lfx-header>
+
+<div [ngClass]="{'expanded':hasExpanded}" class="fix-header-margin">
+    <app-alert></app-alert>
     <router-outlet></router-outlet>
 </div>

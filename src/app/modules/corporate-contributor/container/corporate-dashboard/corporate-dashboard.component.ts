@@ -101,7 +101,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))
       ])],
     });
-
     this.openAuthRedirectionModal();
     this.handledBrowserBack();
   }
