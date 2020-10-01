@@ -21,14 +21,9 @@ aliases:
     paths:
       - "*"
 
-  - &persist_to_workspace
-    root: '.'
-    paths:
-      - "*"
-
 defaults: &defaults
   docker:
-    - image: circleci/node:12-browsers
+    - image: circleci/node:14.9.0-browsers
   working_directory: /tmp/workspace
 
 jobs:
