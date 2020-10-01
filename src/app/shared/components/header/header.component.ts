@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 @Component({
   selector: 'lfx-header',
   templateUrl: './header.component.html',
@@ -9,7 +9,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 })
 export class HeaderComponent {
   @Input() expanded: boolean;
-  
+
   constructor() { }
 
 }
