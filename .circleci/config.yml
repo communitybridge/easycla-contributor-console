@@ -239,19 +239,17 @@ workflows:
                 - master
 
       # Deploy Staging
-      - approveStaging:
-          type: approval
-          requires:
-            - deployContributorConsoleDev
+      - buildStaging:
           filters:
             branches:
               ignore: /.*/
             tags:
               # see semver examples https://regex101.com/r/Ly7O1x/201/
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - buildStaging:
+      - approveStaging:
+          type: approval
           requires:
-            - approveStaging
+            - buildStating
           filters:
             branches:
               ignore: /.*/
@@ -270,19 +268,18 @@ workflows:
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
       # Deploy Prod
-      - approveProd:
-          type: approval
-          requires:
-            - deployContributorConsoleStaging
+      - buildProd:
           filters:
             branches:
               ignore: /.*/
             tags:
               # see semver examples https://regex101.com/r/Ly7O1x/201/
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - buildProd:
+      - approveProd:
+          type: approval
           requires:
-            - approveProd
+            - deployContributorConsoleStaging
+            - buildProd
           filters:
             branches:
               ignore: /.*/
