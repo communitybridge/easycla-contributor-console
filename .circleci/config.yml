@@ -249,7 +249,7 @@ workflows:
       - approveStaging:
           type: approval
           requires:
-            - buildStating
+            - buildStaging
           filters:
             branches:
               ignore: /.*/
