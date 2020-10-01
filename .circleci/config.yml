@@ -137,17 +137,6 @@ jobs:
       - restore_cache: *restore-cache
       - run: yarn eslint
 
-#  test:
-#    <<: *defaults
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: /tmp/workspace
-#      - restore_cache: *restore-cache
-#      - run:
-#          command: yarn test
-#          no_output_timeout: 3m
-
   deployFrontend: &deployFrontendAnchor
     <<: *defaults
     steps:
@@ -184,7 +173,6 @@ jobs:
           command: |
             echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
             SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true" --verbose
-      - persist_to_workspace: *persist_to_workspace
 
   deployContributorConsoleDev:
     <<: *deployFrontendAnchor
@@ -251,17 +239,19 @@ workflows:
                 - master
 
       # Deploy Staging
-      - buildStaging:
+      - approveStaging:
+          type: approval
+          requires:
+            - deployContributorConsoleDev
           filters:
             branches:
               ignore: /.*/
             tags:
               # see semver examples https://regex101.com/r/Ly7O1x/201/
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - approve_staging:
-          type: approval
+      - buildStaging:
           requires:
-            - buildStaging
+            - approveStaging
           filters:
             branches:
               ignore: /.*/
@@ -271,6 +261,7 @@ workflows:
       - deployContributorConsoleStaging:
           requires:
             - approve_staging
+            - buildStaging
           filters:
             branches:
               ignore: /.*/
@@ -279,18 +270,19 @@ workflows:
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
 
       # Deploy Prod
-      - buildProd:
+      - approveProd:
+          type: approval
+          requires:
+            - deployContributorConsoleStaging
           filters:
             branches:
               ignore: /.*/
             tags:
               # see semver examples https://regex101.com/r/Ly7O1x/201/
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - approve_prod:
-          type: approval
+      - buildProd:
           requires:
-            - buildProd
-            - deployContributorConsoleStaging
+            - approveProd
           filters:
             branches:
               ignore: /.*/
@@ -299,7 +291,8 @@ workflows:
               only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
       - deployContributorConsoleProd:
           requires:
-            - approve_prod
+            - approveProd
+            - buildProd
           filters:
             branches:
               ignore: /.*/
