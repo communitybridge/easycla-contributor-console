@@ -13,7 +13,7 @@
                 <div class="col-10 element">
                     <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
                         placeholder="Enter Organization Website (http://www.example.com)"
-                        formControlName="companyWebsite" tabindex="-1" class="form-control" />
+                        formControlName="companyWebsite" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
                     <div
@@ -36,7 +36,7 @@
 
                 <div class="col-10 element">
                     <input #organizationName type="text" name="companyName" placeholder="Enter Organization Name"
-                        (input)="onNameKeypress()" formControlName="companyName" tabindex="-1" class="form-control" />
+                        (input)="onNameKeypress()" formControlName="companyName" tabindex="2" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
                     </ng-container>
                     <div
@@ -75,7 +75,7 @@
     <div class="col-12 buttons">
         <div class="row justify-content-end">
             <div class="col-4">
-                <button tabindex="-1" type="button" class="btn inactive" [disabled]="!form.valid"
+                <button tabindex="3" type="button" class="btn inactive" [disabled]="!form.valid"
                     [ngClass]="{'active':(form.valid)}" (click)="onClickProceed()">
                     Next
                 </button>

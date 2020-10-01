@@ -1,5 +1,12 @@
 /* Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT */
 .fix-header-margin {
-  margin-top: 50px;
+  transition: margin 0.3s;
+  margin-top: 25px;
+  padding: 25px 0;
+  min-height: calc(100vh - 207px);
+  &.expanded {
+    margin-top: 100px;
+    min-height: calc(100vh - 282px);
+  }
 }
