@@ -159,6 +159,22 @@ jobs:
             printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
             echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
       - run:
+          name: Building Source
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running yarn build:${STAGE}..."
+            yarn build:${STAGE}
+          no_output_timeout: 10m
+      - run:
+          name: Build Edge
+          command: |
+            echo "Node version is: $(node --version)"
+            echo "Running yarn build..."
+            pushd edge
+            yarn build
+            popd
+          no_output_timeout: 10m
+      - run:
           name: Deploy Cloudfront and LambdaEdge
           command: |
             echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true --verbose"
