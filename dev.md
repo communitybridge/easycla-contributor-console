@@ -2,81 +2,74 @@
 
 ## CLA Local Development
 
-Copyright The Linux Foundation and each contributor to CommunityBridge.
-
-SPDX-License-Identifier: CC-BY-4.0
-
 ## Prerequisites
 
 - Node 12+
 - Angular CLI
 
 ## The Forking Workflow
- Select Project
- Fork Project into your own repository (from the UI)
- Clone the project from forked repository (command line).
 
- Create `upstream` remote reference
-    - Example: `git remote add upstream git@github.com:communitybridge/easycla-contributor-console.git`.
-    The first time Pull in the latest reference from the upstream
-    - Example: `git fetch upstream`
-    Rebase and fix any merge conflicts
-    - Example: `git rebase upstream/master`
+1. Select Project
+1. Fork Project into your own repository (from the UI)
+1. Clone the project from forked repository (command line).
+1. Create `upstream` remote reference
+   - Example: `git remote add upstream git@github.com:communitybridge/easycla-contributor-console.git`.
+   The first time Pull in the latest reference from the upstream
+   - Example: `git fetch upstream`
+   Rebase and fix any merge conflicts
+   - Example: `git rebase upstream/master`
 
 ## Angular project setup (Frontend) and essential commands
-Yarn is available for Windows, Linux and MacOS. Once you have successfully installed Yarn. (You can test by running the command below, it will give you the yarn version number)
+
+Yarn is available for Windows, Linux and MacOS. Once you have successfully
+installed Yarn. (You can test by running the command below, it will give you the
+yarn version number)
 
 `yarn -v`
-
 
 Install angualar CLI
 
 `yarn global add @angular/cli`
 
+### Install dependencies:
 
-Install dependencies:
+```bash
+# Install the project dependencies
+yarn install
 
-`yarn install`
+# Install the edge dependencies
+cd edge
+yarn install
+```
 
+### Build The Project
 
-Run Angular Project 
+```bash
+# Build for dev environment
+yarn build:dev
 
-`yarn serve`
+# Build the edge dependencies
+cd edge
+yarn build
+```
 
+### Run Angular Project 
 
-Run ES Lint 
+```bash
+yarn serve
+```
 
-`yarn run eslint`
+### Run ES Lint 
 
+```bash
+yarn run eslint
+```
 
-To install packages using Yarn is rather simple. Find or take any NPM package name and add it using yarn add command as indicated below:
+## License
 
-`yarn add package-name-1 package-name-2 …`
+Copyright The Linux Foundation and each contributor to CommunityBridge.
 
+This project’s source code is licensed under the MIT License. A copy of the license is available in LICENSE.
 
-Removing a dependency
-`yarn remove [package]`
+This project’s documentation is licensed under the Creative Commons Attribution 4.0 International License \(CC-BY-4.0\). A copy of the license is available in LICENSE-docs.
 
-
-Create a new module
-
-`ng g m <path>`
-
-
-Create a new component
-
-`ng g c <path>`
-
-
-Create a new service
-
-`ng g s <path>`
-
-
-Create a local build
-
-`ng build` or `yarn build`
-
-Create a production build
-
-`ng build --prod` or `yarn build --prod`
