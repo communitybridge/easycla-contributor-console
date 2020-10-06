@@ -61,10 +61,6 @@ plugins:
   - serverless-prune-plugin
   - '@silvermine/serverless-plugin-cloudfront-lambda-edge'
 
-environment:
-  STAGE: ${self:provider.stage}
-  REGION: us-east-1
-
 custom:
   project: ${file(./project-vars.yml):projectIdentifier}
 
@@ -97,7 +93,7 @@ custom:
   # CloudFront invalidation plugin configuration
   cloudfrontInvalidate:
     # Grab the distribution ID key from the output section
-    distributionIdKey: 'CloudFrontDistribution'
+    distributionIdKey: 'CloudFrontDistributionId'
     items: # one or more paths required
       - '/*'
 
