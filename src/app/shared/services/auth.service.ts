@@ -42,6 +42,7 @@ export class AuthService {
       return throwError(err);
     })
   );
+
   // Define observables for SDK methods that return promises by default
   // For each Auth0 SDK method, first ensure the client instance is ready
   // concatMap: Using the client instance, call SDK method; SDK returns a promise
@@ -49,13 +50,12 @@ export class AuthService {
   isAuthenticated$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
     tap((res: any) => {
-      tap(() => { log('this.auth0Client$.pipe > concatMap > tap', { res }) }),
-
         // *info: once isAuthenticated$ responses , SSO sessiong is loaded
         this.loading$.next(false);
       this.loggedIn = res;
     })
   );
+
   handleRedirectCallback$ = this.auth0Client$.pipe(
     tap(() => {
       // *info: We need to use the URL with code and state store in the service because
@@ -64,16 +64,18 @@ export class AuthService {
     }),
     concatMap((client: Auth0Client) => from(client.handleRedirectCallback(this.currentHref)))
   );
-  // Create subject and public observable of user profile data
-  private userProfileSubject$ = new BehaviorSubject<any>(null);
-  userProfile$ = this.userProfileSubject$.asObservable();
+
   // Create a local property for login status
   loggedIn = false;
+  userProfile$;
+  // Create subject and public observable of user profile data
+  private userProfileSubject$ = new BehaviorSubject<any>(null);
 
   constructor(
     private router: Router,
     private storageService: StorageService
   ) {
+    this.userProfile$ = this.userProfileSubject$.asObservable();
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
     this.localAuthSetup();
@@ -91,6 +93,37 @@ export class AuthService {
         this.userProfileSubject$.next(user);
       })
     );
+  }
+
+  login(redirectPath = '/') {
+    // A desired redirect path can be passed to login method
+    // (e.g., from a route guard)
+    // Ensure Auth0 client instance exists
+    this.auth0Client$.subscribe((client: Auth0Client) => {
+      // Call method to log in
+      client.loginWithRedirect({
+        redirect_uri: `${window.location.origin}`,
+        appState: { target: redirectPath },
+      });
+    });
+  }
+
+  logout() {
+    // Ensure Auth0 client instance exists
+    this.auth0Client$.subscribe((client: Auth0Client) => {
+      // Call method to log out
+      client.logout({
+        client_id: this.auth0Options.clientId,
+        returnTo: this.auth0Options.redirectUri,
+      });
+    });
+  }
+
+  public getIdToken(): Promise<string> {
+    return new Promise<string>((resolve) => {
+      const token = this.getIdToken$({ ignoreCache: true }).toPromise();
+      resolve(token);
+    });
   }
 
   private localAuthSetup() {
@@ -115,19 +148,6 @@ export class AuthService {
     checkAuth$.subscribe();
   }
 
-  login(redirectPath: string = '/') {
-    // A desired redirect path can be passed to login method
-    // (e.g., from a route guard)
-    // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
-      // Call method to log in
-      client.loginWithRedirect({
-        redirect_uri: `${window.location.origin}`,
-        appState: { target: redirectPath },
-      });
-    });
-  }
-
   private handleAuthCallback() {
     // Call when app reloads after user logs in with Auth0
     const params = window.location.search;
@@ -141,10 +161,10 @@ export class AuthService {
           // Get and set target redirect route from callback results
           targetRoute = cbRes.appState && cbRes.appState.target ? cbRes.appState.target : '/';
         }),
-        concatMap(() => {
+        concatMap(() =>
           // Redirect callback complete; get user and login status
-          return combineLatest([this.getUser$(), this.isAuthenticated$]);
-        })
+          combineLatest([this.getUser$(), this.isAuthenticated$])
+        )
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
@@ -159,22 +179,11 @@ export class AuthService {
     }
   }
 
-  logout() {
-    // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
-      // Call method to log out
-      client.logout({
-        client_id: this.auth0Options.clientId,
-        returnTo: this.auth0Options.redirectUri,
-      });
-    });
-  }
-
-  getTokenSilently$(options?): Observable<any> {
+  private getTokenSilently$(options?): Observable<any> {
     return this.auth0Client$.pipe(concatMap((client: Auth0Client) => from(client.getTokenSilently(options))));
   }
 
-  getIdToken$(options?): Observable<any> {
+  private getIdToken$(options?): Observable<any> {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getIdTokenClaims(options))),
       concatMap((claims: any) => of(claims.__raw))
@@ -189,13 +198,6 @@ export class AuthService {
       user_name: authResult.name
     }
     this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
-  }
-
-  public getIdToken(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      const token = this.getIdToken$({ ignoreCache: true }).toPromise();
-      resolve(token);
-    });
   }
 
   private redirectForGerritFlow() {
