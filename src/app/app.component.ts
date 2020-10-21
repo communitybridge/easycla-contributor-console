@@ -18,9 +18,7 @@ export class AppComponent {
 
   constructor(
     public authService: AuthService
-  ) {
-    this.authService.handleAuthentication();
-  }
+  ) {}
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;

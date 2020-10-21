@@ -9,6 +9,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { AUTH_ROUTE } from 'src/app/config/auth-utils';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -56,7 +57,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
-      if (this.claContributorService.hasTokenValid() && this.authService.isAuthenticated()) {
+      if (this.authService.loggedIn) {
         this.addContributorAsDesigneeAndOwner();
       } else {
         this.redirectToAuth0();
@@ -181,7 +182,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   redirectToAuth0() {
     this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
-    this.authService.login();
+    this.authService.login(AUTH_ROUTE);
   }
 
   onClickBackBtn() {

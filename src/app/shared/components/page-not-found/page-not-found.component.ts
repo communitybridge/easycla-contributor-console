@@ -42,13 +42,14 @@ export class PageNotFoundComponent implements OnInit {
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
 
     this.setMessage();
-
+    console.log(this.authService.loggedIn);
     setTimeout(() => {
-      if (this.authService.isAuthenticated()) {
+      if (this.authService.loggedIn) {
         if (this.hasGerrit) {
           this.performActionAsPerType();
         } else {
-          this.updateUserInfo();
+          // this.updateUserInfo();
+          this.performActionAsPerType();
         }
       } else {
         this.message = 'The page you are looking for was not found.';

@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import { AUTH_ROUTE } from 'src/app/config/auth-utils';
 
 @Component({
   selector: 'app-gerrit-dashboard',
@@ -32,7 +33,7 @@ export class GerritDashboardComponent implements OnInit {
     this.storageService.setItem(AppSettings.HAS_GERRIT, true);
     this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
     this.storageService.setItem(AppSettings.CONTRACT_TYPE, this.contractType);
-    this.authService.login();
+    this.authService.login(AUTH_ROUTE);
   }
 
 }

@@ -246,26 +246,30 @@ export class ClaContributorService {
     oReq.send();
   }
 
-  hasTokenValid() {
-    const tokenId = this.authService.getIdToken();
-    if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
   private getHttpClientHeaders(): HttpHeaders {
-    const tokenId = this.authService.getIdToken();
-    if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
-      return new HttpHeaders({
-        'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
-        Accept: AppSettings.HEADER_CONTENT_TYPE,
-        Authorization: 'Bearer ' + tokenId
-      });
-    }
-    return new HttpHeaders({
+    const httpHeader = new HttpHeaders({
       'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
       Accept: AppSettings.HEADER_CONTENT_TYPE
     });
+
+    // if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
+    //   return new HttpHeaders({
+    //     'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
+    //     Accept: AppSettings.HEADER_CONTENT_TYPE,
+    //     Authorization: 'Bearer ' + tokenId
+    //   });
+    // }
+    // return new HttpHeaders({
+    //   'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
+    //   Accept: AppSettings.HEADER_CONTENT_TYPE
+    // });
+
+    this.authService.getIdToken().then((token) => {
+      if (token) {
+        httpHeader.append('Authorization', 'Bearer ' + token);
+      }
+    });
+    console.log(httpHeader);
+    return httpHeader;
   }
 }

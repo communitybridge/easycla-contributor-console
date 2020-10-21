@@ -16,7 +16,6 @@ export class AppSettings {
     public static PROJECT = 'project';
     public static USER_ID = 'userId';
     public static CONTRACT_TYPE = 'contractType';
-    public static ID_TOKEN = 'id_token';
     public static SELECTED_COMPANY = 'selectedCompany';
     public static REDIRECT = 'redirect';
     public static AUTH_DATA = 'authData';
