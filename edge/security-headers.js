@@ -51,8 +51,8 @@ function generateCSP(env, isDevServer) {
     connectSources = [...connectSources, 'https://localhost:8100/sockjs-node/', 'wss://localhost:8100/sockjs-node/'];
     // The webpack dev server uses system js which violates the unsafe-eval exception. This doesn't happen in the
     // production AOT build.
-    scriptSources = [...scriptSources, UNSAFE_EVAL];
     // The development build needs unsafe inline assets.
+    scriptSources = [...scriptSources, UNSAFE_EVAL];
   }
 
   const CSP_SOURCES = env ? env.CSP_SOURCES : undefined;
@@ -60,9 +60,7 @@ function generateCSP(env, isDevServer) {
 
   const sources = {
     'default-src': [NONE],
-    'img-src': [
-      SELF,
-      'data:',
+    'img-src': [SELF, 'data:',
       'https://s3.amazonaws.com/cla-project-logo-dev/',
       'https://s3.amazonaws.com/cla-project-logo-staging/',
       'https://s3.amazonaws.com/cla-project-logo-prod/',
@@ -75,12 +73,10 @@ function generateCSP(env, isDevServer) {
     'connect-src': connectSources,
     'frame-ancestors': [NONE],
     'form-action': [NONE],
-    'worker-src': [SELF],
+    'worker-src': [SELF, 'blob:'],
     'base-uri': [SELF],
     // frame-src restricts what iframe's you can put on your website
-    'frame-src': [
-      SELF,
-      'data:',
+    'frame-src': [SELF, 'data:',
       'https://cla-signature-files-dev.s3.amazonaws.com/',
       'https://s3.amazonaws.com/cla-project-logo-dev/',
       'https://cla-signature-files-staging.s3.amazonaws.com/',
@@ -90,7 +86,8 @@ function generateCSP(env, isDevServer) {
     ],
     'child-src': [],
     'media-src': [],
-    'manifest-src': [SELF]
+    'manifest-src': [SELF],
+    'object-src': ['data:', '*']
   };
 
   return Object.entries(sources)
