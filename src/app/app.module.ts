@@ -16,6 +16,7 @@ import { AlertComponent } from './shared/components/alert/alert.component';
 import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
 import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
 import { FormsModule } from '@angular/forms';
+import { InterceptorService } from './shared/services/interceptor.service';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,11 @@ import { FormsModule } from '@angular/forms';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
       multi: true
     },
     AlertService

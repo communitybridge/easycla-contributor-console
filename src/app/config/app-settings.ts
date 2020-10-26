@@ -16,13 +16,13 @@ export class AppSettings {
     public static PROJECT = 'project';
     public static USER_ID = 'userId';
     public static CONTRACT_TYPE = 'contractType';
-    public static ID_TOKEN = 'id_token';
     public static SELECTED_COMPANY = 'selectedCompany';
     public static REDIRECT = 'redirect';
     public static AUTH_DATA = 'authData';
     public static ACTION_TYPE = 'actionType';
     public static ACTION_DATA = 'actionData';
     public static SIGN_CLA = 'signCLA';
+    public static AUTH_0_REDIRECTION = 'auth0Redirection';
     public static ORGANIZATION_DETAILS = 'organizationDetails';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';

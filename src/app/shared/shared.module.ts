@@ -13,6 +13,9 @@ import { ProjectTitleComponent } from './components/project-title/project-title.
 import { TrimCharactersPipe } from './pipes/trim-characters';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { AuthService } from './services/auth.service';
+import { LfxHeaderService } from './services/lfx-header.service';
+import { InterceptorService } from './services/interceptor.service';
+import { AuthComponent } from './components/auth/auth.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +27,8 @@ import { AuthService } from './services/auth.service';
         LoaderComponent,
         ProjectTitleComponent,
         TrimCharactersPipe,
-        CheckboxComponent
+        CheckboxComponent,
+        AuthComponent
     ],
     imports: [
 
@@ -40,6 +44,6 @@ import { AuthService } from './services/auth.service';
         TrimCharactersPipe,
         CheckboxComponent
     ],
-    providers: [StorageService, AuthService]
+    providers: [StorageService, AuthService, LfxHeaderService, InterceptorService]
 })
 export class SharedModule { }
