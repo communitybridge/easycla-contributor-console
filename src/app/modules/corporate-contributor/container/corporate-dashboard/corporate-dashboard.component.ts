@@ -114,6 +114,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   openAuthRedirectionModal() {
     setTimeout(() => {
       if (this.openView === AppSettings.SIGN_CLA) {
+        window.location.href = window.location.href.split('?view=signCLA')[0];
         this.open(this.configureCLAManager);
       }
     }, 250);
@@ -258,7 +259,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
 
   onClickExitCLA() {
     this.modalService.dismissAll();
-    this.redirectToSource();
+    // this.redirectToSource();
   }
 
   completeContributorAssociation() {

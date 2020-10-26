@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ProjectModel } from '../models/project';
@@ -46,7 +46,7 @@ export class ClaContributorService {
 
   updateUser(data: any): Observable<UpdateUserModel> {
     const url = this.baseURL + 'v3/users';
-    return this.httpClient.put<UpdateUserModel>(url, data, this.getHeaders());
+    return this.httpClient.put<UpdateUserModel>(url, data);
   }
 
   getProject(projectId: string): Observable<ProjectModel> {
@@ -108,12 +108,12 @@ export class ClaContributorService {
 
   getGerritUserInfo(): Observable<GerritUserModel> {
     const url = this.baseURL + 'v1/user/gerrit';
-    return this.httpClient.post<GerritUserModel>(url, '', this.getHeaders());
+    return this.httpClient.post<GerritUserModel>(url, '');
   }
 
   getGerritProjectInfo(projectId: string): Observable<ProjectModel> {
     const url = this.baseURL + 'v2/project/' + projectId;
-    return this.httpClient.get<ProjectModel>(url, this.getHeaders());
+    return this.httpClient.get<ProjectModel>(url);
   }
 
   inviteManager(userLFID: string, data: any): Observable<CompanyAdminDesigneeModel> {
@@ -143,7 +143,7 @@ export class ClaContributorService {
 
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
-    return this.httpClient.post<any>(url, data, this.getHeaders());
+    return this.httpClient.post<any>(url, data);
   }
 
   addAsCompanyOwner(companyId: string, data: any): Observable<any> {
@@ -166,10 +166,6 @@ export class ClaContributorService {
         }
       }
     }
-  }
-
-  getHeaders() {
-    return { headers: this.getHttpClientHeaders() };
   }
 
   getUserLFID(): string {
@@ -244,32 +240,5 @@ export class ClaContributorService {
     };
 
     oReq.send();
-  }
-
-  private getHttpClientHeaders(): HttpHeaders {
-    const httpHeader = new HttpHeaders({
-      'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
-      Accept: AppSettings.HEADER_CONTENT_TYPE
-    });
-
-    // if (tokenId !== undefined && tokenId !== null && tokenId.length > 0) {
-    //   return new HttpHeaders({
-    //     'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
-    //     Accept: AppSettings.HEADER_CONTENT_TYPE,
-    //     Authorization: 'Bearer ' + tokenId
-    //   });
-    // }
-    // return new HttpHeaders({
-    //   'Content-Type': AppSettings.HEADER_CONTENT_TYPE,
-    //   Accept: AppSettings.HEADER_CONTENT_TYPE
-    // });
-
-    this.authService.getIdToken().then((token) => {
-      if (token) {
-        httpHeader.append('Authorization', 'Bearer ' + token);
-      }
-    });
-    console.log(httpHeader);
-    return httpHeader;
   }
 }

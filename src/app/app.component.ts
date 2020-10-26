@@ -3,7 +3,7 @@
 
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { AuthService } from './shared/services/auth.service';
+import { LfxHeaderService } from './shared/services/lfx-header.service';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +17,8 @@ export class AppComponent {
   links: any[];
 
   constructor(
-    public authService: AuthService
-  ) {}
+    private lfxHeaderService: LfxHeaderService
+  ) { }
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;
