@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { TestBed } from '@angular/core/testing';
 
 import { LfxHeaderService } from './lfx-header.service';

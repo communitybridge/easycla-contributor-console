@@ -1,3 +1,6 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppSettings } from 'src/app/config/app-settings';
