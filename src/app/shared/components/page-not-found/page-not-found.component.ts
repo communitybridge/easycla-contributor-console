@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../../services/storage.service';
-import { AppSettings } from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-page-not-found',
@@ -16,19 +14,13 @@ export class PageNotFoundComponent implements OnInit {
   actionType: string;
 
   constructor(
-    private storageService: StorageService,
   ) { }
 
   ngOnInit(): void {
-    this.actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
-    this.setMessage();
-  }
-
-  setMessage() {
-    if (this.actionType !== undefined && this.actionType !== null && this.actionType !== '') {
-      this.message = 'Wait... we are validating session';
-    } else {
+    this.message = 'Wait... we are validating session';
+    // If auth0 response is null then page not exist.
+    setTimeout(() => {
       this.message = 'The page you are looking for was not found.';
-    }
+    }, 2000);
   }
 }
