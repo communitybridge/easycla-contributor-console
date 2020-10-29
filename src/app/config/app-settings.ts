@@ -22,6 +22,8 @@ export class AppSettings {
     public static ACTION_TYPE = 'actionType';
     public static ACTION_DATA = 'actionData';
     public static SIGN_CLA = 'signCLA';
+    public static PROJECT_CONSOLE_LINK = 'proj-console-link';
+    public static CORPORATE_CONSOLE_LINK = 'corp-console-link';
     public static AUTH_0_REDIRECTION = 'auth0Redirection';
     public static ORGANIZATION_DETAILS = 'organizationDetails';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
@@ -34,5 +36,6 @@ export class AppSettings {
     public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z])?[a-zA-Z]*)*$/;
     public static GITHUB_EMAIL_CONTENT = 'noreply.github.com';
     public static NEW_ORGANIZATIONS = 'newOrganizations';
+    public static LEARN_MORE = 'https://docs.linuxfoundation.org/docs/communitybridge/easycla';
     public static TICKET_URL = 'https://jira.linuxfoundation.org/servicedesk/customer/portal/4/create/143';
 }
