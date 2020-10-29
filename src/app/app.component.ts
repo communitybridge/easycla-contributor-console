@@ -35,7 +35,7 @@ export class AppComponent {
       },
       {
         title: 'CLA Manager Login',
-        url: EnvConfig.default[AppSettings.PROJECT_CONSOLE_LINK] + '#/login'
+        url: EnvConfig.default[AppSettings.CORPORATE_CONSOLE_LINK] + '#/login'
       },
       {
         title: 'Developer',
