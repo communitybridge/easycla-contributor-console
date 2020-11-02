@@ -1,7 +1,9 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 <app-loader></app-loader>
-<lfx-header product="LF CLA" id="lfx-header" [expanded]="hasExpanded" (toggled)="onToggled()">
+<lfx-header product="LF CLA" docslink="https://docs.linuxfoundation.org/docs/communitybridge/easycla"
+    supportlink="https://jira.linuxfoundation.org/plugins/servlet/theme/portal/4/create/143" id="lfx-header"
+    [expanded]="hasExpanded" (toggled)="onToggled()">
 </lfx-header>
 
 <div [ngClass]="{'expanded':hasExpanded}" class="fix-header-margin">
