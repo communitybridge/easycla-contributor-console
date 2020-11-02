@@ -75,7 +75,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.openWithDismiss(this.addCompany);
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
         this.onSelectCompany(result.payload);
-        this.getOrganizationInformation();
+        this.openWithDismiss(this.signedCLANotFoundModal);
+        // this.getOrganizationInformation();
       }
     });
 
@@ -132,15 +133,18 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   onSelectCompany(organization: Organization) {
-    this.hasShowDropdown = false;
-    this.selectedCompany = organization.organization_id;
-    this.searchBoxValue = organization.organization_name;
-    this.form.controls.companyName.setValue(organization.organization_name);
+    if (organization !== null) {
+      this.hasShowDropdown = false;
+      this.selectedCompany = organization.organization_id;
+      this.searchBoxValue = organization.organization_name;
+      this.form.controls.companyName.setValue(organization.organization_name);
+    }
   }
 
   getOrganizationInformation() {
     this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
       (response) => {
+        console.log(response);
         this.organization = response;
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
         this.checkEmployeeeSignature();
@@ -169,7 +173,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       (response) => {
         if (response.errors) {
           if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
-            this.openWithDismiss(this.signedCLANotFoundModal)
+            this.openWithDismiss(this.signedCLANotFoundModal);
           } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);

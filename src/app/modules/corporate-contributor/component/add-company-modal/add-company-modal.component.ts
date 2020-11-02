@@ -182,44 +182,52 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   callAddOrganizationAPI(publicEmail) {
+    this.selectedOrganization = null;
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
-    const data = {
+    // Stored newly added org in the local storage.
+    const newOrgData = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
-      userEmail: publicEmail
+      userEmail: publicEmail,
+      createdBy: userModel.user_id,
     };
-    this.claContributorService.addCompany(userModel.user_id, data).subscribe(
-      (response: CompanyModel) => {
-        this.hasError = false;
+    this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrgData);
+    // Skip success dialog and show CLA not sign dialog.
 
-        // chnage company model to organization model.
-        this.selectedOrganization = {
-          organization_id: response.companyID,
-          organization_name: response.companyName,
-          organization_website: response.companyWebsite
-        };
+    this.onClickDialogBtn();
+    // this.claContributorService.addCompany(userModel.user_id, data).subscribe(
+    //   (response: CompanyModel) => {
+    //     this.hasError = false;
 
-        // Store newly added org in local storage for assiging company owner role.
-        const newOrgData = {
-          organizationId: response.companyID,
-          createdBy: userModel.user_id
-        };
-        let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
-        newOrganizations = newOrganizations === null ? [] : newOrganizations;
-        newOrganizations.push(newOrgData);
-        this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrganizations);
+    //     // change company model to organization model.
+    //     this.selectedOrganization = {
+    //       organization_id: response.companyID,
+    //       organization_name: response.companyName,
+    //       organization_website: response.companyWebsite
+    //     };
 
-        this.title = 'Successfully Added';
-        this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
-        this.openDialog(this.successModal);
-      },
-      (exception) => {
-        this.hasError = true;
-        this.title = 'Request Failed';
-        this.message = exception.error.Message;
-        this.openDialog(this.successModal);
-      }
-    );
+    //     // Store newly added org in local storage for assiging company owner role.
+    //     const newOrgData = {
+    //       organizationId: response.companyID,
+    //       createdBy: userModel.user_id,
+    //       data: data
+    //     };
+    //     let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
+    //     newOrganizations = newOrganizations === null ? [] : newOrganizations;
+    //     newOrganizations.push(newOrgData);
+    //     this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrganizations);
+
+    //     this.title = 'Successfully Added';
+    //     this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
+    //     this.openDialog(this.successModal);
+    //   },
+    //   (exception) => {
+    //     this.hasError = true;
+    //     this.title = 'Request Failed';
+    //     this.message = exception.error.Message;
+    //     this.openDialog(this.successModal);
+    //   }
+    // );
   }
 
   onSelectOrganization(organization) {
