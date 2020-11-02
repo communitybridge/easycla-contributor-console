@@ -122,6 +122,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   onClickProceed() {
+    this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
     this.getOrganizationInformation();
   }
 
@@ -144,7 +145,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   getOrganizationInformation() {
     this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
       (response) => {
-        console.log(response);
         this.organization = response;
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
         this.checkEmployeeeSignature();
