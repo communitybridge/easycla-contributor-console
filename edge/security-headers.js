@@ -42,7 +42,10 @@ function generateCSP(env, isDevServer) {
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
     'https://cdn.dev.platform.linuxfoundation.org/lfx-header.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-header.js',
-    'https://cdn.platform.linuxfoundation.org/lfx-header.js'
+    'https://cdn.platform.linuxfoundation.org/lfx-header.js',
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
+    'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js'
   ];
 
   const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
@@ -68,7 +71,8 @@ function generateCSP(env, isDevServer) {
       'https://lf-master-project-logos-prod.s3.us-east-2.amazonaws.com/',
       'https://s.gravatar.com/',
       'https://lh3.googleusercontent.com/',
-      'https://platform-logos-myprofile-api-dev.s3.us-east-2.amazonaws.com/'
+      'https://platform-logos-myprofile-api-dev.s3.us-east-2.amazonaws.com/',
+      'https://cdn.platform.linuxfoundation.org/', // favicon: https://cdn.platform.linuxfoundation.org/assets/lf-favicon.png
     ],
     'script-src': scriptSources,
     'style-src': styleSources, // Unfortunately using Angular basically requires inline styles.
