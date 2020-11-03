@@ -40,9 +40,9 @@ function generateCSP(env, isDevServer) {
     'https://api-gw.platform.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
-    'https://cdn.dev.platform.linuxfoundation.org/lfx-header.js',
-    'https://cdn.staging.platform.linuxfoundation.org/lfx-header.js',
-    'https://cdn.platform.linuxfoundation.org/lfx-header.js',
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.staging.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-header-no-zone.js',
     'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js'
