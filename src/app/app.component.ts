@@ -3,7 +3,6 @@
 
 import { Component } from '@angular/core';
 import { AppSettings } from './config/app-settings';
-import { EnvConfig } from './config/cla-env-utils';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
 
 @Component({
@@ -30,11 +29,11 @@ export class AppComponent {
     this.links = [
       {
         title: 'Project Login',
-        url: EnvConfig.default[AppSettings.PROJECT_CONSOLE_LINK] + '#/login'
+        url: environment.PROJECT_CONSOLE
       },
       {
         title: 'CLA Manager Login',
-        url: EnvConfig.default[AppSettings.CORPORATE_CONSOLE_LINK] + '#/login'
+        url: environment.CORPORATE_CONSOLE
       },
       {
         title: 'Developer',
