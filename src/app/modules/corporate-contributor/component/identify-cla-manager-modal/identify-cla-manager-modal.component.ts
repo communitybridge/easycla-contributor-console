@@ -26,6 +26,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
+  getOrgTimeout = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -75,7 +76,9 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(response.companyID);
+        this.getOrgTimeout = setTimeout(() => {
+          this.getOrganizationInformation(response.companyID);
+        }, 2000);
       },
       (exception) => {
         this.alertService.error(exception.error.Message);
@@ -86,14 +89,9 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   getOrganizationInformation(companySFID) {
     this.claContributorService.getOrganizationDetails(companySFID).subscribe(
       (response) => {
+        clearTimeout(this.getOrgTimeout);
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.inviteCLAManager(false);
-      },
-      () => {
-        const message = 'The error occured during adding organization.</br>' +
-          ' Please help us by <a href="' + AppSettings.TICKET_URL + '" target="_blank">filing a support ticket</a>' +
-          ' to get it fix. Once the issue is resolve you will be able to proceed further.';
-        this.alertService.error(message);
       }
     );
   }
