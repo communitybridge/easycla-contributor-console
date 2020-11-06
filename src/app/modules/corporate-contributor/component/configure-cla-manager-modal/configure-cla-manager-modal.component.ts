@@ -63,10 +63,15 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.redirectToAuth0();
       }
     } else {
-      this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
-        '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
-        ' into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
-      this.openDialog(this.warningModal);
+      // Handle usecase wheather LFID is not present but session already exist in browser.
+      if (this.authService.loggedIn) {
+        this.addContributorAsDesigneeAndOwner();
+      } else {
+        this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
+          '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
+          ' into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
+        this.openDialog(this.warningModal);
+      }
     }
   }
 
