@@ -120,12 +120,7 @@ export class ClaContributorService {
     const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
     return this.httpClient.post<CompanyAdminDesigneeModel>(url, data);
   }
-
-  setContributorAssociation(companySFID: string, claGroupID: string, data: any): Observable<any> {
-    const url = this.v4BaseUrl + 'v4/company/' + companySFID + '/claGroup/' + claGroupID + '/contributorAssociation';
-    return this.httpClient.post<any>(url, data);
-  }
-
+  
   getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers';
     return this.httpClient.get<CLAManagersModel>(url);

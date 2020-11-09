@@ -252,34 +252,11 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
-    } else {
-      this.completeContributorAssociation();
     }
   }
 
   onClickExitCLA() {
     this.modalService.dismissAll();
-    // this.redirectToSource();
-  }
-
-  completeContributorAssociation() {
-    const data = {
-      userEmail: this.claContributorService.getUserPublicEmail()
-    }
-    const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
-    this.claContributorService.setContributorAssociation(company.companyExternalID, this.projectId, data).subscribe(
-      () => {
-        this.redirectToSource();
-      },
-      (exception) => {
-        // handled conflict when contributor role already assigned. 
-        if (exception.status === 400 || exception.status === 409) {
-          this.redirectToSource();
-        } else {
-          this.alertService.error(exception.error.Message);
-        }
-      }
-    );
   }
 
   redirectToSource() {
