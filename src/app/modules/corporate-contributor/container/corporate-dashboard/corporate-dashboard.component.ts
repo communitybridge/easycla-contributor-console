@@ -76,7 +76,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
         this.onSelectCompany(result.payload);
         this.openWithDismiss(this.signedCLANotFoundModal);
-        // this.getOrganizationInformation();
       }
     });
 

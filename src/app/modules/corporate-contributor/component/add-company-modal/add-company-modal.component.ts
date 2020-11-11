@@ -8,7 +8,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
-import { OrganizationListModel, Organization, CompanyModel } from 'src/app/core/models/organization';
+import { OrganizationListModel, Organization } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',

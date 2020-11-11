@@ -28,6 +28,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   hasCLAManagerDesignee: boolean;
   hasCompanyOwner: boolean;
   spinnerMessage: string;
+  getOrgTimeout = null;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -75,7 +76,9 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(response.companyID);
+        this.getOrgTimeout = setTimeout(() => {
+          this.getOrganizationInformation(response.companyID);
+        }, 2000);
       },
       (exception) => {
         this.title = 'Request Failed';
@@ -88,6 +91,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   getOrganizationInformation(companySFID) {
     this.claContributorService.getOrganizationDetails(companySFID).subscribe(
       (response) => {
+        console.log('Timeout cleared');
+        clearTimeout(this.getOrgTimeout);
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.company = response;
         this.manageAuthRedirection();
@@ -122,7 +127,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   addContributorAsDesigneeAndOwner() {
-    console.log('Added CLA manager designee role.');
     const data = {
       userEmail: this.claContributorService.getUserPublicEmail()
     };
