@@ -16,6 +16,7 @@ import { AuthService } from './services/auth.service';
 import { LfxHeaderService } from './services/lfx-header.service';
 import { InterceptorService } from './services/interceptor.service';
 import { AuthComponent } from './components/auth/auth.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
     declarations: [
@@ -28,7 +29,8 @@ import { AuthComponent } from './components/auth/auth.component';
         ProjectTitleComponent,
         TrimCharactersPipe,
         CheckboxComponent,
-        AuthComponent
+        AuthComponent,
+        FooterComponent
     ],
     imports: [
 
@@ -42,7 +44,8 @@ import { AuthComponent } from './components/auth/auth.component';
         LoaderComponent,
         ProjectTitleComponent,
         TrimCharactersPipe,
-        CheckboxComponent
+        CheckboxComponent,
+        FooterComponent
     ],
     providers: [StorageService, AuthService, LfxHeaderService, InterceptorService]
 })

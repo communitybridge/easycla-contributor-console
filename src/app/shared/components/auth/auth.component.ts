@@ -42,7 +42,11 @@ export class AuthComponent implements OnInit {
       if (this.hasGerrit) {
         this.performActionAsPerType();
       } else {
-        this.updateUserInfo();
+        if (this.claContributorService.getUserLFID()) {
+          this.performActionAsPerType();
+        } else {
+          this.updateUserInfo();
+        }
       }
     }, 2000);
   }

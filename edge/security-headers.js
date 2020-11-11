@@ -34,15 +34,19 @@ function generateCSP(env, isDevServer) {
     'https://api.dev.lfcla.com/',
     'https://api.staging.lfcla.com/',
     'https://api.lfcla.com/',
+    'https://api.easycla.lfx.linuxfoundation.org/',
     'https://communitybridge.org/',
     'https://api-gw.dev.platform.linuxfoundation.org/',
     'https://api-gw.staging.platform.linuxfoundation.org/',
     'https://api-gw.platform.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
-    'https://cdn.dev.platform.linuxfoundation.org/lfx-header.js',
-    'https://cdn.staging.platform.linuxfoundation.org/lfx-header.js',
-    'https://cdn.platform.linuxfoundation.org/lfx-header.js'
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.staging.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
+    'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js'
   ];
 
   const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
@@ -60,7 +64,9 @@ function generateCSP(env, isDevServer) {
 
   const sources = {
     'default-src': [NONE],
-    'img-src': [SELF, 'data:',
+    'img-src': [
+      SELF,
+      'data:',
       'https://s3.amazonaws.com/cla-project-logo-dev/',
       'https://s3.amazonaws.com/cla-project-logo-staging/',
       'https://s3.amazonaws.com/cla-project-logo-prod/',
@@ -68,7 +74,9 @@ function generateCSP(env, isDevServer) {
       'https://lf-master-project-logos-prod.s3.us-east-2.amazonaws.com/',
       'https://s.gravatar.com/',
       'https://lh3.googleusercontent.com/',
-      'https://platform-logos-myprofile-api-dev.s3.us-east-2.amazonaws.com/'
+      'https://platform-logos-myprofile-api-dev.s3.us-east-2.amazonaws.com/',
+      'https://cdn.platform.linuxfoundation.org/', // cdn favicon: https://cdn.platform.linuxfoundation.org/assets/lf-favicon.png
+      'https://platform-logos-myprofile-api-prod.s3.us-east-2.amazonaws.com/',
     ],
     'script-src': scriptSources,
     'style-src': styleSources, // Unfortunately using Angular basically requires inline styles.

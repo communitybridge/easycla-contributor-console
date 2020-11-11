@@ -76,18 +76,20 @@ custom:
       name:
         dev: 'dev.communitybridge.org'
         staging: 'staging.communitybridge.org'
-        prod: 'communitybridge.org'
+        prod: 'easycla.lfx.linuxfoundation.org'
         other: 'dev.communitybridge.org'
     domain:
       name:
         dev: 'easycla.dev.communitybridge.org'
         staging: 'easycla.staging.communitybridge.org'
-        prod: 'easycla.communitybridge.org'
+        prod: 'contributor.easycla.lfx.linuxfoundation.org'
         other: 'easycla.dev.communitybridge.org'
   certificate:
     arn:
       # ARN of the Externally generated certificate
-      prod: 'arn:aws:acm:us-east-1:716487311010:certificate/64dbe152-05ef-460e-98ad-b71a9a650d31'
+      dev: arn:aws:acm:us-east-1:395594542180:certificate/14e2ed6d-3484-42ec-aff0-70475c965b6f
+      staging: arn:aws:acm:us-east-1:844390194980:certificate/2905cc06-b9b5-4cc9-a0f7-f5e201e0a042
+      prod: arn:aws:acm:us-east-1:716487311010:certificate/4a3c3018-df9e-4c3a-84a6-231317f8bcec
       other: 'invalid - value'
 
   # CloudFront invalidation plugin configuration

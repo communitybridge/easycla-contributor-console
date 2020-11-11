@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { AppSettings } from './config/app-settings';
-import { EnvConfig } from './config/cla-env-utils';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
+import { EnvConfig } from './config/cla-env-utils';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,8 @@ export class AppComponent {
 
   constructor(
     private lfxHeaderService: LfxHeaderService
-  ) { }
+  ) {
+  }
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;
@@ -31,11 +32,11 @@ export class AppComponent {
     this.links = [
       {
         title: 'Project Login',
-        url: EnvConfig.default[AppSettings.PROJECT_CONSOLE_LINK] + '#/login'
+        url: environment.PROJECT_CONSOLE,
       },
       {
         title: 'CLA Manager Login',
-        url: EnvConfig.default[AppSettings.CORPORATE_CONSOLE_LINK] + '#/login'
+        url: environment.CORPORATE_CONSOLE,
       },
       {
         title: 'Developer',
@@ -45,13 +46,24 @@ export class AppComponent {
     const element: any = document.getElementById('lfx-header');
     element.links = this.links;
     this.mounted();
+    this.mountFooter();
   }
 
   mounted() {
     const script = document.createElement('script');
     script.setAttribute(
       'src',
-      environment.LFX_HEADER_URL
+      EnvConfig.default[AppSettings.LFX_HEADER]
+    );
+    document.head.appendChild(script);
+  }
+
+
+  mountFooter() {
+    const script = document.createElement('script');
+    script.setAttribute(
+      'src',
+      EnvConfig.default[AppSettings.LFX_FOOTER]
     );
     document.head.appendChild(script);
   }
