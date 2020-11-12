@@ -26,7 +26,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
-  getOrgTimeout = null;
+  companyId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -75,10 +75,9 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
+        this.companyId = response.companyID;
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrgTimeout = setTimeout(() => {
-          this.getOrganizationInformation(response.companyID);
-        }, 2000);
+        this.getOrganizationInformation(this.companyId);
       },
       (exception) => {
         this.alertService.error(exception.error.Message);
@@ -89,9 +88,11 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   getOrganizationInformation(companySFID) {
     this.claContributorService.getOrganizationDetails(companySFID).subscribe(
       (response) => {
-        clearTimeout(this.getOrgTimeout);
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.inviteCLAManager(false);
+      },
+      () => {
+        this.getOrganizationInformation(this.companyId);
       }
     );
   }
