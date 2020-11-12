@@ -95,6 +95,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.manageAuthRedirection();
       },
       () => {
+        // To add org in salesforce take couple of seconds
+        // So called getOrganizationInformation metod till result comes
         this.getOrganizationInformation(this.companyId);
       }
     );

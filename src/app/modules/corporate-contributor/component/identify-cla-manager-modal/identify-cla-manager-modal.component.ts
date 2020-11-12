@@ -92,6 +92,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         this.inviteCLAManager(false);
       },
       () => {
+        // To add org in salesforce take couple of seconds
+        // So called getOrganizationInformation metod till result comes
         this.getOrganizationInformation(this.companyId);
       }
     );
