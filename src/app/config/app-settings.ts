@@ -28,7 +28,7 @@ export class AppSettings {
     public static ORGANIZATION_DETAILS = 'organizationDetails';
     public static HEADER_ACCEPT_LANGUAGE = 'en-US';
     public static HEADER_CONTENT_TYPE = 'application/json';
-    public static EMAIL_PATTERN = '[a-z|A-Z|0-9]+[@]+[a-z|A-Z|0-9]+[.]+([a-z|A-Z|0-9]){2}';
+    public static EMAIL_PATTERN = /^([a-zA-Z0-9_\-\.\+]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     public static USERNAME_REGEX = '/^[a-zA-Z0-9_]{1,15}$/';
     public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
     public static URL_PATTERN = /^((http|https):\/\/)?(www.)?[a-zA-Z0-9]+(\.[a-zA-Z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
