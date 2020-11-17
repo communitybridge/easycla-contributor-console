@@ -63,7 +63,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const data = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
     if (data !== undefined && data !== null) {
       // Add organization if it is not created.
-      this.spinnerMessage = 'Please wait while we adding organization.';
+      this.spinnerMessage = 'Please wait for a moment, we are adding the organization.';
       this.addNewOrganization(data);
     } else {
       this.manageAuthRedirection();
