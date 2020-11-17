@@ -7,9 +7,10 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { OrganizationModel } from 'src/app/core/models/organization';
+import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AUTH_ROUTE } from 'src/app/config/auth-utils';
+import { UserModel } from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -26,6 +27,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   company: OrganizationModel;
   hasCLAManagerDesignee: boolean;
   hasCompanyOwner: boolean;
+  spinnerMessage: string;
+  companyId: string;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -38,7 +41,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.hasCompanyOwner = false;
     this.showCloseBtnEmitter.emit(false);
     setTimeout(() => {
-      this.manageAuthRedirection();
+      this.addOrganizationIfNotAdded();
     }, 100);
   }
 
@@ -47,12 +50,56 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   manageAuthRedirection() {
+    this.spinnerMessage = 'Please wait while we configure the initial CLA Manager settings for this CLA.';
     const actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
     if (actionType === AppSettings.SIGN_CLA) {
       this.addContributorAsDesigneeAndOwner();
     } else {
       this.validateUserLFID();
     }
+  }
+
+  addOrganizationIfNotAdded() {
+    const data = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
+    if (data !== undefined && data !== null) {
+      // Add organization if it is not created.
+      this.spinnerMessage = 'Please wait for a moment, we are adding the organization.';
+      this.addNewOrganization(data);
+    } else {
+      this.manageAuthRedirection();
+    }
+  }
+
+
+  addNewOrganization(data) {
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    this.claContributorService.addCompany(userModel.user_id, data).subscribe(
+      (response: CompanyModel) => {
+        this.companyId = response.companyID;
+        this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
+        this.getOrganizationInformation(this.companyId);
+      },
+      (exception) => {
+        this.title = 'Request Failed';
+        this.message = exception.error.Message;
+        this.openDialog(this.errorModal);
+      }
+    );
+  }
+
+  getOrganizationInformation(companySFID) {
+    this.claContributorService.getOrganizationDetails(companySFID).subscribe(
+      (response) => {
+        this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
+        this.company = response;
+        this.manageAuthRedirection();
+      },
+      () => {
+        // To add org in salesforce take couple of seconds
+        // So called getOrganizationInformation metod till result comes
+        this.getOrganizationInformation(this.companyId);
+      }
+    );
   }
 
   validateUserLFID() {

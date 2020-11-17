@@ -8,7 +8,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { UserModel } from 'src/app/core/models/user';
 import { ProjectModel } from 'src/app/core/models/project';
-import { OrganizationModel } from 'src/app/core/models/organization';
+import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
@@ -26,6 +26,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
+  companyId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -57,11 +58,45 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   onClickSubmit() {
-    this.inviteCLAManager(false);
+    const data = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
+    if (data !== undefined && data !== null) {
+      // Add organization if it is not created.
+      this.addNewOrganization(data);
+    } else {
+      this.inviteCLAManager(false);
+    }
   }
 
   onClickContactAdmin() {
     this.inviteCLAManager(true);
+  }
+
+  addNewOrganization(data) {
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    this.claContributorService.addCompany(userModel.user_id, data).subscribe(
+      (response: CompanyModel) => {
+        this.companyId = response.companyID;
+        this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
+        this.getOrganizationInformation(this.companyId);
+      },
+      (exception) => {
+        this.alertService.error(exception.error.Message);
+      }
+    );
+  }
+
+  getOrganizationInformation(companySFID) {
+    this.claContributorService.getOrganizationDetails(companySFID).subscribe(
+      (response) => {
+        this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
+        this.inviteCLAManager(false);
+      },
+      () => {
+        // To add org in salesforce take couple of seconds
+        // So called getOrganizationInformation metod till result comes
+        this.getOrganizationInformation(this.companyId);
+      }
+    );
   }
 
   inviteCLAManager(hasCompanyAdmin: boolean) {

@@ -7,7 +7,7 @@
             <i *ngIf="hasCLAManagerDesignee && hasCompanyOwner" class="fas fa-check-circle green"></i>
         </div>
         <div *ngIf="!(hasCLAManagerDesignee && hasCompanyOwner)" class="col-10 mt-20 message">
-            Please wait while we configure the initial CLA Manager settings for this CLA.
+            {{spinnerMessage}}
         </div>
         <div *ngIf="hasCLAManagerDesignee && hasCompanyOwner" class="col-10 mt-20 message">
             When this CLA is signed, you will be the initial CLA Manager. Please click below to proceed.
@@ -16,8 +16,8 @@
 
     <div class="row justify-content-center mt-20">
         <div class="col-5">
-            <button tabindex="-1" type="button" class="btn" [ngClass]="{'active':hasCLAManagerDesignee && hasCompanyOwner}"
-                (click)="onClickProceedBtn()">
+            <button tabindex="-1" type="button" class="btn"
+                [ngClass]="{'active':hasCLAManagerDesignee && hasCompanyOwner}" (click)="onClickProceedBtn()">
                 Proceed
             </button>
         </div>
