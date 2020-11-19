@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { UserModel } from 'src/app/core/models/user';
-import { ProjectModel } from 'src/app/core/models/project';
-import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { EmailValidator } from 'src/app/shared/validators/email-validator';
-import { AppSettings } from 'src/app/config/app-settings';
-import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {UserModel} from 'src/app/core/models/user';
+import {ProjectModel} from 'src/app/core/models/project';
+import {CompanyModel, OrganizationModel} from 'src/app/core/models/organization';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {EmailValidator} from 'src/app/shared/validators/email-validator';
+import {AppSettings} from 'src/app/config/app-settings';
+import {CompanyAdminDesigneeModel, CompnayAdminListModel} from 'src/app/core/models/company-admin-designee';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -34,7 +34,8 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     private claContributorService: ClaContributorService,
     private storageService: StorageService,
     private alertService: AlertService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.hasShowContactAdmin = false;
@@ -43,11 +44,11 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     }, 50);
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(255),
-        Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
-      ]
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(255),
+          Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
+        ]
       )],
       email: ['', Validators.compose([
         Validators.required,
@@ -118,11 +119,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     if (user.user_id) {
       this.claContributorService.inviteManager(user.user_id, data).subscribe(
         (response: any) => {
-          if (!hasCompanyAdmin) {
-            this.addAsCompanyOwner(hasCompanyAdmin, response);
-          } else {
-            this.handleSuccess(hasCompanyAdmin, response);
-          }
+          this.handleSuccess(hasCompanyAdmin, response);
         },
         (exception) => {
           if (exception.status === 400) {
@@ -137,25 +134,6 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         }
       );
     }
-  }
-
-  addAsCompanyOwner(hasCompanyAdmin, response) {
-    const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
-    const data = {
-      userEmail: this.form.controls.email.value
-    };
-    this.claContributorService.addAsCompanyOwner(company.companyExternalID, data).subscribe(
-      () => {
-        this.handleSuccess(hasCompanyAdmin, response);
-      },
-      (exception) => {
-        if (exception.status === 400) {
-          this.handleSuccess(hasCompanyAdmin, response);
-        } else {
-          this.handleError(exception);
-        }
-      }
-    );
   }
 
   handleSuccess(hasCompanyAdmin: boolean, response: CompanyAdminDesigneeModel) {
@@ -174,7 +152,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       }
       this.message += ' has been contacted, you will need to follow up with them to process your CLA request.';
     } else {
-      // Two diffrent success message as per from which screen he came
+      // Two different success message as per from which screen he came
       // Add Organization or from Company search page.
       if (this.hasShowContactAdmin) {
         // Came from Search organization flow.

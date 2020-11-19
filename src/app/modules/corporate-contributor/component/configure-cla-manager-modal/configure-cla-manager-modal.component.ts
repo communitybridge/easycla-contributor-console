@@ -1,16 +1,16 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, TemplateRef, ViewChild, EventEmitter, Output, OnInit } from '@angular/core';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { AppSettings } from 'src/app/config/app-settings';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { AUTH_ROUTE } from 'src/app/config/auth-utils';
-import { UserModel } from 'src/app/core/models/user';
+import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {AuthService} from 'src/app/shared/services/auth.service';
+import {AppSettings} from 'src/app/config/app-settings';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {CompanyModel, OrganizationModel} from 'src/app/core/models/organization';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {AUTH_ROUTE} from 'src/app/config/auth-utils';
+import {UserModel} from 'src/app/core/models/user';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -26,7 +26,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   message: string;
   company: OrganizationModel;
   hasCLAManagerDesignee: boolean;
-  hasCompanyOwner: boolean;
   spinnerMessage: string;
   companyId: string;
 
@@ -38,7 +37,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     private alertService: AlertService
   ) {
     this.hasCLAManagerDesignee = false;
-    this.hasCompanyOwner = false;
     this.showCloseBtnEmitter.emit(false);
     setTimeout(() => {
       this.addOrganizationIfNotAdded();
@@ -53,7 +51,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.spinnerMessage = 'Please wait while we configure the initial CLA Manager settings for this CLA.';
     const actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
     if (actionType === AppSettings.SIGN_CLA) {
-      this.addContributorAsDesigneeAndOwner();
+      this.addContributorAsDesignee();
     } else {
       this.validateUserLFID();
     }
@@ -105,14 +103,14 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
       if (this.authService.loggedIn) {
-        this.addContributorAsDesigneeAndOwner();
+        this.addContributorAsDesignee();
       } else {
         this.redirectToAuth0();
       }
     } else {
       // Handle usecase wheather LFID is not present but session already exist in browser.
       if (this.authService.loggedIn) {
-        this.addContributorAsDesigneeAndOwner();
+        this.addContributorAsDesignee();
       } else {
         this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
           '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
@@ -122,33 +120,12 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     }
   }
 
-  addContributorAsDesigneeAndOwner() {
+  addContributorAsDesignee() {
     const data = {
       userEmail: this.claContributorService.getUserPublicEmail()
     };
     this.addAsCLAManagerDesignee(data);
-
-    // Verify the user who created orgnization only can be a company owner.
-    if (this.hasAccessForCompanyOwnerRole()) {
-      this.addAsCompanyOwner(data);
-    } else {
-      // Make it true for procced to corporate console.
-      this.hasCompanyOwner = true;
-    }
-  }
-
-  hasAccessForCompanyOwnerRole() {
-    let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
-    const selectedOrganization: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
-    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-    newOrganizations = newOrganizations === null ? [] : newOrganizations;
-
-    for (const organization of newOrganizations) {
-      if (selectedOrganization.companyExternalID === organization.organizationId && organization.createdBy === userId) {
-        return true;
-      }
-    }
-    return false;
+    this.proceedToCorporateConsole();
   }
 
   addAsCLAManagerDesignee(data: any) {
@@ -156,13 +133,13 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
       () => {
         this.hasCLAManagerDesignee = true;
-        this.proccedToCorporateConsole();
+        this.proceedToCorporateConsole();
       },
       (exception) => {
         if (exception.status === 409) {
           // User has already CLA manager designee.
           this.hasCLAManagerDesignee = true;
-          this.proccedToCorporateConsole();
+          this.proceedToCorporateConsole();
         } else {
           this.title = 'Request Failed';
           this.storageService.removeItem(AppSettings.ACTION_TYPE);
@@ -173,28 +150,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     );
   }
 
-  addAsCompanyOwner(data: any) {
-    this.claContributorService.addAsCompanyOwner(this.company.companyExternalID, data).subscribe(
-      () => {
-        this.hasCompanyOwner = true;
-        this.proccedToCorporateConsole();
-      },
-      (exception) => {
-        if (exception.status === 400) {
-          this.hasCompanyOwner = true;
-          this.proccedToCorporateConsole();
-        } else {
-          this.title = 'Request Failed';
-          this.storageService.removeItem(AppSettings.ACTION_TYPE);
-          this.message = exception.error.Message;
-          this.openDialog(this.errorModal);
-        }
-      }
-    );
-  }
-
-  proccedToCorporateConsole() {
-    if (this.hasCLAManagerDesignee && this.hasCompanyOwner) {
+  proceedToCorporateConsole() {
+    if (this.hasCLAManagerDesignee) {
       this.storageService.removeItem(AppSettings.ACTION_TYPE);
       this.showCloseBtnEmitter.emit(true);
     }
@@ -207,8 +164,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.openDialog(this.warningModal);
   }
 
-  onClickProccedModalBtn() {
-    if (!(this.hasCLAManagerDesignee && this.hasCompanyOwner)) {
+  onClickProceedModalBtn() {
+    if (!this.hasCLAManagerDesignee) {
       this.redirectToAuth0();
     } else {
       this.modalService.dismissAll();
@@ -226,7 +183,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         if (redirectUrl) {
           window.open(redirectUrl, '_self');
         } else {
-          this.alertService.error('Error occured while redirection please confirm you come to the contributor console by following proper steps.');
+          this.alertService.error('Error occurred while redirection please confirm you come to the contributor console by following proper steps.');
         }
       }, 5000);
     }
@@ -256,5 +213,4 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       keyboard: false
     });
   }
-
 }
