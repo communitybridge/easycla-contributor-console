@@ -125,7 +125,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       userEmail: this.claContributorService.getUserPublicEmail()
     };
     this.addAsCLAManagerDesignee(data);
-    this.proceedToCorporateConsole();
   }
 
   addAsCLAManagerDesignee(data: any) {
