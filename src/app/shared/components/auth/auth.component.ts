@@ -37,7 +37,7 @@ export class AuthComponent implements OnInit {
     this.actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
     this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-    this.setMessage()
+    this.setMessage();
     setTimeout(() => {
       if (this.hasGerrit) {
         this.performActionAsPerType();
