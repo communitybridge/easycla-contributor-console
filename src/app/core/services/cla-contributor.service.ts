@@ -1,25 +1,26 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
-import { ProjectModel } from '../models/project';
-import { UserModel, UpdateUserModel } from '../models/user';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { ActiveSignatureModel } from '../models/active-signature';
-import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { OrganizationModel, OrganizationListModel, CompanyModel } from '../models/organization';
-import { EmployeeSignatureModel } from '../models/employee-signature';
-import { InviteCompanyModel } from '../models/invite-company';
-import { CLAManagersModel } from '../models/cla-manager';
-import { AppSettings } from 'src/app/config/app-settings';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { AuthService } from 'src/app/shared/services/auth.service';
-import { GerritUserModel } from '../models/gerrit';
-import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
-declare const require: any
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
+import {environment} from 'src/environments/environment';
+import {ProjectModel} from '../models/project';
+import {UpdateUserModel, UserModel} from '../models/user';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {ActiveSignatureModel} from '../models/active-signature';
+import {IndividualRequestSignatureModel} from '../models/individual-request-signature';
+import {CompanyModel, OrganizationListModel, OrganizationModel} from '../models/organization';
+import {EmployeeSignatureModel} from '../models/employee-signature';
+import {InviteCompanyModel} from '../models/invite-company';
+import {CLAManagersModel} from '../models/cla-manager';
+import {AppSettings} from 'src/app/config/app-settings';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {AuthService} from 'src/app/shared/services/auth.service';
+import {GerritUserModel} from '../models/gerrit';
+import {CompanyAdminDesigneeModel, CompnayAdminListModel} from '../models/company-admin-designee';
+
+declare const require: any;
 const FileSaver = require('file-saver');
 
 @Injectable({
@@ -37,7 +38,8 @@ export class ClaContributorService {
     private alertService: AlertService,
     private storageService: StorageService,
     private authService: AuthService
-  ) { }
+  ) {
+  }
 
   getUser(userId: string): Observable<UserModel> {
     const url = this.baseURL + 'v2/user/' + userId;
@@ -120,7 +122,7 @@ export class ClaContributorService {
     const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
     return this.httpClient.post<CompanyAdminDesigneeModel>(url, data);
   }
-  
+
   getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers';
     return this.httpClient.get<CLAManagersModel>(url);
@@ -138,11 +140,6 @@ export class ClaContributorService {
 
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
-    return this.httpClient.post<any>(url, data);
-  }
-
-  addAsCompanyOwner(companyId: string, data: any): Observable<any> {
-    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/company-owner';
     return this.httpClient.post<any>(url, data);
   }
 
@@ -219,7 +216,7 @@ export class ClaContributorService {
   downloadFile(projectId: string, claType: string) {
     const url = this.v4BaseUrl + 'v4/template/' + projectId + '/preview?watermark=true&claType=' + claType;
     let fileName = claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
-    fileName += '_License_Agreement.pdf'
+    fileName += '_License_Agreement.pdf';
     this.saveAs(url, fileName);
   }
 
@@ -227,7 +224,7 @@ export class ClaContributorService {
     const oReq = new XMLHttpRequest();
     oReq.open('GET', URLToPDF, true);
     oReq.responseType = 'blob';
-    oReq.onload = function () {
+    oReq.onload = () => {
       const file = new Blob([oReq.response], {
         type: 'application/pdf'
       });
