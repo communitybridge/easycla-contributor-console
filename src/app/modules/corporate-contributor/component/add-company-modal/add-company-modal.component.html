@@ -13,7 +13,7 @@
                 <div class="col-10 element">
                     <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
                         placeholder="Enter Organization Website (http://www.example.com)"
-                        formControlName="companyWebsite" tabindex="1" class="form-control" />
+                        formControlName="companyWebsite" (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
                     <div
@@ -36,7 +36,8 @@
 
                 <div class="col-10 element">
                     <input #organizationName type="text" name="companyName" placeholder="Enter Organization Name"
-                        (input)="onNameKeypress()" formControlName="companyName" tabindex="2" class="form-control" />
+                        (input)="onNameKeypress()" (focusout)="onFocusOut()" formControlName="companyName" tabindex="2"
+                        class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
                     </ng-container>
                     <div
@@ -124,7 +125,8 @@
     <div class="model">
         <div class="modal-body">
             <form class="col-12" [formGroup]="publicEmailform">
-                <p class="col-11 success-message">System cannot read your email address since it is not public, please enter
+                <p class="col-11 success-message">System cannot read your email address since it is not public, please
+                    enter
                     your email address so that we can proceed to next step</p>
                 <div class="row justify-content-center success-dialog">
                     <div class="col-11 element">
