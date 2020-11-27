@@ -148,6 +148,10 @@ export class AddCompanyModalComponent implements OnInit {
     this.organizationList.list = [];
   }
 
+  onFocusOut() {
+    this.hasShowDropdown = false;
+  }
+
   addOrganization() {
     const publicEmail = this.claContributorService.getUserPublicEmail();
     if (publicEmail !== null) {
