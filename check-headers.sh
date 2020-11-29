@@ -8,7 +8,7 @@
 # Exits with a 1 if one or more source files are missing a license header
 
 # These are the file patterns we should exclude - these are typically transient/generated files not checked into source control
-exclude_pattern='node_modules|dist|polyfills.ts|husky.sh|husky.local.sh|LICENSE.txt|OFL.txt'
+exclude_pattern='node_modules|dist|polyfills.ts|husky.sh|husky.local.sh|LICENSE.txt|OFL.txt|.git'
 
 files=()
 echo "Scanning source code..."
