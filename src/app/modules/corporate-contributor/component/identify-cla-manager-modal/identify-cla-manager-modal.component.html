@@ -10,7 +10,7 @@
             </div>
             <div class="col-10 element">
                 <input type="text" name="name" placeholder="Enter Name" formControlName="name" class="form-control"
-                    tabindex="-1" />
+                    tabindex="1" />
                 <div *ngIf="form.controls.name.errors  && (form.controls.name.dirty || form.controls.name.touched)">
                     <div [hidden]="!form.controls.name.errors.required" class="error">
                         Name is required.
@@ -31,7 +31,7 @@
 
             <div class="col-10 element">
                 <input type="text" name="email" placeholder="Enter Email Address" formControlName="email"
-                    class="form-control" tabindex="-1" />
+                    class="form-control" tabindex="2" />
                 <div *ngIf="form.controls.email.errors  && (form.controls.email.dirty || form.controls.email.touched)">
                     <div [hidden]="!form.controls.email.errors.maxlength" class="error">
                         Email address should not exceed 255 characters.
@@ -46,13 +46,13 @@
 
     <div class="row justify-content-center buttons">
         <div *ngIf="!hasShowContactAdmin" class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-            <button tabindex="-1" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
+            <button tabindex="4" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
                 Go Back
             </button>
         </div>
 
         <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
-            <button tabindex="-1" type="button" class="btn inactive" [ngClass]="{'active':form.valid}"
+            <button tabindex="3" type="button" class="btn inactive" [ngClass]="{'active':form.valid}"
                 [disabled]="!form.valid" (click)="onClickSubmit()">
                 Submit Request
             </button>
@@ -74,7 +74,7 @@
                 Contact your organization's CommunityBridge Company Admin if you do not know who will be the CLA
                 Manager.
             </div>
-            <div class="col-auto contact-admin" (click)="onClickContactAdmin()">Contact Company Admin </div>
+            <div class="col-auto contact-admin" tabindex="5" (click)="onClickContactAdmin()">Contact Company Admin </div>
         </div>
 
         <div class="or-container row justify-content-center align-items-center">
@@ -90,7 +90,7 @@
         <div class="col-12 buttons">
             <div class="row justify-content-center align-items-center">
                 <div class="col-6">
-                    <button tabindex="-1" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
+                    <button tabindex="6" type="button" class="btn back" (click)="onClickBackToCLANotFound()">
                         Go Back
                     </button>
                 </div>
