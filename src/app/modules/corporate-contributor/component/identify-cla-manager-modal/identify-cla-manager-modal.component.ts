@@ -10,7 +10,6 @@ import { UserModel } from 'src/app/core/models/user';
 import { ProjectModel } from 'src/app/core/models/project';
 import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
 import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
 
