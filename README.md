@@ -1,10 +1,10 @@
 # EasyCLA Contributor Console
 
-A stand-alone EasyCLA console for contributors to support the CommunityBridge.
+A stand-alone EasyCLA console for contributors to support the LFX platform.
 
 ## License
 
-Copyright The Linux Foundation and each contributor to CommunityBridge.
+Copyright The Linux Foundation and each contributor to the LFX platform.
 
 This project’s source code is licensed under the MIT License. A copy of the license is available in LICENSE.
 
