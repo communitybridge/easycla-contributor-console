@@ -252,7 +252,7 @@ workflows:
               ignore: /.*/
             branches:
               only:
-                - master
+                - main
 
       # Deploy Staging
       - buildStaging:
