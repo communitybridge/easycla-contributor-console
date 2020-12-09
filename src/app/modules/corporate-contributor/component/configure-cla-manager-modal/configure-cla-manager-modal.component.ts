@@ -9,7 +9,6 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { AUTH_ROUTE } from 'src/app/config/auth-utils';
 import { UserModel } from 'src/app/core/models/user';
 
 @Component({
