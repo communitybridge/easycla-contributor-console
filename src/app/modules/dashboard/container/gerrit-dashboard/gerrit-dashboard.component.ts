@@ -6,8 +6,6 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { AUTH_ROUTE } from 'src/app/config/auth-utils';
-
 @Component({
   selector: 'app-gerrit-dashboard',
   templateUrl: './gerrit-dashboard.component.html',
