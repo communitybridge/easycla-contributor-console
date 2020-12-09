@@ -33,7 +33,7 @@ export class GerritDashboardComponent implements OnInit {
     this.storageService.setItem(AppSettings.HAS_GERRIT, true);
     this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
     this.storageService.setItem(AppSettings.CONTRACT_TYPE, this.contractType);
-    this.authService.login(AUTH_ROUTE);
+    this.authService.login();
   }
 
 }

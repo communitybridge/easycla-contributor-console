@@ -140,7 +140,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
           this.hasCLAManagerDesignee = true;
           this.proceedToCorporateConsole();
         } if (exception.status === 401) {
-          this.authService.login(AUTH_ROUTE);
+          this.authService.login();
         } else {
           this.title = 'Request Failed';
           this.storageService.removeItem(AppSettings.ACTION_TYPE);
@@ -192,7 +192,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   redirectToAuth0() {
     this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
-    this.authService.login(AUTH_ROUTE);
+    this.authService.login();
   }
 
   onClickBackBtn() {

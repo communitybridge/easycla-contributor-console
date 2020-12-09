@@ -115,15 +115,21 @@ export class AuthService {
     );
   }
 
-  login(redirectPath = '/') {
+  login() {
     // A desired redirect path can be passed to login method
     // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
-      client.loginWithRedirect({
-        redirect_uri: `${window.location.origin}${window.location.search}`,
-        appState: { target: redirectPath },
-      });
-    });
+    // this.auth0Client$.subscribe((client: Auth0Client) => {
+    //   client.loginWithRedirect({
+    //     redirect_uri: `${window.location.origin}${window.location.search}`,
+    //     appState: { target: redirectPath },
+    //   });
+    // });
+    const button = document
+      .querySelector('#lfx-header')
+      .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
+    if (button) {
+      button.click();
+    }
   }
 
   logout() {
@@ -217,12 +223,8 @@ export class AuthService {
     const params = this.currentHref;
 
     if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute: string; // Path to redirect to after login processsed
+      // let targetRoute: string; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
-        // Have client, now call method to handle auth callback redirect
-        tap((cbRes: any) => {
-          targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
-        }),
         concatMap(() =>
           // Redirect callback complete; get user and login status
           combineLatest([this.getUser$(), this.isAuthenticated$])
@@ -231,7 +233,7 @@ export class AuthService {
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(() => {
-        this.router.navigate([targetRoute]);
+        this.router.navigate(['/auth']);
       });
     }
   }
