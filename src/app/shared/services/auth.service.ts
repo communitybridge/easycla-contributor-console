@@ -223,8 +223,12 @@ export class AuthService {
     const params = this.currentHref;
 
     if (params.includes('code=') && params.includes('state=')) {
-      // let targetRoute: string; // Path to redirect to after login processsed
+      let targetRoute: string; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
+        // Have client, now call method to handle auth callback redirect
+        tap((cbRes: any) => {
+          targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
+        }),
         concatMap(() =>
           // Redirect callback complete; get user and login status
           combineLatest([this.getUser$(), this.isAuthenticated$])
@@ -233,7 +237,7 @@ export class AuthService {
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(() => {
-        this.router.navigate(['/auth']);
+        this.router.navigateByUrl(`/auth?targetRoute=${targetRoute}`);
       });
     }
   }
