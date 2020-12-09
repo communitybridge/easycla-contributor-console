@@ -11,6 +11,7 @@ import { CompanyModel, OrganizationModel } from 'src/app/core/models/organizatio
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { AUTH_ROUTE } from 'src/app/config/auth-utils';
 import { UserModel } from 'src/app/core/models/user';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -34,7 +35,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     private authService: AuthService,
     private storageService: StorageService,
     private modalService: NgbModal,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private loaderService: LoaderService
   ) {
     this.hasCLAManagerDesignee = false;
     this.showCloseBtnEmitter.emit(false);
@@ -170,6 +172,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       this.redirectToAuth0();
     } else {
       this.modalService.dismissAll();
+      this.loaderService.show();
       const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
@@ -184,6 +187,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         if (redirectUrl) {
           window.open(redirectUrl, '_self');
         } else {
+          this.loaderService.hide();
           this.alertService.error('Error occurred while redirection please confirm you come to the contributor console by following proper steps.');
         }
       }, 5000);
