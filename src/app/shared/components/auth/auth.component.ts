@@ -23,6 +23,7 @@ export class AuthComponent implements OnInit {
   hasGerrit: string;
   userId: string;
   actionType: string;
+  previousURL: string;
 
   constructor(
     private storageService: StorageService,
@@ -37,6 +38,7 @@ export class AuthComponent implements OnInit {
     this.actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
     this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
+    this.previousURL = decodeURIComponent(window.location.hash.split('=')[1]);
     this.setMessage();
     setTimeout(() => {
       if (this.hasGerrit) {
@@ -58,7 +60,12 @@ export class AuthComponent implements OnInit {
     else if (this.hasGerrit) {
       this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
     } else {
-      this.message = 'The page you are looking for was not found.';
+      if (this.previousURL) {
+        this.router.navigateByUrl(this.previousURL);
+      } else {
+        this.message = 'The page you are looking for was not found.';
+      }
+
     }
   }
 
@@ -70,6 +77,7 @@ export class AuthComponent implements OnInit {
     } else if (this.hasGerrit) {
       this.getGerritProjectInfo();
       this.getUserInfo();
+
     }
   }
 

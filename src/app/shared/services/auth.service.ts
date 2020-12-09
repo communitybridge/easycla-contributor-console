@@ -115,15 +115,21 @@ export class AuthService {
     );
   }
 
-  login(redirectPath = '/') {
+  login() {
     // A desired redirect path can be passed to login method
     // Ensure Auth0 client instance exists
-    this.auth0Client$.subscribe((client: Auth0Client) => {
-      client.loginWithRedirect({
-        redirect_uri: `${window.location.origin}${window.location.search}`,
-        appState: { target: redirectPath },
-      });
-    });
+    // this.auth0Client$.subscribe((client: Auth0Client) => {
+    //   client.loginWithRedirect({
+    //     redirect_uri: `${window.location.origin}${window.location.search}`,
+    //     appState: { target: redirectPath },
+    //   });
+    // });
+    const button = document
+      .querySelector('#lfx-header')
+      .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
+    if (button) {
+      button.click();
+    }
   }
 
   logout() {
@@ -231,7 +237,7 @@ export class AuthService {
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(() => {
-        this.router.navigate([targetRoute]);
+        this.router.navigateByUrl(`/auth?targetRoute=${targetRoute}`);
       });
     }
   }
