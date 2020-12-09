@@ -173,14 +173,21 @@ export class ClaContributorService {
 
   getLFXCorporateURL(): string {
     let url = '';
+    // Load the CLA Group models from local storage - should only be 1 CLA Group
     const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
+    // We may have zero or more SF Projects attached to this CLA Group
     const projectDetails = project.projects;
+
+    // No SF Projects for this CLA Group
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
       url = environment.lfxCorporateUrl + 'company/dashboard';
     } else if (project.signed_at_foundation_level) {
       // Signed at foundation level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
+    } else if (projectDetails[0].standalone_project) {
+      // Standalone project
+      url = environment.lfxCorporateUrl + 'foundation/LF%20Supported/project/' + projectDetails[0].project_sfid + '/cla';
     } else {
       // Signed at project level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
