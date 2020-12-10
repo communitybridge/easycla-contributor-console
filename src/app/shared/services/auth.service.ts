@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable @typescript-eslint/prefer-for-of */
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
@@ -20,6 +22,10 @@ import { EnvConfig } from '../../config/cla-env-utils';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from './storage.service';
 
+function log(text: any, value: any = '') {
+  console.log(`(authServr) ${text}`, value && JSON.stringify({log: value}, null, 2)|| '');
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,9 +34,11 @@ export class AuthService {
   auth0Options = {
     domain: EnvConfig.default['auth0-domain'], // e.g linuxfoundation-dev.auth0.com
     clientId: EnvConfig.default['auth0-clientId'],
+    callbackUrl: window.location.origin + '/#/auth'
   };
 
   currentHref = window.location.href;
+  currentSearch = window.location.search;
   loading$ = new BehaviorSubject<any>(true);
 
   // Create an observable of Auth0 instance of client
@@ -56,15 +64,17 @@ export class AuthService {
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
     tap((res: any) => {
       // *info: once isAuthenticated$ responses , SSO sessiong is loaded
-      this.loading$.next(false);
+      // this.loading$.next(false);
       this.loggedIn = res;
     })
   );
 
   handleRedirectCallback$ = this.auth0Client$.pipe(
-    concatMap((client: Auth0Client) =>
-      from(client.handleRedirectCallback(this.currentHref))
-    )
+    concatMap((client: Auth0Client) => {
+      log('### obser > this.currentHref ', {jhref: this.currentHref, searcj: this.currentSearch});
+      // return from(client.handleRedirectCallback(this.currentHref))
+      return from(client.handleRedirectCallback(this.currentSearch))
+    }),
   );
 
   // Create subject and public observable of user profile data
@@ -80,16 +90,31 @@ export class AuthService {
     private router: Router,
     private storageService: StorageService
   ) {
+    this.initializeApplication();
 
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
 
+    // const params = this.currentHref;
+    // if (params.includes('code=') && params.includes('state=')) {
+    //   this.handleAuthCallback();
+    // } else {
+    //   this.localAuthSetup();
+    // }
+    // this.handlerReturnToAferlogout();
+  }
+
+  async initializeApplication() {
+    // On initial load, check authentication state with authorization server
+    // Set up local auth streams if user is already authenticated
     const params = this.currentHref;
+    log(' > params', params);
     if (params.includes('code=') && params.includes('state=')) {
       this.handleAuthCallback();
-    } else {
-      this.localAuthSetup();
+      return;
     }
+
+    await this.localAuthSetup();
     this.handlerReturnToAferlogout();
   }
 
@@ -116,41 +141,29 @@ export class AuthService {
   }
 
   login() {
-    // A desired redirect path can be passed to login method
-    // Ensure Auth0 client instance exists
-    // this.auth0Client$.subscribe((client: Auth0Client) => {
-    //   client.loginWithRedirect({
-    //     redirect_uri: `${window.location.origin}${window.location.search}`,
-    //     appState: { target: redirectPath },
-    //   });
-    // });
-    const button = document
-      .querySelector('#lfx-header')
+    log('entered login');
+    setTimeout(() => {
+      const header = document.querySelector('#lfx-header');
+    if (!header) {
+      console.error('not header found');
+    }
+    const button = header
       .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
     if (button) {
       button.click();
     }
+    }, 500)
   }
 
   logout() {
-    const { query, fragmentIdentifier } = querystring.parseUrl(
-      window.location.href,
-      { parseFragmentIdentifier: true }
-    );
-    const qs = {
-      ...query,
-      returnTo: window.location.href,
-    };
-    const searchStr = querystring.stringify(qs);
-    const searchPart = searchStr ? `?${searchStr}` : '';
-    const fragmentPart = fragmentIdentifier ? `#${fragmentIdentifier}` : '';
-    const request = {
-      client_id: this.auth0Options.clientId,
-      returnTo: `${window.location.origin}${searchPart}${fragmentPart}`,
-    };
-    this.auth0Client$.subscribe((client: Auth0Client) =>
-      client.logout(request)
-    );
+    const header = document.querySelector('#lfx-header');
+    if (!header) {
+      console.error('not header found');
+    }
+    const button =header.shadowRoot.querySelector('.lfx-header.is-logout-link') as HTMLElement;
+    if (button) {
+      button.click();
+    }
   }
 
 
@@ -171,27 +184,74 @@ export class AuthService {
     );
   }
 
-  private localAuthSetup() {
+  private async localAuthSetup() {
+    log('entered localAuthSetup');
     // This should only be called on app initialization
     // Set up local authentication streams
-
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
         if (loggedIn) {
-
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
-
+          this.loading$.next(false);
           return this.getUser$();
         }
         this.auth0Client$
-          .pipe(concatMap((client: Auth0Client) => from(client.checkSession())))
-          .subscribe(() => { });
+          .pipe(
+            // https://auth0.com/docs/libraries/auth0-single-page-app-sdk#get-access-token-with-no-interaction
+            // *info: Allow check user session in public pages to avoid redirecting to login page
+            concatMap((client: any) =>
+              from(client.getTokenSilently({ ignoreCache: true }))
+            ),
+            concatMap(() => this.getUser$()),
+            concatMap((user) => {
+              if (user) {
+                return this.isAuthenticated$;
+              }
+              this.checkUserSessionByCookie();
+              return of(null);
+            }),
+            catchError(() => {
+              // *info: by pass error, no needed, it is login_required
+              this.checkUserSessionByCookie();
+              return of(null);
+            })
+          )
+          .subscribe(() => {
+            this.loading$.next(false);
+          });
         // If not authenticated, return stream that emits 'false'
         return of(loggedIn);
       })
     );
     checkAuth$.subscribe();
+  }
+
+  private checkUserSessionByCookie() {
+    const cookieName = `auth-${this.auth0Options.domain}`;
+    const cookieExists = this.getCookie(cookieName);
+    if (cookieExists) {
+      console.log('#### cookieExists com > login');
+      this.login();
+      return;
+    }
+  }
+
+  private getCookie(cname) {
+    const name = cname + '=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return '';
   }
 
   private getTargetRouteFromAppState(appState) {
@@ -219,25 +279,41 @@ export class AuthService {
   }
 
   private handleAuthCallback() {
+    log('enntered handleAuthCallback')
     // Call when app reloads after user logs in with Auth0
     const params = this.currentHref;
 
     if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute: string; // Path to redirect to after login processsed
+      let targetRoute = ''; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
         // Have client, now call method to handle auth callback redirect
         tap((cbRes: any) => {
           targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
+          log('### targetRoute', { targetRoute });
         }),
         concatMap(() =>
           // Redirect callback complete; get user and login status
           combineLatest([this.getUser$(), this.isAuthenticated$])
-        )
+        ),
+        catchError((err) => {
+          console.log('handleAuthCallback  > err', err);
+          return of(true);
+        })
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(() => {
-        this.router.navigateByUrl(`/auth?targetRoute=${targetRoute}`);
+        log('### redirection to auth');
+        this.loading$.next(false);
+        
+        let url = '/auth';
+
+        if (targetRoute && targetRoute !== '/auth') {
+          url = `/auth?targetRoute=${targetRoute}`;
+        }
+        
+        log('### url', { url });
+        this.router.navigateByUrl(url);
       });
     }
   }
@@ -245,10 +321,11 @@ export class AuthService {
 
   /* Extra method added */
   private setSession(authResult): void {
+    const { nickname, username, email, name  } = authResult || {};
     const sessionData = {
-      userid: authResult.nickname,
-      user_email: authResult.email,
-      user_name: authResult.name
+      userid: nickname || username,
+      user_email: email,
+      user_name: name
     }
     this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
   }
