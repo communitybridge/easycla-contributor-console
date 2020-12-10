@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable @typescript-eslint/prefer-for-of */
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
@@ -28,6 +30,7 @@ export class AuthService {
   auth0Options = {
     domain: EnvConfig.default['auth0-domain'], // e.g linuxfoundation-dev.auth0.com
     clientId: EnvConfig.default['auth0-clientId'],
+    callbackUrl: window.location.origin + '/#/auth'
   };
 
   currentHref = window.location.href;
@@ -55,8 +58,6 @@ export class AuthService {
   isAuthenticated$ = this.auth0Client$.pipe(
     concatMap((client: Auth0Client) => from(client.isAuthenticated())),
     tap((res: any) => {
-      // *info: once isAuthenticated$ responses , SSO sessiong is loaded
-      this.loading$.next(false);
       this.loggedIn = res;
     })
   );
@@ -81,15 +82,19 @@ export class AuthService {
     private storageService: StorageService
   ) {
 
+    this.initializeApplication();
+  }
+
+  async initializeApplication() {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
-
     const params = this.currentHref;
     if (params.includes('code=') && params.includes('state=')) {
       this.handleAuthCallback();
-    } else {
-      this.localAuthSetup();
+      return;
     }
+
+    await this.localAuthSetup();
     this.handlerReturnToAferlogout();
   }
 
@@ -116,20 +121,15 @@ export class AuthService {
   }
 
   login() {
-    // A desired redirect path can be passed to login method
-    // Ensure Auth0 client instance exists
-    // this.auth0Client$.subscribe((client: Auth0Client) => {
-    //   client.loginWithRedirect({
-    //     redirect_uri: `${window.location.origin}${window.location.search}`,
-    //     appState: { target: redirectPath },
-    //   });
-    // });
-    const button = document
+   
+    setTimeout(() => {
+      const button = document
       .querySelector('#lfx-header')
       .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
     if (button) {
       button.click();
     }
+    }, 500)
   }
 
   logout() {
@@ -171,27 +171,72 @@ export class AuthService {
     );
   }
 
-  private localAuthSetup() {
+  private async localAuthSetup() {
     // This should only be called on app initialization
     // Set up local authentication streams
-
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
         if (loggedIn) {
-
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
-
+          this.loading$.next(false);
           return this.getUser$();
         }
         this.auth0Client$
-          .pipe(concatMap((client: Auth0Client) => from(client.checkSession())))
-          .subscribe(() => { });
+          .pipe(
+            // https://auth0.com/docs/libraries/auth0-single-page-app-sdk#get-access-token-with-no-interaction
+            // *info: Allow check user session in public pages to avoid redirecting to login page
+            concatMap((client: any) =>
+              from(client.getTokenSilently({ ignoreCache: true }))
+            ),
+            concatMap(() => this.getUser$()),
+            concatMap((user) => {
+              if (user) {
+                return this.isAuthenticated$;
+              }
+              this.checkUserSessionByCookie();
+              return of(null);
+            }),
+            catchError(() => {
+              // *info: by pass error, no needed, it is login_required
+              this.checkUserSessionByCookie();
+              return of(null);
+            })
+          )
+          .subscribe(() => {
+            this.loading$.next(false);
+          });
         // If not authenticated, return stream that emits 'false'
         return of(loggedIn);
       })
     );
     checkAuth$.subscribe();
+  }
+
+  private checkUserSessionByCookie() {
+    const cookieName = `auth-${this.auth0Options.domain}`;
+    const cookieExists = this.getCookie(cookieName);
+    if (cookieExists) {
+      this.login();
+      return;
+    }
+  }
+
+  private getCookie(cname) {
+    const name = cname + '=';
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return '';
   }
 
   private getTargetRouteFromAppState(appState) {
@@ -223,21 +268,24 @@ export class AuthService {
     const params = this.currentHref;
 
     if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute: string; // Path to redirect to after login processsed
+      let targetRoute = ''; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
         // Have client, now call method to handle auth callback redirect
         tap((cbRes: any) => {
           targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
         }),
-        concatMap(() =>
-          // Redirect callback complete; get user and login status
-          combineLatest([this.getUser$(), this.isAuthenticated$])
-        )
+        concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
+        catchError(() => of(true))
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
       authComplete$.subscribe(() => {
-        this.router.navigateByUrl(`/auth?targetRoute=${targetRoute}`);
+        this.loading$.next(false);
+        if (!targetRoute) {
+          return this.router.navigateByUrl('/auth');
+        }
+        const url = '/auth?targetRoute=' + (targetRoute || '')
+        this.router.navigateByUrl(url);
       });
     }
   }

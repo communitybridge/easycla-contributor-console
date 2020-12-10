@@ -9,6 +9,7 @@ import { ProjectModel } from 'src/app/core/models/project';
 import { UpdateUserModel, UserModel } from 'src/app/core/models/user';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AlertService } from '../../services/alert.service';
+import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class AuthComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private claContributorService: ClaContributorService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit(): void {
@@ -40,17 +42,30 @@ export class AuthComponent implements OnInit {
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
     this.previousURL = decodeURIComponent(window.location.hash.split('=')[1]);
     this.setMessage();
-    setTimeout(() => {
-      if (this.hasGerrit) {
+
+    this.authService.loading$.subscribe((loading) => {
+      if (!loading) {
+        this.authService.isAuthenticated$.subscribe(authenticated => {
+          if (authenticated) {
+            this.handleRedirection()
+          } else {
+            this.authService.login();
+          }
+        })
+      }
+    })    
+  }
+
+  handleRedirection() {
+    if (this.hasGerrit) {
+      this.performActionAsPerType();
+    } else {
+      if (this.claContributorService.getUserLFID()) {
         this.performActionAsPerType();
       } else {
-        if (this.claContributorService.getUserLFID()) {
-          this.performActionAsPerType();
-        } else {
-          this.updateUserInfo();
-        }
+        this.updateUserInfo();
       }
-    }, 2000);
+    }
   }
 
   setMessage() {
