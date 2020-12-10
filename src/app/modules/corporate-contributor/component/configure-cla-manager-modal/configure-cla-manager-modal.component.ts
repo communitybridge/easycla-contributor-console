@@ -175,21 +175,26 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
-      setTimeout(() => {
-        this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        const corporateUrl = this.claContributorService.getLFXCorporateURL();
-        window.open(corporateUrl, '_blank');
-      }, 4500);
 
-      setTimeout(() => {
-        const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-        if (redirectUrl) {
-          window.open(redirectUrl, '_self');
-        } else {
-          this.loaderService.hide();
-          this.alertService.error('Error occurred while redirection please confirm you come to the contributor console by following proper steps.');
-        }
-      }, 5000);
+      const corporateUrl = this.claContributorService.getLFXCorporateURL();
+      if (corporateUrl !== '') {
+        setTimeout(() => {
+          this.storageService.removeItem(AppSettings.ACTION_TYPE);
+          window.open(corporateUrl, '_blank');
+        }, 4500);
+
+        setTimeout(() => {
+          const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+          if (redirectUrl) {
+            window.open(redirectUrl, '_self');
+          } else {
+            this.loaderService.hide();
+            this.alertService.error('Error occurred while redirection please confirm you come to the contributor console by following proper steps.');
+          }
+        }, 4000);
+      } else {
+        this.loaderService.hide();
+      }
     }
   }
 
