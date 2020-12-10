@@ -1,24 +1,24 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
-import {environment} from 'src/environments/environment';
-import {ProjectModel} from '../models/project';
-import {UpdateUserModel, UserModel} from '../models/user';
-import {AlertService} from 'src/app/shared/services/alert.service';
-import {ActiveSignatureModel} from '../models/active-signature';
-import {IndividualRequestSignatureModel} from '../models/individual-request-signature';
-import {CompanyModel, OrganizationListModel, OrganizationModel} from '../models/organization';
-import {EmployeeSignatureModel} from '../models/employee-signature';
-import {InviteCompanyModel} from '../models/invite-company';
-import {CLAManagersModel} from '../models/cla-manager';
-import {AppSettings} from 'src/app/config/app-settings';
-import {StorageService} from 'src/app/shared/services/storage.service';
-import {AuthService} from 'src/app/shared/services/auth.service';
-import {GerritUserModel} from '../models/gerrit';
-import {CompanyAdminDesigneeModel, CompnayAdminListModel} from '../models/company-admin-designee';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { ProjectModel } from '../models/project';
+import { UpdateUserModel, UserModel } from '../models/user';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { ActiveSignatureModel } from '../models/active-signature';
+import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
+import { CompanyModel, OrganizationListModel, OrganizationModel } from '../models/organization';
+import { EmployeeSignatureModel } from '../models/employee-signature';
+import { InviteCompanyModel } from '../models/invite-company';
+import { CLAManagersModel } from '../models/cla-manager';
+import { AppSettings } from 'src/app/config/app-settings';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { GerritUserModel } from '../models/gerrit';
+import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
 
 declare const require: any;
 const FileSaver = require('file-saver');
@@ -188,14 +188,36 @@ export class ClaContributorService {
     } else if (project.signed_at_foundation_level) {
       // Signed at foundation level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
-    } else if (projectDetails[0].lf_supported) {
-      // Standalone project
-      url = environment.lfxCorporateUrl + 'foundation/LF%20Supported/project/' + projectDetails[0].project_sfid + '/cla';
     } else {
-      // Signed at project level.
-      url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/project/' + projectDetails[0].project_sfid + '/cla';
+      const project = this.getProjectFromRepo(projectDetails);
+      if (project !== null) {
+        if (project.standalone_project) {
+          // Standalone project
+          url = environment.lfxCorporateUrl + 'foundation/LF%20Supported/project/' + project.project_sfid + '/cla';
+        } else {
+          // Signed at project level.
+          url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
+        }
+      } else {
+        this.alertService.error('Unable to find project by repository, please contact to your administrator.');
+      }
     }
     return url;
+  }
+
+  getProjectFromRepo(projects) {
+    const repoURL = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+    if (repoURL) {
+      for (const project of projects) {
+        const repos = project.repos;
+        for (const repo of repos) {
+          if (repoURL.indexOf(repo.repository_name) >= 0) {
+            return project;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   getUserPublicEmail(): string {
