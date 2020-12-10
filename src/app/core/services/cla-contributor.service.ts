@@ -178,6 +178,9 @@ export class ClaContributorService {
     // We may have zero or more SF Projects attached to this CLA Group
     const projectDetails = project.projects;
 
+    // TODO: figure out the github repository that was used to come here...
+    // pick the matching SF Project based on the repository name, instead of just using the first project in the list
+
     // No SF Projects for this CLA Group
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
@@ -185,7 +188,7 @@ export class ClaContributorService {
     } else if (project.signed_at_foundation_level) {
       // Signed at foundation level.
       url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
-    } else if (projectDetails[0].standalone_project) {
+    } else if (projectDetails[0].lf_supported) {
       // Standalone project
       url = environment.lfxCorporateUrl + 'foundation/LF%20Supported/project/' + projectDetails[0].project_sfid + '/cla';
     } else {

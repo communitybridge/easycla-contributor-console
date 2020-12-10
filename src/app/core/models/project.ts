@@ -64,5 +64,25 @@ export class Project {
   project_sfid: string;
   repositories_count: string;
   standalone_project: boolean;
+  lf_supported: boolean;
+  version: string;
+  repos: Repository[];
+}
+
+// Repository for a SF Project
+export class Repository {
+  date_created: string;
+  date_modified: string;
+  enabled: boolean;
+  note?: any;
+  project_sfid: string;
+  repository_external_id: string;
+  repository_id: string;
+  repository_name: string;
+  repository_organization_name: string;
+  repository_project_id: string;
+  repository_sfdc_id: string;
+  repository_type: string;
+  repository_url: string;
   version: string;
 }
