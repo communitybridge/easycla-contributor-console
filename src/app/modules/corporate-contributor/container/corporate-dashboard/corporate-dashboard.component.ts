@@ -255,6 +255,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
+    } else {
+      this.redirectToSource();
     }
   }
 

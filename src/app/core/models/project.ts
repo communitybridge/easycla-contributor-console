@@ -66,11 +66,12 @@ export class Project {
   standalone_project: boolean;
   lf_supported: boolean;
   version: string;
-  repos: Repository[];
+  github_repos: GithubRepository[];
+  gerrit_repos: GerritRepository[];
 }
 
-// Repository for a SF Project
-export class Repository {
+// Github Repository Model
+export class GithubRepository {
   date_created: string;
   date_modified: string;
   enabled: boolean;
@@ -84,5 +85,22 @@ export class Repository {
   repository_sfdc_id: string;
   repository_type: string;
   repository_url: string;
+  version: string;
+}
+
+
+// Gerrit Repository Model
+export class GerritRepository {
+  date_created: string;
+  date_modified: string;
+  gerrit_id: string;
+  gerrit_name: string;
+  gerrit_url: string;
+  group_id_ccla: string;
+  group_id_icla: string;
+  group_name_ccla: string;
+  group_name_icla: string;
+  project_id: string;
+  project_sfid: string;
   version: string;
 }

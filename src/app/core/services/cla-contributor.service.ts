@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProjectModel } from '../models/project';
+import { Project, ProjectModel } from '../models/project';
 import { UpdateUserModel, UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
@@ -205,14 +205,26 @@ export class ClaContributorService {
     return url;
   }
 
-  getProjectFromRepo(projects) {
+  getProjectFromRepo(projects: Project[]) {
     const repoURL = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (repoURL) {
       for (const project of projects) {
-        const repos = project.repos;
-        for (const repo of repos) {
-          if (repoURL.indexOf(repo.repository_name) >= 0) {
-            return project;
+        // Checked in Github Repo
+        if (project.github_repos.length > 0) {
+          const repos = project.github_repos;
+          for (const repo of repos) {
+            if (repoURL.indexOf(repo.repository_name) >= 0) {
+              return project;
+            }
+          }
+        }
+        // Checked in Gerrit Repo
+        if (project.gerrit_repos.length > 0) {
+          const repos = project.gerrit_repos;
+          for (const repo of repos) {
+            if (repoURL.indexOf(repo.gerrit_url) >= 0) {
+              return project;
+            }
           }
         }
       }
