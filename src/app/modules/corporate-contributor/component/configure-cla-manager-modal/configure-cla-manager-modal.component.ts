@@ -122,8 +122,9 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   addContributorAsDesignee() {
+    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     const data = {
-      userEmail: this.claContributorService.getUserPublicEmail()
+      userEmail: authData.user_email
     };
     this.addAsCLAManagerDesignee(data);
   }

@@ -57,15 +57,7 @@ export class AuthComponent implements OnInit {
   }
 
   handleRedirection() {
-    if (this.hasGerrit) {
-      this.performActionAsPerType();
-    } else {
-      if (this.claContributorService.getUserLFID()) {
-        this.performActionAsPerType();
-      } else {
-        this.updateUserInfo();
-      }
-    }
+    this.performActionAsPerType();
   }
 
   setMessage() {
@@ -111,29 +103,30 @@ export class AuthComponent implements OnInit {
     );
   }
 
-  updateUserInfo() {
-    const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
-    const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
-    const data = {
-      lfEmail: autData.user_email,
-      lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
-      githubUsername: user.user_github_username,
-      githubID: user.user_github_id
-    }
-    this.claContributorService.updateUser(data).subscribe(
-      (response: UpdateUserModel) => {
-        // Update new values in local storage.
-        user.lf_username = response.lfUsername;
-        user.lf_email = response.lfEmail;
-        this.storageService.setItem(AppSettings.USER, user);
-        this.performActionAsPerType();
-      },
-      (exception) => {
-        this.alertService.error(exception.error.Message);
-        this.message = 'Error occured during updating user info. Please contact to your administrator.';
-      }
-    );
-  }
+  // No need to call update endpoint.
+  // updateUserInfo() {
+  //   const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+  //   const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+  //   const data = {
+  //     lfEmail: autData.user_email,
+  //     lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
+  //     githubUsername: user.user_github_username,
+  //     githubID: user.user_github_id
+  //   }
+  //   this.claContributorService.updateUser(data).subscribe(
+  //     (response: UpdateUserModel) => {
+  //       // Update new values in local storage.
+  //       user.lf_username = response.lfUsername;
+  //       user.lf_email = response.lfEmail;
+  //       this.storageService.setItem(AppSettings.USER, user);
+  //       this.performActionAsPerType();
+  //     },
+  //     (exception) => {
+  //       this.alertService.error(exception.error.Message);
+  //       this.message = 'Error occured during updating user info. Please contact to your administrator.';
+  //     }
+  //   );
+  // }
 
   getGerritProjectInfo() {
     this.claContributorService.getGerritProjectInfo(this.projectId).subscribe(
