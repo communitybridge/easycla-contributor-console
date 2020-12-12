@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { AppSettings } from 'src/app/config/app-settings';
 import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
-import { UpdateUserModel, UserModel } from 'src/app/core/models/user';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AlertService } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
