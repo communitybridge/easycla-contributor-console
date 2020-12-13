@@ -98,6 +98,9 @@
     "tslint": "~6.1.0",
     "typescript": "~3.9.6"
   },
+  "resolutions": {
+    "ini": "^1.3.7"
+  },
   "husky": {
     "hooks": {
       "pre-push": "yarn eslint --quiet"
