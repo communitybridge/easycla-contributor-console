@@ -121,15 +121,16 @@ export class AuthService {
   }
 
   login() {
-   
-    setTimeout(() => {
+   // Need to increase timeout to 1500 as for slower network it gives an error
+   // Cannot read property 'querySelector' of null
+   setTimeout(() => {
       const button = document
       .querySelector('#lfx-header')
       .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
     if (button) {
       button.click();
     }
-    }, 500)
+    }, 1500)
   }
 
   logout() {
