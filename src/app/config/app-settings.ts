@@ -40,4 +40,6 @@ export class AppSettings {
     public static TICKET_URL = 'https://jira.linuxfoundation.org/servicedesk/customer/portal/4/create/143';
     public static LFX_FOOTER = 'lfx-footer';
     public static LFX_HEADER = 'lfx-header';
+    public static MAX_FAILED_COUNT = 12;
+
 }
