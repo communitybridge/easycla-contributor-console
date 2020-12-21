@@ -28,6 +28,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   hasCLAManagerDesignee: boolean;
   spinnerMessage: string;
   companyId: string;
+  failedCount: number;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -45,6 +46,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.failedCount = 0;
     this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
   }
 
@@ -80,7 +82,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       },
       (exception) => {
         this.title = 'Request Failed';
-        this.message = exception.error.Message;
+        const msg = exception.error.Message ? exception.error.Message : exception.error.message;
+        this.message = msg;
         this.openDialog(this.errorModal);
       }
     );
@@ -93,10 +96,17 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.company = response;
         this.manageAuthRedirection();
       },
-      () => {
+      (exception) => {
         // To add org in salesforce take couple of seconds
         // So called getOrganizationInformation metod till result comes
-        this.getOrganizationInformation(this.companyId);
+        this.failedCount++;
+        if (this.failedCount >= AppSettings.MAX_FAILED_COUNT) { // end API call after 20 time failed
+          this.title = 'Request Failed';
+          this.message = exception.error.Message;
+          this.openDialog(this.errorModal);
+        } else {
+          this.getOrganizationInformation(this.companyId);
+        }
       }
     );
   }
