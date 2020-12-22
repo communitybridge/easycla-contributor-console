@@ -33,7 +33,7 @@ export class AppSettings {
     public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
     public static URL_PATTERN = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
     public static NON_WHITE_SPACE_REGEX = /.*\S.*/;
-    public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z.]*)*$/;
+    public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z])?[a-zA-Z]*)*$/;
     public static GITHUB_EMAIL_CONTENT = 'noreply.github.com';
     public static NEW_ORGANIZATIONS = 'newOrganizations';
     public static LEARN_MORE = 'https://docs.linuxfoundation.org/docs/communitybridge/easycla';
