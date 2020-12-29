@@ -8,7 +8,7 @@ import { ClaContributorService } from 'src/app/core/services/cla-contributor.ser
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { UserModel } from 'src/app/core/models/user';
-import { OrganizationListModel, Organization } from 'src/app/core/models/organization';
+import { OrganizationListModel, Organization, ClearBitModel } from 'src/app/core/models/organization';
 
 @Component({
   selector: 'app-add-company-modal',
@@ -33,6 +33,7 @@ export class AddCompanyModalComponent implements OnInit {
   searchType: string;
   hasShowDropdown: boolean;
   selectedOrganization: Organization;
+  hasReadonly: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,6 +50,7 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.hasReadonly = true;
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([
         Validators.required,
@@ -84,6 +86,7 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onWebsiteKeypress() {
+    this.hasReadonly = true;
     this.hasOrganizationExist = false;
     this.searchType = 'ORGANIZATION_WEBSITE';
     if (this.form.controls.companyWebsite.valid) {
@@ -94,7 +97,6 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onNameKeypress() {
-    this.hasOrganizationExist = false;
     this.searchType = 'ORGANIZATION_NAME';
     if (this.form.controls.companyName.valid) {
       this.checkOrganization();
@@ -125,6 +127,7 @@ export class AddCompanyModalComponent implements OnInit {
         this.organizationList = response;
         this.hasShowDropdown = true;
         if (this.organizationList.list.length === 0) {
+          this.hasReadonly = false;
           this.resetOrganizationList();
         }
         if (this.searchType === 'ORGANIZATION_NAME') {
@@ -149,7 +152,32 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onFocusOut() {
-    this.hasShowDropdown = false;
+    setTimeout(() => {
+      this.hasShowDropdown = false;
+      this.getOrganizationNameByDomain();
+    }, 100);
+  }
+
+  getOrganizationNameByDomain() {
+    const domain = this.form.controls.companyWebsite.value;
+    this.claContributorService.getClearBitData(domain).subscribe(
+      (response: ClearBitModel) => {
+        this.hasOrganizationExist = false;
+        this.form.controls.companyName.setValue(response.Name);
+        this.selectedOrganization = new Organization;
+        if (response.ID) {
+          this.hasOrganizationExist = true;
+        }
+        this.selectedOrganization.organization_id = response.ID;
+        this.selectedOrganization.organization_name = response.Name;
+        this.selectedOrganization.organization_website = response.Link;
+      },
+      (exception) => {
+        this.hasReadonly = false;
+        this.form.controls.companyName.setValue('');
+        this.claContributorService.handleError(exception);
+      }
+    );
   }
 
   addOrganization() {
@@ -199,46 +227,12 @@ export class AddCompanyModalComponent implements OnInit {
     // Skip success dialog and show CLA not sign dialog.
 
     this.onClickDialogBtn();
-    // this.claContributorService.addCompany(userModel.user_id, data).subscribe(
-    //   (response: CompanyModel) => {
-    //     this.hasError = false;
-
-    //     // change company model to organization model.
-    //     this.selectedOrganization = {
-    //       organization_id: response.companyID,
-    //       organization_name: response.companyName,
-    //       organization_website: response.companyWebsite
-    //     };
-
-    //     // Store newly added org in local storage for assiging company owner role.
-    //     const newOrgData = {
-    //       organizationId: response.companyID,
-    //       createdBy: userModel.user_id,
-    //       data: data
-    //     };
-    //     let newOrganizations: any[] = JSON.parse(this.storageService.getItem(AppSettings.NEW_ORGANIZATIONS));
-    //     newOrganizations = newOrganizations === null ? [] : newOrganizations;
-    //     newOrganizations.push(newOrgData);
-    //     this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrganizations);
-
-    //     this.title = 'Successfully Added';
-    //     this.message = 'Your organization has been successfully added to our data. Please proceed further to continue the process to add a CLA Manager.';
-    //     this.openDialog(this.successModal);
-    //   },
-    //   (exception) => {
-    //     this.hasError = true;
-    //     this.title = 'Request Failed';
-    //     this.message = exception.error.Message;
-    //     this.openDialog(this.successModal);
-    //   }
-    // );
   }
 
   onSelectOrganization(organization) {
     this.hasOrganizationExist = true;
-    this.selectedOrganization = organization;
-    this.form.controls.companyName.setValue(organization.organization_name);
     this.form.controls.companyWebsite.setValue(organization.organization_website);
+    this.form.controls.companyName.setValue(organization.organization_name);
     this.organizationList = new OrganizationListModel;
   }
 
