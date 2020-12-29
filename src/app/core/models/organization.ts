@@ -26,3 +26,12 @@ export class CompanyModel {
     companyWebsite: string;
     logoURL: string;
 }
+export class ClearBitModel {
+    Employees: string;
+    ID: string;
+    Industry: string;
+    Link: string;
+    Name: string;
+    Sector: string;
+    Source: string;
+}

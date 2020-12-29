@@ -35,8 +35,8 @@
                 </div>
 
                 <div class="col-10 element">
-                    <input #organizationName type="text" name="companyName" placeholder="Enter Organization Name"
-                        (input)="onNameKeypress()" (focusout)="onFocusOut()" formControlName="companyName" tabindex="2"
+                    <input #organizationName type="text" name="companyName" placeholder="Organization Name"
+                        (input)="onNameKeypress()" [readonly]="hasReadonly" formControlName="companyName" tabindex="2"
                         class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
                     </ng-container>

@@ -10,7 +10,7 @@ import { UpdateUserModel, UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ActiveSignatureModel } from '../models/active-signature';
 import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { CompanyModel, OrganizationListModel, OrganizationModel } from '../models/organization';
+import { ClearBitModel, CompanyModel, OrganizationListModel, OrganizationModel } from '../models/organization';
 import { EmployeeSignatureModel } from '../models/employee-signature';
 import { InviteCompanyModel } from '../models/invite-company';
 import { CLAManagersModel } from '../models/cla-manager';
@@ -70,6 +70,11 @@ export class ClaContributorService {
       url += 'websiteName=' + organizationWebsite;
     }
     return this.httpClient.get<OrganizationListModel>(url);
+  }
+
+  getClearBitData(organizationWebsite: string): Observable<ClearBitModel> {
+    const url = this.v4BaseUrl  + 'v4/company/lookup?websiteName=' + organizationWebsite;
+    return this.httpClient.get<ClearBitModel>(url);
   }
 
   hasOrganizationExist(organizationName: string, organizationWebsite: string): Observable<OrganizationListModel> {
