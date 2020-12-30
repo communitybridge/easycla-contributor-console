@@ -73,7 +73,7 @@ export class ClaContributorService {
   }
 
   getClearBitData(organizationWebsite: string): Observable<ClearBitModel> {
-    const url = this.v4BaseUrl  + 'v4/company/lookup?websiteName=' + organizationWebsite;
+    const url = this.v4BaseUrl + 'v4/company/lookup?websiteName=' + organizationWebsite;
     return this.httpClient.get<ClearBitModel>(url);
   }
 
@@ -196,13 +196,8 @@ export class ClaContributorService {
     } else {
       const project = this.getProjectFromRepo(projectDetails);
       if (project !== null) {
-        if (project.standalone_project) {
-          // Standalone project
-          url = environment.lfxCorporateUrl + 'foundation/LF%20Supported/project/' + project.project_sfid + '/cla';
-        } else {
-          // Signed at project level.
-          url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
-        }
+        // For standalone project we must redirect to the SFID of The Linux Foundation
+        url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
       } else {
         this.alertService.error('Unable to find project by repository, please contact to your administrator.');
       }
