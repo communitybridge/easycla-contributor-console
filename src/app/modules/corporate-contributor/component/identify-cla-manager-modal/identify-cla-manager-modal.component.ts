@@ -21,6 +21,8 @@ import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/m
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('inputBox') element: ElementRef;
+
   hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
@@ -28,7 +30,6 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   hasError: boolean;
   companyId: string;
   failedCount: number;
-  @ViewChild("inputBox") element: ElementRef;
 
   constructor(
     private formBuilder: FormBuilder,
