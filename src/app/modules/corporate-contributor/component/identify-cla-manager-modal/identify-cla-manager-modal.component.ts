@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
@@ -28,6 +28,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   hasError: boolean;
   companyId: string;
   failedCount: number;
+  @ViewChild("inputBox") element: ElementRef;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -184,6 +185,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     this.claContributorService.getCompanyAdminList(selectedCompany.companyExternalID).subscribe(
       (response: CompnayAdminListModel) => {
+        this.element.nativeElement.focus();
         if (response.list.length > 0) {
           this.hasShowContactAdmin = true;
         }
