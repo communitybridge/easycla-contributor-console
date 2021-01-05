@@ -9,7 +9,8 @@
                 for this project
             </div>
             <div class="col-10 element">
-                <input type="text" name="name" placeholder="Enter Name" formControlName="name" class="form-control" #inputBox/>
+                <input type="text" name="name" placeholder="Enter Name" formControlName="name" class="form-control"
+                    #inputBox />
                 <div *ngIf="form.controls.name.errors  && (form.controls.name.dirty || form.controls.name.touched)">
                     <div [hidden]="!form.controls.name.errors.required" class="error">
                         Name is required.
@@ -36,7 +37,12 @@
                         Email address should not exceed 255 characters.
                     </div>
                     <div *ngIf="!form.controls.email.valid" class="error">
-                        <span class="error">Email address is invalid</span>
+                        <span class="error">Email provided is incorrect, please check the
+                            format
+                            <a href="https://docs.linuxfoundation.org/lfx/v/v2/easycla/getting-started/easycla-faqs" target="_blank">FAQ
+                                Section </a>
+                            to see valid email
+                        </span>
                     </div>
                 </div>
             </div>
