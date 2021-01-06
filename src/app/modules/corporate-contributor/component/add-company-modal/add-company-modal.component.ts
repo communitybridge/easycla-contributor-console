@@ -89,6 +89,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.hasReadonly = true;
     this.hasOrganizationExist = false;
     this.searchType = 'ORGANIZATION_WEBSITE';
+    this.form.controls.companyName.setValue('');
     if (this.form.controls.companyWebsite.valid) {
       this.checkOrganization();
     } else {
@@ -152,10 +153,12 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onFocusOut() {
-    setTimeout(() => {
-      this.hasShowDropdown = false;
-      this.getOrganizationNameByDomain();
-    }, 100);
+    if (this.form.controls.companyWebsite.valid) {
+      setTimeout(() => {
+        this.hasShowDropdown = false;
+        this.getOrganizationNameByDomain();
+      }, 100);
+    }
   }
 
   getOrganizationNameByDomain() {
