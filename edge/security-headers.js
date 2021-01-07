@@ -97,7 +97,8 @@ function generateCSP(env, isDevServer) {
       'https://s3.amazonaws.com/cla-project-logo-prod/',
       'https://linuxfoundation-dev.auth0.com',
       'https://linuxfoundation-staging.auth0.com',
-      'https://linuxfoundation.auth0.com'
+      'https://linuxfoundation.auth0.com',
+      'https://sso.linuxfoundation.org/'
     ],
     'child-src': [],
     'media-src': [],
