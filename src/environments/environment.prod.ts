@@ -3,7 +3,7 @@
 
 export const environment = {
   production: true,
-  baseUrl: 'https://api.easycla.lfx.linuxfoundation.org',
+  baseUrl: 'https://api.easycla.lfx.linuxfoundation.org/',
   lfxCorporateUrl: 'https://lfx.platform.linuxfoundation.org/',
   v4BaseUrl: 'https://api-gw.platform.linuxfoundation.org/cla-service/',
   ACCEPTABLE_USER_POLICY: 'https://communitybridge.platform.linuxfoundation.org/acceptable-use/',
