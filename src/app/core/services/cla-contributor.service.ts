@@ -4,7 +4,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Project, ProjectModel } from '../models/project';
 import { UpdateUserModel, UserModel } from '../models/user';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -16,9 +15,9 @@ import { InviteCompanyModel } from '../models/invite-company';
 import { CLAManagersModel } from '../models/cla-manager';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
-import { AuthService } from 'src/app/shared/services/auth.service';
 import { GerritUserModel } from '../models/gerrit';
 import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
+import { EnvConfig } from 'src/app/config/cla-env-utils';
 
 declare const require: any;
 const FileSaver = require('file-saver');
@@ -30,16 +29,15 @@ export class ClaContributorService {
   public openDialogModalEvent = new Subject<any>();
   public proccedWithExistingOrganizationEvent = new Subject<any>();
 
-  baseURL = environment.baseUrl;
-  v4BaseUrl = environment.v4BaseUrl;
+  baseURL = EnvConfig.default['api-base'] + '/';
+  v4BaseUrl = EnvConfig.default['api-v4-base'] + '/';
+  corporateV2Base = EnvConfig.default['corporate-v2-base'] + '/';
 
   constructor(
     private httpClient: HttpClient,
     private alertService: AlertService,
     private storageService: StorageService,
-    private authService: AuthService
-  ) {
-  }
+  ) { }
 
   getUser(userId: string): Observable<UserModel> {
     const url = this.baseURL + 'v2/user/' + userId;
@@ -189,15 +187,15 @@ export class ClaContributorService {
     // No SF Projects for this CLA Group
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
-      url = environment.lfxCorporateUrl + 'company/dashboard';
+      url = this.corporateV2Base + 'company/dashboard';
     } else if (project.signed_at_foundation_level) {
       // Signed at foundation level.
-      url = environment.lfxCorporateUrl + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
+      url = this.corporateV2Base + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
     } else {
       const project = this.getProjectFromRepo(projectDetails);
       if (project !== null) {
         // For standalone project we must redirect to the SFID of The Linux Foundation
-        url = environment.lfxCorporateUrl + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
+        url = this.corporateV2Base + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
       } else {
         this.alertService.error('Unable to find project by repository, please contact to your administrator.');
       }
