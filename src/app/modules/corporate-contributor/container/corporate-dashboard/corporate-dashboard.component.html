@@ -46,13 +46,26 @@
                                                 <div class="col-6 ellipsis">{{organization.organization_name}}</div>
                                                 <div class="col-6 ellipsis">{{organization.organization_website}}
                                                 </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-1"></div>
+                                                        <div class="col-5 ellipsis">
+                                                            test project company
+                                                        </div>
+                                                        <div class="col-6 ellipsis">
+                                                            www.testprojectcompany.com
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
 
                                     </div>
                                     <div class="footer col-12">
                                         <span>Organization not listed? </span>
-                                        <span class="click-here" (click)="onClickAddOrganization()">+ Click Here</span>
+                                        <span class="click-here" (click)="onClickAddOrganization()">+ Click
+                                            Here</span>
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +99,7 @@
 <ng-template #addCompany let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Enter Organization Details" showCloseBtn="true"
+            <app-modal-header title="CREATE NEW ORGANIZATION" showCloseBtn="true"
                 (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
             <app-add-company-modal></app-add-company-modal>

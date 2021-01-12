@@ -10,10 +10,11 @@
     <form [formGroup]="form">
         <div class="container">
             <div class="row">
-                <div class="col-10 element">
+                <div class="col-11 element">
+                    <div class="title">Your Organization Website</div>
                     <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
-                        placeholder="Enter Organization Website (http://www.example.com)"
-                        formControlName="companyWebsite" (focusout)="onFocusOut()" tabindex="1" class="form-control" />
+                        placeholder="Your Organization Website" formControlName="companyWebsite"
+                        (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
                     <div
@@ -34,12 +35,13 @@
                     </div>
                 </div>
 
-                <div class="col-10 element">
+                <div class="col-11 element">
+                    <div class="title">Organization Name</div>
                     <input #organizationName type="text" name="companyName" placeholder="Organization Name"
                         (input)="onNameKeypress()" [readonly]="hasReadonly" formControlName="companyName" tabindex="2"
                         class="form-control" />
-                    <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
-                    </ng-container>
+                    <!-- <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
+                    </ng-container> -->
                     <div
                         *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
                         <div [hidden]="!form.controls.companyName.errors.required" class="error">
@@ -54,6 +56,30 @@
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
                             Organization name may only contain alphanumeric characters or special characters -,.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-11 element">
+                    <div class="title">Signing Entity Name</div>
+                    <input #organizationName type="text" name="entityName" placeholder="Signing Entity Name"
+                        (input)="onNameKeypress()" formControlName="entityName" tabindex="3" class="form-control" />
+                    <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
+                    </ng-container>
+                    <div
+                        *ngIf="form.controls.entityName.errors  && (form.controls.entityName.dirty || form.controls.entityName.touched)">
+                        <div [hidden]="!form.controls.entityName.errors.required" class="error">
+                            Signing entity name is required.
+                        </div>
+                        <div [hidden]="!form.controls.entityName.errors.minlength" class="error">
+                            Signing entity name should be at least 2 characters.
+                        </div>
+                        <div [hidden]="!form.controls.entityName.errors.maxlength" class="error">
+                            Signing entity name should not exceed 255 characters.
+                        </div>
+                        <div *ngIf="form.controls.entityName.value.length > 1"
+                            [hidden]="!form.controls.entityName.errors.pattern" class="error">
+                            Signing entity name may only contain alphanumeric characters or special characters -,.
                         </div>
                     </div>
                 </div>

@@ -59,6 +59,13 @@ export class AddCompanyModalComponent implements OnInit {
         Validators.minLength(2),
         Validators.maxLength(255)
       ])],
+      entityName: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
+        Validators.minLength(2),
+        Validators.maxLength(255)
+      ])],
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
