@@ -7,6 +7,7 @@ export class OrganizationModel {
     companyID: string;
     companyManagerID: string;
     companyName: string;
+    signingEntityName: string;
     created: string;
     updated: string;
 }
@@ -35,5 +36,9 @@ export class ClearBitModel {
     Name: string;
     Sector: string;
     Source: string;
+<<<<<<< HEAD
     signingEntityNames: string[];
 }
+=======
+}
+>>>>>>> b62992c1412fd4ecdfbd8b7874e3f3e1c71a792f

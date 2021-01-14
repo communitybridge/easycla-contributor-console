@@ -90,6 +90,11 @@ export class ClaContributorService {
     return this.httpClient.get<OrganizationModel>(url);
   }
 
+  getSigningEntityNameDetails(signingEntityName: string, companySFID: string): Observable<OrganizationModel> {
+    const url = this.baseURL + 'v3/company/signing-entity-name?name=' + signingEntityName + '&companySFID=' + companySFID;
+    return this.httpClient.get<OrganizationModel>(url);
+  }
+
   postIndividualSignatureRequest(data: any): Observable<IndividualRequestSignatureModel> {
     const url = this.baseURL + 'v2/request-individual-signature';
     return this.httpClient.post<IndividualRequestSignatureModel>(url, data);
