@@ -223,6 +223,8 @@ export class AddCompanyModalComponent implements OnInit {
     const newOrgData = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
+      // Update this when the user selects the Signing Entity name
+      signingEntityName: this.form.controls.companyName.value,
       userEmail: publicEmail,
       createdBy: userModel.user_id,
     };

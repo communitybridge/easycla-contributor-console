@@ -7,6 +7,7 @@ export class OrganizationModel {
     companyID: string;
     companyManagerID: string;
     companyName: string;
+    signingEntityName: string;
     created: string;
     updated: string;
 }
