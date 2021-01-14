@@ -20,6 +20,7 @@ export class Organization {
     organization_name: string;
     organization_website: string;
     signing_entity_names: string[];
+    selected_entity_name: string;
 }
 
 export class CompanyModel {
@@ -36,9 +37,5 @@ export class ClearBitModel {
     Name: string;
     Sector: string;
     Source: string;
-<<<<<<< HEAD
     signingEntityNames: string[];
 }
-=======
-}
->>>>>>> b62992c1412fd4ecdfbd8b7874e3f3e1c71a792f

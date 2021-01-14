@@ -48,6 +48,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
   attempt: boolean;
+  selectedEntityName: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -131,13 +132,14 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (organization !== null) {
       this.hasShowDropdown = false;
       this.selectedCompany = organization.organization_id;
+      this.selectedEntityName = entityName;
       this.searchBoxValue = entityName ? entityName : organization.organization_name;
       this.form.controls.companyName.setValue(this.searchBoxValue);
     }
   }
 
   getOrganizationInformation() {
-    this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
+    this.claContributorService.getSigningEntityNameDetails(this.selectedEntityName, this.selectedCompany).subscribe(
       (response) => {
         this.organization = response;
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);

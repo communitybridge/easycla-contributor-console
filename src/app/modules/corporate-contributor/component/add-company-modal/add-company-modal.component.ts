@@ -16,7 +16,6 @@ import { OrganizationListModel, Organization, ClearBitModel } from 'src/app/core
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
-  @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('addEmailModal') addEmailModal: TemplateRef<any>;
   @ViewChild('organizationName') organizationName: ElementRef;
   @ViewChild('organizationWebsite') organizationWebsite: ElementRef;
@@ -230,9 +229,12 @@ export class AddCompanyModalComponent implements OnInit {
     this.onClickDialogBtn();
   }
 
-  onSelectOrganization(organization) {
+  onSelectOrganization(organization, entityName?) {
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.form.controls.companyName.setValue(organization.organization_name);
+    if (entityName) {
+      this.form.controls.entityName.setValue(entityName);
+    }
     this.organizationList = new OrganizationListModel;
   }
 
