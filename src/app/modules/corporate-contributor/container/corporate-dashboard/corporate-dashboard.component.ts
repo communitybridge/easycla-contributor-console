@@ -75,13 +75,20 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
-        this.onSelectCompany(result.payload);
-        this.openWithDismiss(this.signedCLANotFoundModal);
+        const hasEntityExist = result.payload.signing_entity_names.indexOf(result.signingEntityName) >= 0 ? true : false;
+        if (hasEntityExist) { // If organization already exist.
+          this.onSelectCompany(result.payload, result.signingEntityName);
+          this.onClickProceed();
+        } else { // Newly created organization 
+          this.form.controls.companyName.setValue('');
+          this.openWithDismiss(this.signedCLANotFoundModal);
+        }
       }
     });
   }
 
   ngOnInit(): void {
+
     this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.emptySearchError = true;
