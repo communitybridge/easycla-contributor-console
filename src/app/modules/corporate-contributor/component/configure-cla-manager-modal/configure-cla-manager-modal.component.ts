@@ -27,7 +27,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   company: OrganizationModel;
   hasCLAManagerDesignee: boolean;
   spinnerMessage: string;
-  companyId: string;
   failedCount: number;
 
   constructor(
@@ -76,9 +75,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
-        this.companyId = response.companyID;
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(this.companyId);
+        this.getOrganizationInformation(data.signingEntityName, response.companyID);
       },
       (exception) => {
         this.title = 'Request Failed';
@@ -89,8 +87,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     );
   }
 
-  getOrganizationInformation(companySFID) {
-    this.claContributorService.getOrganizationDetails(companySFID).subscribe(
+  getOrganizationInformation(signingEntityName, companySFID) {
+    this.claContributorService.getSigningEntityNameDetails(signingEntityName, companySFID).subscribe(
       (response) => {
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.company = response;
@@ -105,7 +103,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
           this.message = exception.error.Message;
           this.openDialog(this.errorModal);
         } else {
-          this.getOrganizationInformation(this.companyId);
+          this.getOrganizationInformation(signingEntityName, companySFID);
         }
       }
     );

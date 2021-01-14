@@ -2,18 +2,14 @@
  SPDX-License-Identifier: MIT -->
 
 <div class="add-company-container">
-
-    <div *ngIf="hasOrganizationExist" class="col-12 error">
-        Your Organization already exists in our database.
-    </div>
-
     <form [formGroup]="form">
         <div class="container">
             <div class="row">
-                <div class="col-10 element">
+                <div class="col-11 element">
+                    <div class="title">Your Organization Website</div>
                     <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
-                        placeholder="Enter Organization Website (http://www.example.com)"
-                        formControlName="companyWebsite" (focusout)="onFocusOut()" tabindex="1" class="form-control" />
+                        placeholder="Your Organization Website" formControlName="companyWebsite"
+                        (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
                     <div
@@ -34,7 +30,8 @@
                     </div>
                 </div>
 
-                <div class="col-10 element">
+                <div class="col-11 element">
+                    <div class="title">Organization Name</div>
                     <input #organizationName type="text" name="companyName" placeholder="Organization Name"
                         (input)="onNameKeypress()" [readonly]="hasReadonly" formControlName="companyName" tabindex="2"
                         class="form-control" />
@@ -54,6 +51,28 @@
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
                             Organization name may only contain alphanumeric characters or special characters -,.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-11 element">
+                    <div class="title">Signing Entity Name</div>
+                    <input #organizationName type="text" name="entityName" placeholder="Signing Entity Name"
+                        formControlName="entityName" tabindex="3" class="form-control" />
+                    <div
+                        *ngIf="form.controls.entityName.errors  && (form.controls.entityName.dirty || form.controls.entityName.touched)">
+                        <div [hidden]="!form.controls.entityName.errors.required" class="error">
+                            Signing entity name is required.
+                        </div>
+                        <div [hidden]="!form.controls.entityName.errors.minlength" class="error">
+                            Signing entity name should be at least 2 characters.
+                        </div>
+                        <div [hidden]="!form.controls.entityName.errors.maxlength" class="error">
+                            Signing entity name should not exceed 255 characters.
+                        </div>
+                        <div *ngIf="form.controls.entityName.value.length > 1"
+                            [hidden]="!form.controls.entityName.errors.pattern" class="error">
+                            Signing entity name may only contain alphanumeric characters or special characters -,.
                         </div>
                     </div>
                 </div>
@@ -85,26 +104,6 @@
     </div>
 </div>
 
-<ng-template #successModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <div class="row justify-content-center success-dialog">
-                <div class="col-auto">
-                    <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
-                    <i *ngIf="hasError" class="fas fa-exclamation-circle logo red"></i>
-                </div>
-                <div class="col-12 title">{{title}}</div>
-                <p class="col-11 success-message">{{message}}</p>
-                <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickDialogBtn()">
-                        {{hasError?'Go Back':'Proceed'}}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>
-
 
 <ng-template #dropdownList>
     <div class="dropdown-container" *ngIf="hasShowDropdown">
@@ -116,6 +115,21 @@
                     <div class="col-6 ellipsis">{{organization.organization_website}}
                     </div>
                 </div>
+                <ng-container [ngTemplateOutlet]="treeView" [ngTemplateOutletContext]="{organization:organization}">
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #treeView let-organization="organization">
+    <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
+        <div class="row" (click)="onSelectOrganization(organization,entity)">
+            <div class="col-6 ellipsis child">
+                {{entity}}
+            </div>
+            <div class="col-6 ellipsis">
+                {{organization.organization_website}}
             </div>
         </div>
     </div>

@@ -16,7 +16,6 @@ import { OrganizationListModel, Organization, ClearBitModel } from 'src/app/core
   styleUrls: ['./add-company-modal.component.scss']
 })
 export class AddCompanyModalComponent implements OnInit {
-  @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('addEmailModal') addEmailModal: TemplateRef<any>;
   @ViewChild('organizationName') organizationName: ElementRef;
   @ViewChild('organizationWebsite') organizationWebsite: ElementRef;
@@ -26,7 +25,6 @@ export class AddCompanyModalComponent implements OnInit {
   message: string;
   title: string;
   hasError: boolean;
-  hasOrganizationExist: boolean;
   modelRef: NgbModalRef;
   searchTimeout = null;
   organizationList = new OrganizationListModel();
@@ -59,6 +57,13 @@ export class AddCompanyModalComponent implements OnInit {
         Validators.minLength(2),
         Validators.maxLength(255)
       ])],
+      entityName: ['', Validators.compose([
+        Validators.required,
+        Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
+        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
+        Validators.minLength(2),
+        Validators.maxLength(255)
+      ])],
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
@@ -77,17 +82,11 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onClickProceed() {
-    if (this.hasOrganizationExist) {
-      this.modalService.dismissAll();
-      this.claContributorService.proccedWithExistingOrganizationEvent.next(this.selectedOrganization);
-    } else {
-      this.addOrganization();
-    }
+    this.addOrganization();
   }
 
   onWebsiteKeypress() {
     this.hasReadonly = true;
-    this.hasOrganizationExist = false;
     this.searchType = 'ORGANIZATION_WEBSITE';
     this.form.controls.companyName.setValue('');
     if (this.form.controls.companyWebsite.valid) {
@@ -165,18 +164,16 @@ export class AddCompanyModalComponent implements OnInit {
     const domain = this.form.controls.companyWebsite.value;
     this.claContributorService.getClearBitData(domain).subscribe(
       (response: ClearBitModel) => {
-        this.hasOrganizationExist = false;
         this.form.controls.companyName.setValue(response.Name);
         this.selectedOrganization = new Organization;
-        if (response.ID) {
-          this.hasOrganizationExist = true;
-        }
         this.selectedOrganization.organization_id = response.ID;
         this.selectedOrganization.organization_name = response.Name;
         this.selectedOrganization.organization_website = response.Link;
+        this.selectedOrganization.signing_entity_names = response.signingEntityNames === null ? [] : response.signingEntityNames;
       },
       (exception) => {
         this.hasReadonly = false;
+        this.selectedOrganization = null;
         this.form.controls.companyName.setValue('');
         this.claContributorService.handleError(exception);
       }
@@ -217,27 +214,27 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   callAddOrganizationAPI(publicEmail) {
-    this.selectedOrganization = null;
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     // Stored newly added org in the local storage.
     const newOrgData = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
-      // Update this when the user selects the Signing Entity name
-      signingEntityName: this.form.controls.companyName.value,
+      signingEntityName: this.form.controls.entityName.value,
       userEmail: publicEmail,
       createdBy: userModel.user_id,
     };
+    this.selectedOrganization = null;
     this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrgData);
     // Skip success dialog and show CLA not sign dialog.
-
     this.onClickDialogBtn();
   }
 
-  onSelectOrganization(organization) {
-    this.hasOrganizationExist = true;
+  onSelectOrganization(organization, entityName?) {
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.form.controls.companyName.setValue(organization.organization_name);
+    if (entityName) {
+      this.form.controls.entityName.setValue(entityName);
+    }
     this.organizationList = new OrganizationListModel;
   }
 

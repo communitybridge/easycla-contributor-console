@@ -42,17 +42,22 @@
 
                                         <div class="col-12 item" *ngFor="let organization of organizationList.list"
                                             (click)="onSelectCompany(organization)">
-                                            <div class="row">
+                                            <div class="row" (click)="onSelectCompany(organization)">
                                                 <div class="col-6 ellipsis">{{organization.organization_name}}</div>
                                                 <div class="col-6 ellipsis">{{organization.organization_website}}
                                                 </div>
                                             </div>
+                                            <ng-container [ngTemplateOutlet]="treeView"
+                                                [ngTemplateOutletContext]="{organization:organization}">
+                                            </ng-container>
+
                                         </div>
 
                                     </div>
                                     <div class="footer col-12">
                                         <span>Organization not listed? </span>
-                                        <span class="click-here" (click)="onClickAddOrganization()">+ Click Here</span>
+                                        <span class="click-here" (click)="onClickAddOrganization()">+ Click
+                                            Here</span>
                                     </div>
                                 </div>
                             </div>
@@ -83,11 +88,23 @@
 </div>
 
 
+<ng-template #treeView let-organization="organization">
+    <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
+        <div class="row" (click)="onSelectCompany(organization,entity)">
+            <div class="col-6 ellipsis child">
+                {{entity}}
+            </div>
+            <div class="col-6 ellipsis">
+                {{organization.organization_website}}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
 <ng-template #addCompany let-modal>
     <div class="model">
         <div class="modal-body">
-            <app-modal-header title="Enter Organization Details" showCloseBtn="true"
-                (closeDialogEmitter)="onClickClose()">
+            <app-modal-header title="CREATE NEW ORGANIZATION" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
             </app-modal-header>
             <app-add-company-modal></app-add-company-modal>
         </div>
