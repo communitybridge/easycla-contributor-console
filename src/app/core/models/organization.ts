@@ -20,7 +20,6 @@ export class Organization {
     organization_name: string;
     organization_website: string;
     signing_entity_names: string[];
-    selected_entity_name: string;
 }
 
 export class CompanyModel {
