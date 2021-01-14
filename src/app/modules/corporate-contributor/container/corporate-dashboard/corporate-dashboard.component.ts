@@ -132,8 +132,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (organization !== null) {
       this.hasShowDropdown = false;
       this.selectedCompany = organization.organization_id;
-      this.selectedEntityName = entityName;
-      this.searchBoxValue = entityName ? entityName : organization.organization_name;
+      this.selectedEntityName = entityName ? entityName : organization.organization_name;
+      this.searchBoxValue = this.selectedEntityName;
       this.form.controls.companyName.setValue(this.searchBoxValue);
     }
   }
