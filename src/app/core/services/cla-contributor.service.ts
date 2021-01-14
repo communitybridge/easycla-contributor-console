@@ -27,7 +27,6 @@ const FileSaver = require('file-saver');
 })
 export class ClaContributorService {
   public openDialogModalEvent = new Subject<any>();
-  public proccedWithExistingOrganizationEvent = new Subject<any>();
 
   baseURL = EnvConfig.default['api-base'] + '/';
   v4BaseUrl = EnvConfig.default['api-v4-base'] + '/';

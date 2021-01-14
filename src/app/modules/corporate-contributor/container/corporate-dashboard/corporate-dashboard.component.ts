@@ -78,11 +78,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.openWithDismiss(this.signedCLANotFoundModal);
       }
     });
-
-    this.proccedWithExistingOrganization = this.claContributorService.proccedWithExistingOrganizationEvent.subscribe((organization) => {
-      this.onSelectCompany(organization);
-      this.onClickProceed();
-    });
   }
 
   ngOnInit(): void {
@@ -132,12 +127,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.open(this.addCompany);
   }
 
-  onSelectCompany(organization: Organization) {
+  onSelectCompany(organization: Organization, entityName?: string) {
     if (organization !== null) {
       this.hasShowDropdown = false;
       this.selectedCompany = organization.organization_id;
-      this.searchBoxValue = organization.organization_name;
-      this.form.controls.companyName.setValue(organization.organization_name);
+      this.searchBoxValue = entityName ? entityName : organization.organization_name;
+      this.form.controls.companyName.setValue(this.searchBoxValue);
     }
   }
 
