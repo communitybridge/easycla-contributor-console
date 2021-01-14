@@ -30,7 +30,7 @@ export class AppSettings {
     public static HEADER_CONTENT_TYPE = 'application/json';
     public static EMAIL_PATTERN = /^([a-zA-Z0-9_\-\.\+]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     public static USERNAME_REGEX = '/^[a-zA-Z0-9_]{1,15}$/';
-    public static COMPANY_NAME_REGEX = '^([\\w\\d\\s\\-\\,\\./]+)$';
+    public static COMPANY_NAME_REGEX = /^((?!(<\S)|(\S>)).)*$/;
     public static URL_PATTERN = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
     public static NON_WHITE_SPACE_REGEX = /.*\S.*/;
     public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z.]*)*$/;

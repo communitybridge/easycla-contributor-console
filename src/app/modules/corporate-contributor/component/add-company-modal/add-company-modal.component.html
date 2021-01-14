@@ -50,7 +50,7 @@
                         </div>
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            Organization name may only contain alphanumeric characters or special characters -,.
+                            HTML tags are not allowed.
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,7 @@
                         </div>
                         <div *ngIf="form.controls.entityName.value.length > 1"
                             [hidden]="!form.controls.entityName.errors.pattern" class="error">
-                            Signing entity name may only contain alphanumeric characters or special characters -,.
+                            HTML tags are not allowed.
                         </div>
                     </div>
                 </div>
@@ -108,9 +108,8 @@
 <ng-template #dropdownList>
     <div class="dropdown-container" *ngIf="hasShowDropdown">
         <div class="dropdown-content">
-            <div class="item" *ngFor="let organization of organizationList.list"
-                (click)="onSelectOrganization(organization)">
-                <div class="row">
+            <div class="item" *ngFor="let organization of organizationList.list">
+                <div class="row" (click)="onSelectOrganization($event,organization)">
                     <div class="col-6 ellipsis">{{organization.organization_name}}</div>
                     <div class="col-6 ellipsis">{{organization.organization_website}}
                     </div>
@@ -124,7 +123,7 @@
 
 <ng-template #treeView let-organization="organization">
     <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
-        <div class="row" (click)="onSelectOrganization(organization,entity)">
+        <div class="row" (click)="onSelectOrganization($event,organization,entity)">
             <div class="col-6 ellipsis child">
                 {{entity}}
             </div>

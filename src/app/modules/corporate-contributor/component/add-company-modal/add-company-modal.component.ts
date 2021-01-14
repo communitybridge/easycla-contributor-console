@@ -156,7 +156,7 @@ export class AddCompanyModalComponent implements OnInit {
       setTimeout(() => {
         this.hasShowDropdown = false;
         this.getOrganizationNameByDomain();
-      }, 100);
+      }, 300);
     }
   }
 
@@ -229,12 +229,13 @@ export class AddCompanyModalComponent implements OnInit {
     this.onClickDialogBtn();
   }
 
-  onSelectOrganization(organization, entityName?) {
+  onSelectOrganization(e, organization, entityName?) {
+    e.stopPropagation();
+    e.preventDefault();
+    entityName = entityName ? entityName : '';
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.form.controls.companyName.setValue(organization.organization_name);
-    if (entityName) {
-      this.form.controls.entityName.setValue(entityName);
-    }
+    this.form.controls.entityName.setValue(entityName);
     this.organizationList = new OrganizationListModel;
   }
 
