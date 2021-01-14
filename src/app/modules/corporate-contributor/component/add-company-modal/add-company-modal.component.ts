@@ -127,7 +127,6 @@ export class AddCompanyModalComponent implements OnInit {
         this.organizationList = response;
         this.hasShowDropdown = true;
         if (this.organizationList.list.length === 0) {
-          this.hasReadonly = false;
           this.resetOrganizationList();
         }
         if (this.searchType === 'ORGANIZATION_NAME') {
@@ -223,7 +222,6 @@ export class AddCompanyModalComponent implements OnInit {
       userEmail: publicEmail,
       createdBy: userModel.user_id,
     };
-    this.selectedOrganization = null;
     this.storageService.setItem(AppSettings.NEW_ORGANIZATIONS, newOrgData);
     // Skip success dialog and show CLA not sign dialog.
     this.onClickDialogBtn();
@@ -251,8 +249,10 @@ export class AddCompanyModalComponent implements OnInit {
     if (!this.hasError) {
       const data = {
         action: 'ADD_NEW_ORGANIZATION',
-        payload: this.selectedOrganization
+        payload: this.selectedOrganization,
+        signingEntityName: this.form.controls.entityName.value,
       }
+      this.modalService.dismissAll();
       this.claContributorService.openDialogModalEvent.next(data);
     } else {
       this.backToAddOrganization();
