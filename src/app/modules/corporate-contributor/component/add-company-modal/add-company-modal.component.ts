@@ -67,7 +67,6 @@ export class AddCompanyModalComponent implements OnInit {
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
-        Validators.minLength(8),
         Validators.maxLength(255)
       ])],
     });
@@ -169,6 +168,11 @@ export class AddCompanyModalComponent implements OnInit {
         this.selectedOrganization.organization_name = response.Name;
         this.selectedOrganization.organization_website = response.Link;
         this.selectedOrganization.signing_entity_names = response.signingEntityNames === null ? [] : response.signingEntityNames;
+        if (response.Name === undefined || response.Name === null || response.Name === '') {
+          // If clearbit not return Name then alllow user to add organization name.
+          this.form.controls.companyName.setValue('');
+          this.hasReadonly = false;
+        }
       },
       (exception) => {
         this.hasReadonly = false;
