@@ -75,7 +75,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
-        const hasEntityExist = result.payload.signing_entity_names.indexOf(result.signingEntityName) >= 0 ? true : false;
+        const entityName = result.payload ? result.payload.signing_entity_names : [];
+        const hasEntityExist = entityName.indexOf(result.signingEntityName) >= 0 ? true : false;
         if (hasEntityExist) { // If organization already exist.
           this.onSelectCompany(result.payload, result.signingEntityName);
           this.onClickProceed();
