@@ -17,8 +17,8 @@
                         <div [hidden]="!form.controls.companyWebsite.errors.required" class="error">
                             Organization website is required.
                         </div>
-                        <div [hidden]="!form.controls.companyWebsite.errors.minlength" class="error">
-                            Organization website should be at least 8 characters.
+                        <div [hidden]="!form.controls.companyWebsite.errors.maxlength" class="error">
+                            Organization website should not exceed 255 characters.
                         </div>
                         <div *ngIf="form.controls.companyWebsite.value.length > 7"
                             [hidden]="!form.controls.companyWebsite.errors.pattern" class="error">
