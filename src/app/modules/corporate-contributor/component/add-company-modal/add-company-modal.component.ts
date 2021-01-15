@@ -42,7 +42,12 @@ export class AddCompanyModalComponent implements OnInit {
   ) {
     this.renderer.listen('window', 'click', (e: Event) => {
       if (!this.organizationName.nativeElement.contains(e.target) && !this.organizationWebsite.nativeElement.contains(e.target)) {
-        this.hasShowDropdown = false;
+        if (this.hasShowDropdown) {
+          this.hasShowDropdown = false;
+          if (this.searchType === 'ORGANIZATION_WEBSITE') {
+            this.onFocusOut();
+          }
+        }
       }
     });
   }
@@ -67,6 +72,7 @@ export class AddCompanyModalComponent implements OnInit {
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
+        Validators.minLength(8),
         Validators.maxLength(255)
       ])],
     });
@@ -150,9 +156,8 @@ export class AddCompanyModalComponent implements OnInit {
   }
 
   onFocusOut() {
-    if (this.form.controls.companyWebsite.valid) {
+    if (this.form.controls.companyWebsite.valid && !this.hasShowDropdown) {
       setTimeout(() => {
-        this.hasShowDropdown = false;
         this.getOrganizationNameByDomain();
       }, 300);
     }
@@ -237,8 +242,11 @@ export class AddCompanyModalComponent implements OnInit {
     entityName = entityName ? entityName : '';
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.form.controls.companyName.setValue(organization.organization_name);
+    this.hasReadonly = true;
     this.form.controls.entityName.setValue(entityName);
     this.organizationList = new OrganizationListModel;
+    this.hasShowDropdown = false;
+    this.onFocusOut();
   }
 
   openDialog(content) {
