@@ -72,7 +72,6 @@ export class AddCompanyModalComponent implements OnInit {
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
-        Validators.minLength(8),
         Validators.maxLength(255)
       ])],
     });
