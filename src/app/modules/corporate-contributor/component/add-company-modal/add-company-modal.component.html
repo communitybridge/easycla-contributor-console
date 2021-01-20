@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-11 element">
                     <div class="title">Your Organization Website</div>
-                    <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
+                    <input #organizationWebsite type="text" autocomplete="off" name="companyWebsite" (input)="onWebsiteKeypress()"
                         placeholder="Your Organization Website" formControlName="companyWebsite"
                         (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
@@ -29,7 +29,7 @@
 
                 <div class="col-11 element">
                     <div class="title">Organization Name</div>
-                    <input #organizationName type="text" name="companyName" placeholder="Organization Name"
+                    <input #organizationName type="text" autocomplete="off" name="companyName" placeholder="Organization Name"
                         (input)="onNameKeypress()" [readonly]="hasReadonly" formControlName="companyName" tabindex="2"
                         class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
@@ -54,7 +54,7 @@
 
                 <div class="col-11 element">
                     <div class="title">Signing Entity Name</div>
-                    <input #organizationName type="text" name="entityName" placeholder="Signing Entity Name"
+                    <input #organizationName type="text" autocomplete="off" name="entityName" placeholder="Signing Entity Name"
                         formControlName="entityName" tabindex="3" class="form-control" />
                     <div
                         *ngIf="form.controls.entityName.errors  && (form.controls.entityName.dirty || form.controls.entityName.touched)">
@@ -140,7 +140,7 @@
                     your email address so that we can proceed to next step</p>
                 <div class="row justify-content-center success-dialog">
                     <div class="col-11 element">
-                        <input type="text" name="publicEmail" placeholder="Enter email address"
+                        <input type="text" autocomplete="off" name="publicEmail" placeholder="Enter email address"
                             formControlName="publicEmail" tabindex="-1" />
                         <div
                             *ngIf="publicEmailform.controls.publicEmail.errors  && (publicEmailform.controls.publicEmail.dirty || publicEmailform.controls.publicEmail.touched)">
