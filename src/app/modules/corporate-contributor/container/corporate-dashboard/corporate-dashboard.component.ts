@@ -74,6 +74,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.openWithDismiss(this.identifyCLAManager);
       } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
         this.openWithDismiss(this.addCompany);
+      } else if (result.action === 'RETRY_CONFIG_CLA_MANAGER') {
+        this.open(this.configureCLAManager);
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
         const entityName = result.payload ? result.payload.signing_entity_names : [];
         const hasEntityExist = entityName.indexOf(result.signingEntityName) >= 0 ? true : false;

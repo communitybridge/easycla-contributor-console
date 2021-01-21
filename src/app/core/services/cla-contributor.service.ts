@@ -150,6 +150,11 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
+  hasRoleAssigned(companyId: string, projectId: string, userLFID: string): Observable<any> {
+    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/user/' + userLFID + '/claGroupID/' + projectId + '/is-cla-manager-designee';
+    return this.httpClient.get<any>(url);
+  }
+
   notifyCLAMangers(data: any): Observable<any> {
     const url = this.v4BaseUrl + 'v4/notify-cla-managers';
     return this.httpClient.post<any>(url, data);

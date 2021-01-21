@@ -28,6 +28,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   hasCLAManagerDesignee: boolean;
   spinnerMessage: string;
   failedCount: number;
+  showRetryBtn: boolean;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -45,6 +46,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showRetryBtn = false;
     this.failedCount = 0;
     this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
   }
@@ -141,8 +143,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
       () => {
-        this.hasCLAManagerDesignee = true;
-        this.proceedToCorporateConsole();
+        this.failedCount = 0;
+        this.checkRoleAssignment();
       },
       (exception) => {
         if (exception.status === 409) {
@@ -159,6 +161,40 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         }
       }
     );
+  }
+
+  checkRoleAssignment() {
+    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
+    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    this.claContributorService.hasRoleAssigned(this.company.companyExternalID, projectId, authData.userid).subscribe(
+      (result) => {
+        if (result.hasRole) {
+          this.hasCLAManagerDesignee = true;
+          this.proceedToCorporateConsole();
+        } else {
+          this.retryRoleAssignement();
+        }
+      },
+      (exception) => {
+        this.title = 'Request Failed';
+        this.message = exception.error.Message;
+        this.openDialog(this.errorModal);
+      }
+    );
+  }
+
+  retryRoleAssignement() {
+    this.failedCount++;
+    if (this.failedCount <= AppSettings.MAX_ROLE_ASSIGN_FAILED_COUNT) {
+      this.checkRoleAssignment();
+    } else {
+      this.showRetryBtn = true;
+      this.title = 'Request Failed';
+      this.message = 'The initial CLA manager settings could not be assigned.</br>' +
+        ' Please <a href="' + AppSettings.TICKET_URL + '" target="_blank"><b>file a support ticket</b>.</a>' +
+        ' Once the support ticket is resolved, you will be able to proceed with the CLA.';
+      this.openDialog(this.errorModal);
+    }
   }
 
   proceedToCorporateConsole() {
@@ -222,6 +258,15 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   onClickClose() {
     this.modalService.dismissAll();
+  }
+
+  onClickRetry() {
+    this.modalService.dismissAll();
+    const data = {
+      action: 'RETRY_CONFIG_CLA_MANAGER',
+      payload: false
+    }
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 
   openDialog(content) {

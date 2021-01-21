@@ -41,4 +41,5 @@ export class AppSettings {
     public static LFX_FOOTER = 'lfx-footer';
     public static LFX_HEADER = 'lfx-header';
     public static MAX_FAILED_COUNT = 12;
+    public static MAX_ROLE_ASSIGN_FAILED_COUNT = 30;
 }
