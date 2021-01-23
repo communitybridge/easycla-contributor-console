@@ -167,7 +167,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.claContributorService.getClearBitData(domain).subscribe(
       (response: ClearBitModel) => {
         this.form.controls.companyName.setValue(response.Name);
-        this.selectedOrganization = new Organization;
+        this.selectedOrganization = new Organization();
         this.selectedOrganization.organization_id = response.ID;
         this.selectedOrganization.organization_name = response.Name;
         this.selectedOrganization.organization_website = response.Link;
@@ -202,7 +202,7 @@ export class AddCompanyModalComponent implements OnInit {
     const data = {
       organizationName: this.form.controls.companyName.value,
       organizationWebsite: this.form.controls.companyWebsite.value,
-    }
+    };
     this.storageService.setItem(AppSettings.ORGANIZATION_DETAILS, data);
   }
 
@@ -243,7 +243,7 @@ export class AddCompanyModalComponent implements OnInit {
     this.form.controls.companyName.setValue(organization.organization_name);
     this.hasReadonly = true;
     this.form.controls.entityName.setValue(entityName);
-    this.organizationList = new OrganizationListModel;
+    this.organizationList = new OrganizationListModel();
     this.hasShowDropdown = false;
     this.onFocusOut();
   }
@@ -262,7 +262,7 @@ export class AddCompanyModalComponent implements OnInit {
         action: 'ADD_NEW_ORGANIZATION',
         payload: this.selectedOrganization,
         signingEntityName: this.form.controls.entityName.value,
-      }
+      };
       this.modalService.dismissAll();
       this.claContributorService.openDialogModalEvent.next(data);
     } else {
@@ -274,7 +274,7 @@ export class AddCompanyModalComponent implements OnInit {
     const data = {
       action: 'BACK_TO_ADD_ORGANIZATION',
       payload: ''
-    }
+    };
     this.storeOrganizationDetails();
     this.claContributorService.openDialogModalEvent.next(data);
   }

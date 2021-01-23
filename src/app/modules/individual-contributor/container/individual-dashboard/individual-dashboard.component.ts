@@ -1,14 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { ActiveSignatureModel } from 'src/app/core/models/active-signature';
-import { IndividualRequestSignatureModel } from 'src/app/core/models/individual-request-signature';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { AppSettings } from 'src/app/config/app-settings';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {ActiveSignatureModel} from 'src/app/core/models/active-signature';
+import {IndividualRequestSignatureModel} from 'src/app/core/models/individual-request-signature';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {AppSettings} from 'src/app/config/app-settings';
 
 @Component({
   selector: 'app-individual-dashboard',

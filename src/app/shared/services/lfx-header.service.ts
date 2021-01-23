@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
-import { EnvConfig } from '../../config/cla-env-utils';
-import { AppSettings } from '../../config/app-settings';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {AuthService} from './auth.service';
+import {EnvConfig} from '../../config/cla-env-utils';
+import {AppSettings} from '../../config/app-settings';
+import {environment} from '../../../environments/environment';
 
 const script = document.createElement('script');
-    script.setAttribute(
-      'src',
-      EnvConfig.default[AppSettings.LFX_HEADER]
-    );
-    document.head.appendChild(script);
+script.setAttribute(
+  'src',
+  EnvConfig.default[AppSettings.LFX_HEADER]
+);
+document.head.appendChild(script);
 
 @Injectable({
   providedIn: 'root'
