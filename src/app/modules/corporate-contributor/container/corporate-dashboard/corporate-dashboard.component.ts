@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { PlatformLocation } from '@angular/common';
-import { OrganizationModel, OrganizationListModel, Organization } from 'src/app/core/models/organization';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { ProjectModel } from 'src/app/core/models/project';
-import { AppSettings } from 'src/app/config/app-settings';
-import { Subscription } from 'rxjs';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {PlatformLocation} from '@angular/common';
+import {Organization, OrganizationListModel, OrganizationModel} from 'src/app/core/models/organization';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {ProjectModel} from 'src/app/core/models/project';
+import {AppSettings} from 'src/app/config/app-settings';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -79,10 +79,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       } else if (result.action === 'ADD_NEW_ORGANIZATION') {
         const entityName = result.payload ? result.payload.signing_entity_names : [];
         const hasEntityExist = entityName.indexOf(result.signingEntityName) >= 0 ? true : false;
-        if (hasEntityExist) { // If organization already exist.
+        if (hasEntityExist) {
+          // If organization already exist.
           this.onSelectCompany(result.payload, result.signingEntityName);
           this.onClickProceed();
-        } else { // Newly created organization 
+        } else {
+          // Newly created organization
           this.form.controls.companyName.setValue('');
           this.openWithDismiss(this.signedCLANotFoundModal);
         }

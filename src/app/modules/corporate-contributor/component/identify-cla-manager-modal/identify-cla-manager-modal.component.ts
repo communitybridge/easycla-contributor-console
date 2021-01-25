@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { UserModel } from 'src/app/core/models/user';
-import { ProjectModel } from 'src/app/core/models/project';
-import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { EmailValidator } from 'src/app/shared/validators/email-validator';
-import { AppSettings } from 'src/app/config/app-settings';
-import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
+import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {UserModel} from 'src/app/core/models/user';
+import {ProjectModel} from 'src/app/core/models/project';
+import {CompanyModel, OrganizationModel} from 'src/app/core/models/organization';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {EmailValidator} from 'src/app/shared/validators/email-validator';
+import {AppSettings} from 'src/app/config/app-settings';
+import {CompanyAdminDesigneeModel, CompnayAdminListModel} from 'src/app/core/models/company-admin-designee';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -49,11 +49,11 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(2),
-        Validators.maxLength(255),
-        Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
-      ]
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(255),
+          Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
+        ]
       )],
       email: ['', Validators.compose([
         Validators.required,
@@ -99,7 +99,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       },
       (exception) => {
         // To add org in salesforce take couple of seconds
-        // So called getOrganizationInformation metod till result comes
+        // So called getOrganizationInformation method till result comes
         this.failedCount++;
         if (this.failedCount >= AppSettings.MAX_FAILED_COUNT) { // end API call after 20 time failed
           this.hasError = true;
@@ -122,7 +122,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       claGroupID: project.project_id,
       name: hasCompanyAdmin ? '' : this.form.controls.name.value,
       userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
-    }
+    };
     this.callInviteManagerAPI(data, hasCompanyAdmin);
   }
 
@@ -230,7 +230,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const data = {
       action: 'CLA_NOT_SIGN',
       payload: false
-    }
+    };
     this.claContributorService.openDialogModalEvent.next(data);
   }
 
@@ -238,7 +238,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const data = {
       action: 'IDENTIFY_CLA_MANAGER',
       payload: ''
-    }
+    };
     this.claContributorService.openDialogModalEvent.next(data);
   }
 }

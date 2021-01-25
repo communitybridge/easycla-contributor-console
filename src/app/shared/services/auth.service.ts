@@ -3,24 +3,17 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Injectable } from '@angular/core';
-import {
-  from,
-  of,
-  Observable,
-  BehaviorSubject,
-  combineLatest,
-  throwError,
-} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, combineLatest, from, Observable, of, throwError} from 'rxjs';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import {catchError, concatMap, shareReplay, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
 import * as querystring from 'query-string';
 import Url from 'url-parse';
-import { EnvConfig } from '../../config/cla-env-utils';
-import { AppSettings } from 'src/app/config/app-settings';
-import { StorageService } from './storage.service';
+import {EnvConfig} from '../../config/cla-env-utils';
+import {AppSettings} from 'src/app/config/app-settings';
+import {StorageService} from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -121,16 +114,16 @@ export class AuthService {
   }
 
   login() {
-   // Need to increase timeout to 1500 as for slower network it gives an error
-   // Cannot read property 'querySelector' of null
-   setTimeout(() => {
+    // Need to increase timeout to 1500 as for slower network it gives an error
+    // Cannot read property 'querySelector' of null
+    setTimeout(() => {
       const button = document
-      .querySelector('#lfx-header')
-      .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
-    if (button) {
-      button.click();
-    }
-    }, 1500)
+        .querySelector('#lfx-header')
+        .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
+      if (button) {
+        button.click();
+      }
+    }, 1500);
   }
 
   logout() {
@@ -230,10 +223,10 @@ export class AuthService {
 
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) == ' ') {
+      while (c.charAt(0) === ' ') {
         c = c.substring(1);
       }
-      if (c.indexOf(name) == 0) {
+      if (c.indexOf(name) === 0) {
         return c.substring(name.length, c.length);
       }
     }
@@ -285,7 +278,7 @@ export class AuthService {
         if (!targetRoute) {
           return this.router.navigateByUrl('/auth');
         }
-        const url = '/auth?targetRoute=' + (targetRoute || '')
+        const url = '/auth?targetRoute=' + (targetRoute || '');
         this.router.navigateByUrl(url);
       });
     }
@@ -298,7 +291,7 @@ export class AuthService {
       userid: authResult.nickname,
       user_email: authResult.email,
       user_name: authResult.name
-    }
+    };
     this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
   }
 }
