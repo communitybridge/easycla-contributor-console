@@ -58,7 +58,7 @@
     "aws-sdk": "^2.820.0",
     "bootstrap": "^4.4.0",
     "file-saver": "^2.0.2",
-    "query-string": "^6.13.6",
+    "query-string": "^6.13.8",
     "rxjs": "~6.6.3",
     "serverless": "^2.3.0",
     "serverless-cloudfront-invalidate": "^1.4.0",
