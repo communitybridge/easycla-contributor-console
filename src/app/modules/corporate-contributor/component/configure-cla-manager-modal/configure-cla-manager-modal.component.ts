@@ -1,16 +1,16 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
-import {AuthService} from 'src/app/shared/services/auth.service';
-import {AppSettings} from 'src/app/config/app-settings';
-import {StorageService} from 'src/app/shared/services/storage.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {CompanyModel, OrganizationModel} from 'src/app/core/models/organization';
-import {AlertService} from 'src/app/shared/services/alert.service';
-import {UserModel} from 'src/app/core/models/user';
-import {LoaderService} from 'src/app/shared/services/loader.service';
+import { Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { AppSettings } from 'src/app/config/app-settings';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { UserModel } from 'src/app/core/models/user';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -140,7 +140,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   addAsCLAManagerDesignee(data: any) {
     const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-    this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
+    this.claContributorService.addAsCLAManagerDesignee(this.company.companyID, projectId, data).subscribe(
       () => {
         this.failedCount = 0;
         this.checkRoleAssignment();
