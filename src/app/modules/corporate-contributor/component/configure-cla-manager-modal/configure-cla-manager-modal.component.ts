@@ -221,9 +221,10 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
 
-      const corporateUrl = this.claContributorService.getLFXCorporateURL();
+      let corporateUrl = this.claContributorService.getLFXCorporateURL();
       if (corporateUrl !== '') {
         setTimeout(() => {
+          corporateUrl += '?signingEntityCompanyId=' + this.company.companyID;
           this.storageService.removeItem(AppSettings.ACTION_TYPE);
           window.open(corporateUrl, '_blank');
         }, 4500);
