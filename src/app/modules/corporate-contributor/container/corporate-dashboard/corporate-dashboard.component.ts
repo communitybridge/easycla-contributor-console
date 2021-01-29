@@ -325,6 +325,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.claContributorService.searchOrganization(companyName).subscribe(
       (response) => {
         this.noCompanyFound = false;
+        // Sort the signing entity name values under the parent organization/company
+        response.list.forEach((item: Organization) => {
+          if (item.signing_entity_names !== null && item.signing_entity_names.length > 0) {
+            item.signing_entity_names = item.signing_entity_names.sort((a: string, b: string) => (a < b ? -1 : 1));
+          }
+        });
         this.organizationList = response;
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;
