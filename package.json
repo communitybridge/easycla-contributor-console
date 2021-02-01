@@ -14,6 +14,7 @@
     "build:dev": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=dev",
     "build:staging": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=staging",
     "build:prod": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=production",
+    "serve:dev:local": "USE_LOCAL_SERVICES=true STAGE_ENV=dev ng serve --port 8100 --configuration=local",
     "serve-local": "ng serve --port 8100",
     "test": "yarn test:unit",
     "test:unit": "ng test --watch=false --progress=false --browsers=ChromeHeadless",

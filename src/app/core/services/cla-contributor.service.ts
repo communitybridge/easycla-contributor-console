@@ -1,23 +1,23 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { Project, ProjectModel } from '../models/project';
-import { UpdateUserModel, UserModel } from '../models/user';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { ActiveSignatureModel } from '../models/active-signature';
-import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import { ClearBitModel, CompanyModel, OrganizationListModel, OrganizationModel } from '../models/organization';
-import { EmployeeSignatureModel } from '../models/employee-signature';
-import { InviteCompanyModel } from '../models/invite-company';
-import { CLAManagersModel } from '../models/cla-manager';
-import { AppSettings } from 'src/app/config/app-settings';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { GerritUserModel } from '../models/gerrit';
-import { CompanyAdminDesigneeModel, CompnayAdminListModel } from '../models/company-admin-designee';
-import { EnvConfig } from 'src/app/config/cla-env-utils';
+import {Injectable, isDevMode} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
+import {Project, ProjectModel} from '../models/project';
+import {UpdateUserModel, UserModel} from '../models/user';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {ActiveSignatureModel} from '../models/active-signature';
+import {IndividualRequestSignatureModel} from '../models/individual-request-signature';
+import {ClearBitModel, CompanyModel, OrganizationListModel, OrganizationModel} from '../models/organization';
+import {EmployeeSignatureModel} from '../models/employee-signature';
+import {InviteCompanyModel} from '../models/invite-company';
+import {CLAManagersModel} from '../models/cla-manager';
+import {AppSettings} from 'src/app/config/app-settings';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {GerritUserModel} from '../models/gerrit';
+import {CompanyAdminDesigneeModel, CompnayAdminListModel} from '../models/company-admin-designee';
+import {EnvConfig} from 'src/app/config/cla-env-utils';
 
 declare const require: any;
 const FileSaver = require('file-saver');
@@ -28,38 +28,55 @@ const FileSaver = require('file-saver');
 export class ClaContributorService {
   public openDialogModalEvent = new Subject<any>();
 
-  baseURL = EnvConfig.default['api-base'] + '/';
-  v4BaseUrl = EnvConfig.default['api-v4-base'] + '/';
-  corporateV2Base = EnvConfig.default['corporate-v2-base'] + '/';
+  localTesting = false;
+  baseURL: string = EnvConfig.default['api-base'];
+  v4BaseUrl: string = EnvConfig.default['api-v4-base'];
+  corporateV2Base: string = EnvConfig.default['corporate-v2-base'];
+
+  v1ClaAPIURLLocal = 'http://localhost:5000';
+  v2ClaAPIURLLocal = 'http://localhost:5000';
+  v3ClaAPIURLLocal = 'http://localhost:8080';
+  v4ClaAPIURLLocal = 'http://localhost:8080';
 
   constructor(
     private httpClient: HttpClient,
     private alertService: AlertService,
     private storageService: StorageService,
-  ) { }
+  ) {
+    // Determine if we're running in a local services (developer) mode - the USE_LOCAL_SERVICES environment variable
+    // will be set to 'true', otherwise we're using normal services deployed in each environment
+    // const localServicesMode = (process.env.USE_LOCAL_SERVICES || 'false').toLowerCase() === 'true';
+    if (isDevMode()) {
+      console.log('Running in local services mode');
+    } else {
+      console.log('Running in deployed services mode');
+    }
+    this.localTesting = isDevMode()
+  }
+
 
   getUser(userId: string): Observable<UserModel> {
-    const url = this.baseURL + 'v2/user/' + userId;
+    const url = this.getV2Endpoint('/v2/user/' + userId);
     return this.httpClient.get<UserModel>(url);
   }
 
   updateUser(data: any): Observable<UpdateUserModel> {
-    const url = this.baseURL + 'v3/users';
+    const url = this.getV3Endpoint('/v3/users');
     return this.httpClient.put<UpdateUserModel>(url, data);
   }
 
   getProject(projectId: string): Observable<ProjectModel> {
-    const url = this.baseURL + 'v2/project/' + projectId;
+    const url = this.getV2Endpoint('/v2/project/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
   getUserActiveSignature(userId: string): Observable<ActiveSignatureModel> {
-    const url = this.baseURL + 'v2/user/' + userId + '/active-signature';
+    const url = this.getV2Endpoint('/v2/user/' + userId + '/active-signature');
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
   searchOrganization(organizationName: string, organizationWebsite?: string): Observable<OrganizationListModel> {
-    let url = this.baseURL + 'v3/organization/search?';
+    let url = this.getV3Endpoint('/v3/organization/search?');
     if (organizationName) {
       url += 'companyName=' + organizationName;
     }
@@ -70,12 +87,12 @@ export class ClaContributorService {
   }
 
   getClearBitData(organizationWebsite: string): Observable<ClearBitModel> {
-    const url = this.v4BaseUrl + 'v4/company/lookup?websiteName=' + organizationWebsite;
+    const url = this.getV4Endpoint('/v4/company/lookup?websiteName=' + organizationWebsite);
     return this.httpClient.get<ClearBitModel>(url);
   }
 
   hasOrganizationExist(organizationName: string, organizationWebsite: string): Observable<OrganizationListModel> {
-    let url = this.baseURL + 'v3/organization/search?';
+    let url = this.getV3Endpoint('/v3/organization/search?');
     if (organizationName) {
       url += '$filter=name eq ' + organizationName;
     }
@@ -86,72 +103,72 @@ export class ClaContributorService {
   }
 
   getOrganizationDetails(companySFID: string): Observable<OrganizationModel> {
-    const url = this.baseURL + 'v3/company/external/' + companySFID;
+    const url = this.getV3Endpoint('/v3/company/external/' + companySFID);
     return this.httpClient.get<OrganizationModel>(url);
   }
 
   getSigningEntityNameDetails(signingEntityName: string, companySFID: string): Observable<OrganizationModel> {
-    const url = this.baseURL + 'v3/company/signing-entity-name?name=' + signingEntityName + '&companySFID=' + companySFID;
+    const url = this.getV3Endpoint('/v3/company/signing-entity-name?name=' + signingEntityName + '&companySFID=' + companySFID);
     return this.httpClient.get<OrganizationModel>(url);
   }
 
   postIndividualSignatureRequest(data: any): Observable<IndividualRequestSignatureModel> {
-    const url = this.baseURL + 'v2/request-individual-signature';
+    const url = this.getV2Endpoint('/v2/request-individual-signature');
     return this.httpClient.post<IndividualRequestSignatureModel>(url, data);
   }
 
   CheckPreparedEmployeeSignature(data: any): Observable<any> {
-    const url = this.baseURL + 'v2/check-prepare-employee-signature';
+    const url = this.getV2Endpoint('/v2/check-prepare-employee-signature');
     return this.httpClient.post<any>(url, data);
   }
 
   postEmployeeSignatureRequest(signatureRequest: any): Observable<EmployeeSignatureModel> {
-    const url: string = this.baseURL + 'v2/request-employee-signature';
+    const url = this.getV2Endpoint('/v2/request-employee-signature');
     return this.httpClient.post<EmployeeSignatureModel>(url, signatureRequest);
   }
 
   getLastIndividualSignature(userId: string, projectId: string): Observable<any> {
-    const url = this.baseURL + 'v2/user/' + userId + '/project/' + projectId + '/last-signature';
+    const url = this.getV2Endpoint('/v2/user/' + userId + '/project/' + projectId + '/last-signature');
     return this.httpClient.get<InviteCompanyModel>(url);
   }
 
   getGerritUserInfo(): Observable<GerritUserModel> {
-    const url = this.baseURL + 'v1/user/gerrit';
+    const url = this.getV1Endpoint('/v1/user/gerrit');
     return this.httpClient.post<GerritUserModel>(url, '');
   }
 
   getGerritProjectInfo(projectId: string): Observable<ProjectModel> {
-    const url = this.baseURL + 'v2/project/' + projectId;
+    const url = this.getV2Endpoint('/v2/project/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
   inviteManager(userLFID: string, data: any): Observable<CompanyAdminDesigneeModel> {
-    const url = this.v4BaseUrl + 'v4/user/' + userLFID + '/invite-company-admin';
+    const url = this.getV4Endpoint('/v4/user/' + userLFID + '/invite-company-admin');
     return this.httpClient.post<CompanyAdminDesigneeModel>(url, data);
   }
 
   getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
-    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers';
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers');
     return this.httpClient.get<CLAManagersModel>(url);
   }
 
   addCompany(userId: string, data: any): Observable<CompanyModel> {
-    const url = this.v4BaseUrl + 'v4/user/' + userId + '/company';
+    const url = this.getV4Endpoint('/v4/user/' + userId + '/company');
     return this.httpClient.post<CompanyModel>(url, data);
   }
 
   getCompanyAdminList(companySFID: string): Observable<CompnayAdminListModel> {
-    const url = this.v4BaseUrl + 'v4/company/' + companySFID + '/admin';
+    const url = this.getV4Endpoint('/v4/company/' + companySFID + '/admin');
     return this.httpClient.get<CompnayAdminListModel>(url);
   }
 
   addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
-    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee';
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee');
     return this.httpClient.post<any>(url, data);
   }
 
   hasRoleAssigned(companyId: string, projectId: string, userLFID: string): Observable<any> {
-    const url = this.v4BaseUrl + 'v4/company/' + companyId + '/user/' + userLFID + '/claGroupID/' + projectId + '/is-cla-manager-designee';
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/user/' + userLFID + '/claGroupID/' + projectId + '/is-cla-manager-designee');
     return this.httpClient.get<any>(url);
   }
 
@@ -265,7 +282,7 @@ export class ClaContributorService {
   }
 
   downloadFile(projectId: string, claType: string) {
-    const url = this.v4BaseUrl + 'v4/template/' + projectId + '/preview?watermark=true&claType=' + claType;
+    const url = this.getV4Endpoint('/v4/template/' + projectId + '/preview?watermark=true&claType=' + claType);
     let fileName = claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
     fileName += '_License_Agreement.pdf';
     this.saveAs(url, fileName);
@@ -283,5 +300,69 @@ export class ClaContributorService {
     };
 
     oReq.send();
+  }
+
+  /**
+   * Constructs a URL based on the path and endpoint host:port.
+   * @param path the URL path
+   * @returns a URL to the V1 endpoint with the specified path. If running in local mode, the endpoint will point to a
+   * local host:port - otherwise the endpoint will point the appropriate environment endpoint running in the cloud.
+   */
+  private getV1Endpoint(path: string): string {
+    let url: URL;
+    if (this.localTesting) {
+      url = new URL(this.v1ClaAPIURLLocal + path);
+    } else {
+      url = new URL(this.baseURL + path);
+    }
+    return url.toString();
+  }
+
+  /**
+   * Constructs a URL based on the path and endpoint host:port.
+   * @param path the URL path
+   * @returns a URL to the V2 endpoint with the specified path. If running in local mode, the endpoint will point to a
+   * local host:port - otherwise the endpoint will point the appropriate environment endpoint running in the cloud.
+   */
+  private getV2Endpoint(path: string): string {
+    let url: URL;
+    if (this.localTesting) {
+      url = new URL(this.v2ClaAPIURLLocal + path);
+    } else {
+      url = new URL(this.baseURL + path);
+    }
+    return url.toString();
+  }
+
+  /**
+   * Constructs a URL based on the path and endpoint host:port.
+   * @param path the URL path
+   * @returns a URL to the V3 endpoint with the specified path. If running in local mode, the endpoint will point to a
+   * local host:port - otherwise the endpoint will point the appropriate environment endpoint running in the cloud.
+   */
+  private getV3Endpoint(path: string): string {
+    let url: URL;
+    if (this.localTesting) {
+      url = new URL(this.v3ClaAPIURLLocal + path);
+    } else {
+      url = new URL(this.baseURL + path);
+    }
+    return url.toString();
+  }
+
+  /**
+   * Constructs a URL based on the path and endpoint host:port.
+   * @param path the URL path
+   * @returns a URL to the V4 endpoint with the specified path. If running in local mode, the endpoint will point to a
+   * local host:port - otherwise the endpoint will point the appropriate environment endpoint running in the cloud.
+   */
+  private getV4Endpoint(path: string): string {
+    let url: URL;
+    if (this.localTesting) {
+      url = new URL(this.v4ClaAPIURLLocal + path);
+    } else {
+      url = new URL(this.v4BaseUrl + path);
+    }
+    return url.toString();
   }
 }

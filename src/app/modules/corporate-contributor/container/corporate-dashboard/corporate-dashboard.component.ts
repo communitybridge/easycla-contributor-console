@@ -183,6 +183,20 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
           if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
             this.openWithDismiss(this.signedCLANotFoundModal);
           } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
+            // Check if response company_id matches the user's selected company. If not match, update local storage with
+            // the updated company information
+            const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+            if (response.errors.company_id !== selectedCompany.companyID) {
+              // Discovered that the API has changed the company...
+              const updatedOrgModel = new OrganizationModel();
+              updatedOrgModel.companyID = response.errors.company_id;
+              updatedOrgModel.companyExternalID = response.errors.company_external_id;
+              updatedOrgModel.companyName = response.errors.company_name;
+              updatedOrgModel.signingEntityName = response.errors.signing_entity_name;
+              this.storageService.setItem(AppSettings.SELECTED_COMPANY, updatedOrgModel);
+              // Potentially show user a dialog to say that we found that a CLA manager has already setup a CCLA under
+              // a different Signed Entity Name - perhaps show informational dialog...tell them that we have swapped
+            }
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);
           } else {
@@ -328,7 +342,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         // Sort the signing entity name values under the parent organization/company
         response.list.forEach((item: Organization) => {
           if (item.signing_entity_names !== null && item.signing_entity_names.length > 0) {
-            item.signing_entity_names = item.signing_entity_names.sort((a: string, b: string) => (a < b ? -1 : 1));
+            item.signing_entity_names = item.signing_entity_names.sort((a: string, b: string) =>
+              (a.toLowerCase() < b.toLowerCase() ? -1 : 1));
           }
         });
         this.organizationList = response;

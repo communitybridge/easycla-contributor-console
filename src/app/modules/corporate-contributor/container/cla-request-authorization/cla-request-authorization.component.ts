@@ -47,7 +47,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
   ngOnInit(): void {
     this.hasSelectAll = false;
     this.claManagerError = 'Wait... we are loading CLA manager(s).';
-    this.company = JSON.parse(this.storageService.getItem('selectedCompany'));
+    this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     if (this.company) {
       this.selectedCompany = this.company.companyID;
       this.getCLAManagers();
