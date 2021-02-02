@@ -51,7 +51,7 @@ export class ClaContributorService {
     } else {
       console.log('Running in deployed services mode');
     }
-    this.localTesting = isDevMode()
+    this.localTesting = isDevMode();
   }
 
 
@@ -173,7 +173,7 @@ export class ClaContributorService {
   }
 
   notifyCLAMangers(data: any): Observable<any> {
-    const url = this.v4BaseUrl + 'v4/notify-cla-managers';
+    const url = this.getV4Endpoint('/v4/notify-cla-managers');
     return this.httpClient.post<any>(url, data);
   }
 
