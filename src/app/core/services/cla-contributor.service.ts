@@ -31,7 +31,7 @@ export class ClaContributorService {
   localTesting = false;
   baseURL: string = EnvConfig.default['api-base'];
   v4BaseUrl: string = EnvConfig.default['api-v4-base'];
-  corporateV2Base: string = EnvConfig.default['corporate-v2-base'];
+  corporateV2Base: string = EnvConfig.default['corporate-v2-base'] + '/';
 
   v1ClaAPIURLLocal = 'http://localhost:5000';
   v2ClaAPIURLLocal = 'http://localhost:5000';
