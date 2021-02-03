@@ -78,7 +78,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(data.signingEntityName, response.companyID);
+        this.getOrganizationInformation(response.companyID);
       },
       (exception) => {
         this.title = 'Request Failed';
@@ -88,8 +88,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     );
   }
 
-  getOrganizationInformation(signingEntityName, companySFID) {
-    this.claContributorService.getSigningEntityNameDetails(signingEntityName, companySFID).subscribe(
+  getOrganizationInformation(companySFID) {
+    this.claContributorService.getOrganizationDetails(companySFID).subscribe(
       (response) => {
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.company = response;
@@ -104,7 +104,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
           this.message = exception.error.Message;
           this.openDialog(this.errorModal);
         } else {
-          this.getOrganizationInformation(signingEntityName, companySFID);
+          this.getOrganizationInformation(companySFID);
         }
       }
     );
@@ -220,11 +220,9 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
-
-      let corporateUrl = this.claContributorService.getLFXCorporateURL();
+      const corporateUrl = this.claContributorService.getLFXCorporateURL();
       if (corporateUrl !== '') {
         setTimeout(() => {
-          corporateUrl += '?signingEntityCompanyId=' + this.company.companyID;
           this.storageService.removeItem(AppSettings.ACTION_TYPE);
           window.open(corporateUrl, '_blank');
         }, 4500);

@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {PlatformLocation} from '@angular/common';
-import {Organization, OrganizationListModel, OrganizationModel} from 'src/app/core/models/organization';
-import {StorageService} from 'src/app/shared/services/storage.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AlertService} from 'src/app/shared/services/alert.service';
-import {ProjectModel} from 'src/app/core/models/project';
-import {AppSettings} from 'src/app/config/app-settings';
-import {Subscription} from 'rxjs';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
+import { Organization, OrganizationListModel, OrganizationModel } from 'src/app/core/models/organization';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { ProjectModel } from 'src/app/core/models/project';
+import { AppSettings } from 'src/app/config/app-settings';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -48,7 +48,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
   attempt: boolean;
-  selectedEntityName: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -68,26 +67,38 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.modalService.dismissAll();
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
-      if (result.action === 'CLA_NOT_SIGN') {
-        this.openWithDismiss(this.signedCLANotFoundModal);
-      } else if (result.action === 'IDENTIFY_CLA_MANAGER') {
-        this.openWithDismiss(this.identifyCLAManager);
-      } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
-        this.openWithDismiss(this.addCompany);
-      } else if (result.action === 'RETRY_CONFIG_CLA_MANAGER') {
-        this.open(this.configureCLAManager);
-      } else if (result.action === 'ADD_NEW_ORGANIZATION') {
-        const entityName = result.payload ? result.payload.signing_entity_names : [];
-        const hasEntityExist = entityName.indexOf(result.signingEntityName) >= 0 ? true : false;
-        if (hasEntityExist) {
-          // If organization already exist.
-          this.onSelectCompany(result.payload, result.signingEntityName);
-          this.onClickProceed();
-        } else {
-          // Newly created organization
-          this.form.controls.companyName.setValue('');
+      switch (result.action) {
+        case 'CLA_NOT_SIGN':
           this.openWithDismiss(this.signedCLANotFoundModal);
-        }
+          break;
+        case 'IDENTIFY_CLA_MANAGER':
+          this.openWithDismiss(this.identifyCLAManager);
+          break;
+        case 'BACK_TO_ADD_ORGANIZATION':
+          this.openWithDismiss(this.addCompany);
+          break;
+        case 'RETRY_CONFIG_CLA_MANAGER':
+          this.open(this.configureCLAManager);
+          break;
+        case 'ADD_NEW_ORGANIZATION':
+          if (result.payload !== undefined && result.payload !== null) {
+            if (result.payload.organization_id) {
+              // If organization already exist in SF.
+              this.onSelectCompany(result.payload);
+              this.onClickProceed();
+            } else {
+              // If organization not in SF but present in clearbit.
+              this.form.controls.companyName.setValue('');
+              this.openWithDismiss(this.signedCLANotFoundModal);
+            }
+          } else {
+            // Newly created organization
+            this.form.controls.companyName.setValue('');
+            this.openWithDismiss(this.signedCLANotFoundModal);
+          }
+          break;
+        default:
+          break;
       }
     });
   }
@@ -140,18 +151,17 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.open(this.addCompany);
   }
 
-  onSelectCompany(organization: Organization, entityName?: string) {
+  onSelectCompany(organization: Organization) {
     if (organization !== null) {
       this.hasShowDropdown = false;
       this.selectedCompany = organization.organization_id;
-      this.selectedEntityName = entityName ? entityName : organization.organization_name;
-      this.searchBoxValue = this.selectedEntityName;
+      this.searchBoxValue = organization.organization_name;
       this.form.controls.companyName.setValue(this.searchBoxValue);
     }
   }
 
   getOrganizationInformation() {
-    this.claContributorService.getSigningEntityNameDetails(this.selectedEntityName, this.selectedCompany).subscribe(
+    this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
       (response) => {
         this.organization = response;
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
@@ -183,20 +193,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
           if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
             this.openWithDismiss(this.signedCLANotFoundModal);
           } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
-            // Check if response company_id matches the user's selected company. If not match, update local storage with
-            // the updated company information
-            const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
-            if (response.errors.company_id !== selectedCompany.companyID) {
-              // Discovered that the API has changed the company...
-              const updatedOrgModel = new OrganizationModel();
-              updatedOrgModel.companyID = response.errors.company_id;
-              updatedOrgModel.companyExternalID = response.errors.company_external_id;
-              updatedOrgModel.companyName = response.errors.company_name;
-              updatedOrgModel.signingEntityName = response.errors.signing_entity_name;
-              this.storageService.setItem(AppSettings.SELECTED_COMPANY, updatedOrgModel);
-              // Potentially show user a dialog to say that we found that a CLA manager has already setup a CCLA under
-              // a different Signed Entity Name - perhaps show informational dialog...tell them that we have swapped
-            }
             const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
             this.router.navigate([url]);
           } else {
@@ -339,13 +335,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.claContributorService.searchOrganization(companyName).subscribe(
       (response) => {
         this.noCompanyFound = false;
-        // Sort the signing entity name values under the parent organization/company
-        response.list.forEach((item: Organization) => {
-          if (item.signing_entity_names !== null && item.signing_entity_names.length > 0) {
-            item.signing_entity_names = item.signing_entity_names.sort((a: string, b: string) =>
-              (a.toLowerCase() < b.toLowerCase() ? -1 : 1));
-          }
-        });
         this.organizationList = response;
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;

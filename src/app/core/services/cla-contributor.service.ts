@@ -51,7 +51,7 @@ export class ClaContributorService {
     } else {
       console.log('Running in deployed services mode');
     }
-    this.localTesting = isDevMode();
+    // this.localTesting = isDevMode();
   }
 
 

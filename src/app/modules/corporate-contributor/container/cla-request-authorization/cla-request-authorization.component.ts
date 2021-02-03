@@ -86,12 +86,14 @@ export class ClaRequestAuthorizationComponent implements OnInit {
 
   getSelectedCLAManagers() {
     const list = [];
-    for (const manager of this.managers.list) {
-      if (manager.hasChecked) {
-        list.push({
-          email: manager.email,
-          name: manager.name
-        });
+    if (this.managers) {
+      for (const manager of this.managers.list) {
+        if (manager.hasChecked) {
+          list.push({
+            email: manager.email,
+            name: manager.name
+          });
+        }
       }
     }
     return list;
@@ -162,7 +164,7 @@ export class ClaRequestAuthorizationComponent implements OnInit {
     this.claContributorService.getProjectCLAManagers(this.projectId, this.selectedCompany).subscribe(
       (response: CLAManagersModel) => {
         this.managers = response;
-        if (!this.managers.list) {
+        if (this.managers && !this.managers.list) {
           this.claManagerError = 'No CLA manager found.';
         }
       },

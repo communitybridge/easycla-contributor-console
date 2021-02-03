@@ -20,19 +20,21 @@
                             <div class="row justify-content-center align-items-center">
                                 <div class="col-12 header">CLA Manager(s) for your Organization
                                 </div>
-                                <div class="col-12 error" *ngIf="!managers.list">{{claManagerError}}</div>
-                                <div *ngIf="managers.list" class="col-12 manager-list">
-                                    <div class="item">
-                                        <app-checkbox [checked]="hasSelectAll" text="Select All"
-                                            (checkboxEmitter)="onClickSelectAll($event)">
-                                        </app-checkbox>
-                                    </div>
-                                    <div class="separator"></div>
-                                    <div class="scrollable">
-                                        <div *ngFor="let manager of managers.list" class="item">
-                                            <app-checkbox [checked]="manager.hasChecked" [text]="manager.name"
-                                                (checkboxEmitter)="onClickCheckbox($event,manager)">
+                                <div *ngIf="managers">
+                                    <div class="col-12 error" *ngIf="!managers.list">{{claManagerError}}</div>
+                                    <div *ngIf="managers.list" class="col-12 manager-list">
+                                        <div class="item">
+                                            <app-checkbox [checked]="hasSelectAll" text="Select All"
+                                                (checkboxEmitter)="onClickSelectAll($event)">
                                             </app-checkbox>
+                                        </div>
+                                        <div class="separator"></div>
+                                        <div class="scrollable">
+                                            <div *ngFor="let manager of managers.list" class="item">
+                                                <app-checkbox [checked]="manager.hasChecked" [text]="manager.name"
+                                                    (checkboxEmitter)="onClickCheckbox($event,manager)">
+                                                </app-checkbox>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
