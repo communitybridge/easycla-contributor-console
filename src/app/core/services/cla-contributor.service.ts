@@ -83,6 +83,7 @@ export class ClaContributorService {
     if (organizationWebsite) {
       url += 'websiteName=' + organizationWebsite;
     }
+    url += '&include-signing-entity-name=false';
     return this.httpClient.get<OrganizationListModel>(url);
   }
 
