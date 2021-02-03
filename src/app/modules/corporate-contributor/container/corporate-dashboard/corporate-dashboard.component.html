@@ -48,10 +48,6 @@
                                                 <div class="col-6 ellipsis">{{organization.organization_website}}
                                                 </div>
                                             </div>
-                                            <ng-container [ngTemplateOutlet]="treeView"
-                                                [ngTemplateOutletContext]="{organization:organization}">
-                                            </ng-container>
-
                                         </div>
 
                                     </div>
@@ -87,20 +83,6 @@
         </div>
     </div>
 </div>
-
-
-<ng-template #treeView let-organization="organization">
-    <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
-        <div class="row" (click)="onSelectCompany(organization,entity)">
-            <div class="col-6 ellipsis child">
-                {{entity}}
-            </div>
-            <div class="col-6 ellipsis">
-                {{organization.organization_website}}
-            </div>
-        </div>
-    </div>
-</ng-template>
 
 <ng-template #addCompany let-modal>
     <div class="model">

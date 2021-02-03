@@ -62,13 +62,6 @@ export class AddCompanyModalComponent implements OnInit {
         Validators.minLength(2),
         Validators.maxLength(255)
       ])],
-      entityName: ['', Validators.compose([
-        Validators.required,
-        Validators.pattern(AppSettings.COMPANY_NAME_REGEX),
-        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
-        Validators.minLength(2),
-        Validators.maxLength(255)
-      ])],
       companyWebsite: ['', Validators.compose([
         Validators.required,
         Validators.pattern(AppSettings.URL_PATTERN),
@@ -171,7 +164,6 @@ export class AddCompanyModalComponent implements OnInit {
         this.selectedOrganization.organization_id = response.ID;
         this.selectedOrganization.organization_name = response.Name;
         this.selectedOrganization.organization_website = response.Link;
-        this.selectedOrganization.signing_entity_names = response.signingEntityNames === null ? [] : response.signingEntityNames;
         if (response.Name === undefined || response.Name === null || response.Name === '') {
           // If clearbit not return Name then alllow user to add organization name.
           this.form.controls.companyName.setValue('');
@@ -226,7 +218,7 @@ export class AddCompanyModalComponent implements OnInit {
     const newOrgData = {
       companyName: this.form.controls.companyName.value,
       companyWebsite: this.form.controls.companyWebsite.value,
-      signingEntityName: this.form.controls.entityName.value,
+      signingEntityName: this.form.controls.companyName.value,
       userEmail: publicEmail,
       createdBy: userModel.user_id,
     };
@@ -235,14 +227,12 @@ export class AddCompanyModalComponent implements OnInit {
     this.onClickDialogBtn();
   }
 
-  onSelectOrganization(e, organization, entityName?) {
+  onSelectOrganization(e, organization) {
     e.stopPropagation();
     e.preventDefault();
-    entityName = entityName ? entityName : '';
     this.form.controls.companyWebsite.setValue(organization.organization_website);
     this.form.controls.companyName.setValue(organization.organization_name);
     this.hasReadonly = true;
-    this.form.controls.entityName.setValue(entityName);
     this.organizationList = new OrganizationListModel();
     this.hasShowDropdown = false;
     this.onFocusOut();
@@ -260,8 +250,7 @@ export class AddCompanyModalComponent implements OnInit {
     if (!this.hasError) {
       const data = {
         action: 'ADD_NEW_ORGANIZATION',
-        payload: this.selectedOrganization,
-        signingEntityName: this.form.controls.entityName.value,
+        payload: this.selectedOrganization
       };
       this.modalService.dismissAll();
       this.claContributorService.openDialogModalEvent.next(data);

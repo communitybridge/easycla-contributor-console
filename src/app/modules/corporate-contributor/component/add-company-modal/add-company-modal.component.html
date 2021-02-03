@@ -7,9 +7,9 @@
             <div class="row">
                 <div class="col-11 element">
                     <div class="title">Your Organization Website</div>
-                    <input #organizationWebsite type="text" autocomplete="off" name="companyWebsite" (input)="onWebsiteKeypress()"
-                        placeholder="Your Organization Website" formControlName="companyWebsite"
-                        (focusout)="onFocusOut()" tabindex="1" class="form-control" />
+                    <input #organizationWebsite type="text" autocomplete="off" name="companyWebsite"
+                        (input)="onWebsiteKeypress()" placeholder="Your Organization Website"
+                        formControlName="companyWebsite" (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
                     <div
@@ -29,9 +29,9 @@
 
                 <div class="col-11 element">
                     <div class="title">Organization Name</div>
-                    <input #organizationName type="text" autocomplete="off" name="companyName" placeholder="Organization Name"
-                        (input)="onNameKeypress()" [readonly]="hasReadonly" formControlName="companyName" tabindex="2"
-                        class="form-control" />
+                    <input #organizationName type="text" autocomplete="off" name="companyName"
+                        placeholder="Organization Name" (input)="onNameKeypress()" [readonly]="hasReadonly"
+                        formControlName="companyName" tabindex="2" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
                     </ng-container>
                     <div
@@ -47,28 +47,6 @@
                         </div>
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            HTML tags are not allowed.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-11 element">
-                    <div class="title">Signing Entity Name</div>
-                    <input #organizationName type="text" autocomplete="off" name="entityName" placeholder="Signing Entity Name"
-                        formControlName="entityName" tabindex="3" class="form-control" />
-                    <div
-                        *ngIf="form.controls.entityName.errors  && (form.controls.entityName.dirty || form.controls.entityName.touched)">
-                        <div [hidden]="!form.controls.entityName.errors.required" class="error">
-                            Signing entity name is required.
-                        </div>
-                        <div [hidden]="!form.controls.entityName.errors.minlength" class="error">
-                            Signing entity name should be at least 2 characters.
-                        </div>
-                        <div [hidden]="!form.controls.entityName.errors.maxlength" class="error">
-                            Signing entity name should not exceed 255 characters.
-                        </div>
-                        <div *ngIf="form.controls.entityName.value.length > 1"
-                            [hidden]="!form.controls.entityName.errors.pattern" class="error">
                             HTML tags are not allowed.
                         </div>
                     </div>
@@ -120,7 +98,7 @@
 
 <ng-template #treeView let-organization="organization">
     <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
-        <div class="row" (click)="onSelectOrganization($event,organization,entity)">
+        <div class="row" (click)="onSelectOrganization($event,organization)">
             <div class="col-6 ellipsis child">
                 {{entity}}
             </div>
