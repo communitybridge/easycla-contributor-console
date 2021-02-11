@@ -92,6 +92,7 @@ export class AuthService {
   }
 
   handlerReturnToAferlogout() {
+    this.storageService.removeItem(AppSettings.AUTH_DATA);
     const { query } = querystring.parseUrl(this.currentHref);
     const returnTo = query.returnTo;
     if (returnTo) {
