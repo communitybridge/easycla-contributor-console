@@ -131,6 +131,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   addContributorAsDesignee() {
+    this.failedCount = 0;
     const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     const data = {
       userEmail: authData.user_email
@@ -153,10 +154,15 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         } else if (exception.status === 401) {
           this.authService.login();
         } else {
-          this.title = 'Request Failed';
-          this.storageService.removeItem(AppSettings.ACTION_TYPE);
-          this.message = exception.error.Message;
-          this.openDialog(this.errorModal);
+          this.failedCount++;
+          if (this.failedCount <= 1) {
+            this.addAsCLAManagerDesignee(data);
+          } else {
+            this.title = 'Request Failed';
+            this.storageService.removeItem(AppSettings.ACTION_TYPE);
+            this.message = exception.error.Message ? exception.error.Message : exception.error.message;
+            this.openDialog(this.errorModal);
+          }
         }
       }
     );
