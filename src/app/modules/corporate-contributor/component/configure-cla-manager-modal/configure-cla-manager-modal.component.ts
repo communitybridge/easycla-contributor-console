@@ -132,11 +132,19 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   addContributorAsDesignee() {
     this.failedCount = 0;
-    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
-    const data = {
-      userEmail: authData.user_email
-    };
-    this.addAsCLAManagerDesignee(data);
+    const interval = setInterval(() => {
+      const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+      if (authData) {
+        console.log('Auth data Found');
+        const data = {
+          userEmail: authData.user_email
+        };
+        this.addAsCLAManagerDesignee(data);
+        clearInterval(interval);
+      } else {
+        console.log('Waiting for getting auth data ...');
+      }
+    }, 100);
   }
 
   addAsCLAManagerDesignee(data: any) {
@@ -155,8 +163,10 @@ export class ConfigureClaManagerModalComponent implements OnInit {
           this.authService.login();
         } else {
           this.failedCount++;
-          if (this.failedCount <= 1) {
-            this.addAsCLAManagerDesignee(data);
+          if (this.failedCount <= AppSettings.MAX_CLA_MANAGER_DESIGNEE_RETRY_COUNT) {
+            setTimeout(() => {
+              this.addAsCLAManagerDesignee(data);
+            }, 200);
           } else {
             this.title = 'Request Failed';
             this.storageService.removeItem(AppSettings.ACTION_TYPE);
