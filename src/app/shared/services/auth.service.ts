@@ -217,6 +217,7 @@ export class AuthService {
     const cookieName = `auth-${this.auth0Options.domain}`;
     const cookieExists = this.getCookie(cookieName);
     if (cookieExists) {
+      console.log('triggering login by cookies ');
       this.login();
       return;
     }
@@ -275,12 +276,22 @@ export class AuthService {
           targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
         }),
         concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
-        catchError((err) => of(console.log('Error occured while getting Auth0 data ' + err)))
+        catchError((err) => {
+          console.log('Error occured while getting Auth0 data ', { err });
+          this.checkUserSessionByCookie();
+          return of('invalid_state');
+        })
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
-      authComplete$.subscribe(() => {
+      authComplete$.subscribe((message: any) => {
         this.loading$.next(false);
+        if (message === 'invalid_state') {
+          console.log('triggering login by invali_state ');
+          this.login();
+          return;
+        }
+        
         if (!targetRoute) {
           return this.router.navigateByUrl('/auth');
         }
