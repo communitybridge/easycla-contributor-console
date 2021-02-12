@@ -170,35 +170,6 @@ export class AuthService {
     );
   }
 
-  handleAuthCallback() {
-    // Call when app reloads after user logs in with Auth0
-    const params = this.currentHref;
-
-    if (params.includes('code=') && params.includes('state=')) {
-      console.log('code=' + params.includes('code='));
-      console.log('state=' + params.includes('state='));
-      let targetRoute = ''; // Path to redirect to after login processsed
-      const authComplete$ = this.handleRedirectCallback$.pipe(
-        // Have client, now call method to handle auth callback redirect
-        tap((cbRes: any) => {
-          targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
-        }),
-        concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
-        catchError(() => of(console.log('Error occured while getting Auth0 data')))
-      );
-      // Subscribe to authentication completion observable
-      // Response will be an array of user and login status
-      authComplete$.subscribe(() => {
-        this.loading$.next(false);
-        if (!targetRoute) {
-          return this.router.navigateByUrl('/auth');
-        }
-        const url = '/auth?targetRoute=' + (targetRoute || '');
-        this.router.navigateByUrl(url);
-      });
-    }
-  }
-
   private async localAuthSetup() {
     // This should only be called on app initialization
     // Set up local authentication streams
@@ -290,6 +261,33 @@ export class AuthService {
     }
     const { pathname } = new Url(returnTo);
     return pathname || '/';
+  }
+
+  private handleAuthCallback() {
+    // Call when app reloads after user logs in with Auth0
+    const params = this.currentHref;
+
+    if (params.includes('code=') && params.includes('state=')) {
+      let targetRoute = ''; // Path to redirect to after login processsed
+      const authComplete$ = this.handleRedirectCallback$.pipe(
+        // Have client, now call method to handle auth callback redirect
+        tap((cbRes: any) => {
+          targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
+        }),
+        concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
+        catchError((err) => of(console.log('Error occured while getting Auth0 data ' + err)))
+      );
+      // Subscribe to authentication completion observable
+      // Response will be an array of user and login status
+      authComplete$.subscribe(() => {
+        this.loading$.next(false);
+        if (!targetRoute) {
+          return this.router.navigateByUrl('/auth');
+        }
+        const url = '/auth?targetRoute=' + (targetRoute || '');
+        this.router.navigateByUrl(url);
+      });
+    }
   }
 
 
