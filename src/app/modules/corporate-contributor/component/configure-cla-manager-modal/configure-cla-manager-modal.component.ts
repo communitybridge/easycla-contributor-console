@@ -142,9 +142,17 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.addAsCLAManagerDesignee(data);
         clearInterval(interval);
       } else {
-        console.log('Waiting for getting auth data ...');
+        // Wait 20 sec to get response from Auth0 otherwise show an error.
+        this.failedCount++;
+        if (this.failedCount > 20) {
+          this.failedCount = 0;
+          this.title = 'Request Failed';
+          this.message = 'Error while getting user info from Auth0, please refresh the page.';
+          this.openDialog(this.errorModal);
+          clearInterval(interval);
+        }
       }
-    }, 100);
+    }, 1000);
   }
 
   addAsCLAManagerDesignee(data: any) {
