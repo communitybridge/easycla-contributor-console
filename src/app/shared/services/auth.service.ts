@@ -175,6 +175,8 @@ export class AuthService {
     const params = this.currentHref;
 
     if (params.includes('code=') && params.includes('state=')) {
+      console.log('code=' + params.includes('code='));
+      console.log('state=' + params.includes('state='));
       let targetRoute = ''; // Path to redirect to after login processsed
       const authComplete$ = this.handleRedirectCallback$.pipe(
         // Have client, now call method to handle auth callback redirect
