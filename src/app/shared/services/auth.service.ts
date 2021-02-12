@@ -263,7 +263,7 @@ export class AuthService {
     return pathname || '/';
   }
 
-  private handleAuthCallback() {
+  handleAuthCallback() {
     // Call when app reloads after user logs in with Auth0
     const params = this.currentHref;
 
@@ -275,7 +275,7 @@ export class AuthService {
           targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
         }),
         concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
-        catchError(() => of(true))
+        catchError(() => of(console.log('Error occured while getting Auth0 data')))
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
