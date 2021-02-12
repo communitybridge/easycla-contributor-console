@@ -144,6 +144,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       } else {
         // Wait 20 sec to get response from Auth0 otherwise show an error.
         this.failedCount++;
+        this.authService.handleAuthCallback();
         if (this.failedCount > 20) {
           this.failedCount = 0;
           this.title = 'Request Failed';
