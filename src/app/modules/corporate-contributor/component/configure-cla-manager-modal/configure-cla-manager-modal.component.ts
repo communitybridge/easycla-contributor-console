@@ -142,13 +142,12 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.addAsCLAManagerDesignee(data);
         clearInterval(interval);
       } else {
-        // Wait 20 sec to get response from Auth0 otherwise show an error.
+        // Wait 15 sec to get response from Auth0 otherwise show an error.
         this.failedCount++;
-        this.authService.handleAuthCallback();
-        if (this.failedCount > 20) {
+        if (this.failedCount > 15) {
           this.failedCount = 0;
           this.title = 'Request Failed';
-          this.message = 'Error while getting user info from Auth0, please refresh the page.';
+          this.message = 'Error while fetching user info from Auth0 service, please refresh the page.';
           this.openDialog(this.errorModal);
           clearInterval(interval);
         }
