@@ -3,17 +3,17 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, from, Observable, of, throwError} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, from, Observable, of, throwError } from 'rxjs';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import {catchError, concatMap, shareReplay, tap} from 'rxjs/operators';
-import {Router} from '@angular/router';
+import { catchError, concatMap, shareReplay, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import * as querystring from 'query-string';
 import Url from 'url-parse';
-import {EnvConfig} from '../../config/cla-env-utils';
-import {AppSettings} from 'src/app/config/app-settings';
-import {StorageService} from './storage.service';
+import { EnvConfig } from '../../config/cla-env-utils';
+import { AppSettings } from 'src/app/config/app-settings';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +83,7 @@ export class AuthService {
     // Set up local auth streams if user is already authenticated
     const params = this.currentHref;
     if (params.includes('code=') && params.includes('state=')) {
+      console.log('Auth0 code and state are found.');
       this.handleAuthCallback();
       return;
     }
@@ -92,6 +93,7 @@ export class AuthService {
   }
 
   handlerReturnToAferlogout() {
+    console.log('In handlerReturnToAferlogout()');
     this.storageService.removeItem(AppSettings.AUTH_DATA);
     const { query } = querystring.parseUrl(this.currentHref);
     const returnTo = query.returnTo;
@@ -108,6 +110,8 @@ export class AuthService {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap((user) => {
+        console.log('In getUser$');
+        console.log(user);
         this.setSession(user);
         this.userProfileSubject$.next(user);
       })
@@ -171,6 +175,7 @@ export class AuthService {
     // Set up local authentication streams
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
+        console.log('In localAuthSetup() and loggedIn=' + loggedIn);
         if (loggedIn) {
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
