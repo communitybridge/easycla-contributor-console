@@ -1,14 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, ViewChild, TemplateRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlatformLocation } from '@angular/common';
-import { OrganizationModel, OrganizationListModel, Organization } from 'src/app/core/models/organization';
+import { Organization, OrganizationListModel, OrganizationModel } from 'src/app/core/models/organization';
 import { StorageService } from 'src/app/shared/services/storage.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AppSettings } from 'src/app/config/app-settings';
@@ -67,25 +67,44 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.modalService.dismissAll();
     });
     this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
-      if (result.action === 'CLA_NOT_SIGN') {
-        this.openWithDismiss(this.signedCLANotFoundModal);
-      } else if (result.action === 'IDENTIFY_CLA_MANAGER') {
-        this.openWithDismiss(this.identifyCLAManager);
-      } else if (result.action === 'BACK_TO_ADD_ORGANIZATION') {
-        this.openWithDismiss(this.addCompany);
-      } else if (result.action === 'ADD_NEW_ORGANIZATION') {
-        this.onSelectCompany(result.payload);
-        this.openWithDismiss(this.signedCLANotFoundModal);
+      switch (result.action) {
+        case 'CLA_NOT_SIGN':
+          this.openWithDismiss(this.signedCLANotFoundModal);
+          break;
+        case 'IDENTIFY_CLA_MANAGER':
+          this.openWithDismiss(this.identifyCLAManager);
+          break;
+        case 'BACK_TO_ADD_ORGANIZATION':
+          this.openWithDismiss(this.addCompany);
+          break;
+        case 'RETRY_CONFIG_CLA_MANAGER':
+          this.open(this.configureCLAManager);
+          break;
+        case 'ADD_NEW_ORGANIZATION':
+          if (result.payload !== undefined && result.payload !== null) {
+            if (result.payload.organization_id) {
+              // If organization already exist in SF.
+              this.onSelectCompany(result.payload);
+              this.onClickProceed();
+            } else {
+              // If organization not in SF but present in clearbit.
+              this.form.controls.companyName.setValue('');
+              this.openWithDismiss(this.signedCLANotFoundModal);
+            }
+          } else {
+            // Newly created organization
+            this.form.controls.companyName.setValue('');
+            this.openWithDismiss(this.signedCLANotFoundModal);
+          }
+          break;
+        default:
+          break;
       }
-    });
-
-    this.proccedWithExistingOrganization = this.claContributorService.proccedWithExistingOrganizationEvent.subscribe((organization) => {
-      this.onSelectCompany(organization);
-      this.onClickProceed();
     });
   }
 
   ngOnInit(): void {
+
     this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.emptySearchError = true;
@@ -137,7 +156,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.hasShowDropdown = false;
       this.selectedCompany = organization.organization_id;
       this.searchBoxValue = organization.organization_name;
-      this.form.controls.companyName.setValue(organization.organization_name);
+      this.form.controls.companyName.setValue(this.searchBoxValue);
     }
   }
 
@@ -255,6 +274,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (this.hasError) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
+    } else {
+      this.redirectToSource();
     }
   }
 

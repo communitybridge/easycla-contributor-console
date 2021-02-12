@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, Input, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-docusign-signature-model',
@@ -13,7 +13,8 @@ export class DocusignSignatureModelComponent {
   @Output() backBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() signCLAEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {
+  }
 
   onClickBack() {
     this.backBtnEmitter.emit();

@@ -1,18 +1,18 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
-import {StorageService} from 'src/app/shared/services/storage.service';
-import {UserModel} from 'src/app/core/models/user';
-import {ProjectModel} from 'src/app/core/models/project';
-import {CompanyModel, OrganizationModel} from 'src/app/core/models/organization';
-import {AlertService} from 'src/app/shared/services/alert.service';
-import {EmailValidator} from 'src/app/shared/validators/email-validator';
-import {AppSettings} from 'src/app/config/app-settings';
-import {CompanyAdminDesigneeModel, CompnayAdminListModel} from 'src/app/core/models/company-admin-designee';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { UserModel } from 'src/app/core/models/user';
+import { ProjectModel } from 'src/app/core/models/project';
+import { CompanyModel, OrganizationModel } from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { EmailValidator } from 'src/app/shared/validators/email-validator';
+import { AppSettings } from 'src/app/config/app-settings';
+import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -21,12 +21,14 @@ import {CompanyAdminDesigneeModel, CompnayAdminListModel} from 'src/app/core/mod
 })
 export class IdentifyClaManagerModalComponent implements OnInit {
   @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('inputBox') element: ElementRef;
+
   hasShowContactAdmin: boolean;
   form: FormGroup;
   message: string;
   title: string;
   hasError: boolean;
-  companyId: string;
+  failedCount: number;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,17 +40,20 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.failedCount = 0;
     this.hasShowContactAdmin = false;
+
     setTimeout(() => {
       this.hasShowContactAdminSection();
     }, 50);
+
     this.form = this.formBuilder.group({
       name: ['', Validators.compose([
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(255),
-          Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
-        ]
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(255),
+        Validators.pattern(new RegExp(AppSettings.USER_FIRST_LAST_NAME_REGEX)),
+      ]
       )],
       email: ['', Validators.compose([
         Validators.required,
@@ -76,12 +81,12 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
-        this.companyId = response.companyID;
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(this.companyId);
+        this.getOrganizationInformation(response.companyID);
       },
       (exception) => {
-        this.alertService.error(exception.error.Message);
+        const msg = exception.error.Message ? exception.error.Message : exception.error.message;
+        this.alertService.error(msg);
       }
     );
   }
@@ -92,10 +97,18 @@ export class IdentifyClaManagerModalComponent implements OnInit {
         this.storageService.setItem(AppSettings.SELECTED_COMPANY, response);
         this.inviteCLAManager(false);
       },
-      () => {
+      (exception) => {
         // To add org in salesforce take couple of seconds
-        // So called getOrganizationInformation metod till result comes
-        this.getOrganizationInformation(this.companyId);
+        // So called getOrganizationInformation method till result comes
+        this.failedCount++;
+        if (this.failedCount >= AppSettings.MAX_FAILED_COUNT) { // end API call after 20 time failed
+          this.hasError = true;
+          this.title = 'Request Failed';
+          this.message = exception.error.message;
+          this.openDialogModal();
+        } else {
+          this.getOrganizationInformation(companySFID);
+        }
       }
     );
   }
@@ -109,7 +122,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
       claGroupID: project.project_id,
       name: hasCompanyAdmin ? '' : this.form.controls.name.value,
       userEmail: hasCompanyAdmin ? '' : this.form.controls.email.value
-    }
+    };
     this.callInviteManagerAPI(data, hasCompanyAdmin);
   }
 
@@ -171,6 +184,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     this.claContributorService.getCompanyAdminList(selectedCompany.companyExternalID).subscribe(
       (response: CompnayAdminListModel) => {
+        this.element.nativeElement.focus();
         if (response.list.length > 0) {
           this.hasShowContactAdmin = true;
         }
@@ -216,7 +230,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const data = {
       action: 'CLA_NOT_SIGN',
       payload: false
-    }
+    };
     this.claContributorService.openDialogModalEvent.next(data);
   }
 
@@ -224,7 +238,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const data = {
       action: 'IDENTIFY_CLA_MANAGER',
       payload: ''
-    }
+    };
     this.claContributorService.openDialogModalEvent.next(data);
   }
 }

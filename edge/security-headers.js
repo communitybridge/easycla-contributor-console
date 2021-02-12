@@ -38,7 +38,9 @@ function generateCSP(env, isDevServer) {
     'https://communitybridge.org/',
     'https://api-gw.dev.platform.linuxfoundation.org/',
     'https://api-gw.staging.platform.linuxfoundation.org/',
-    'https://api-gw.platform.linuxfoundation.org/'
+    'https://api-gw.platform.linuxfoundation.org/',
+    'https://api.lfcla.staging.platform.linuxfoundation.org/',
+    'https://api.lfcla.dev.platform.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
     'https://cdn.dev.platform.linuxfoundation.org/lfx-header-no-zone.js',
@@ -97,7 +99,8 @@ function generateCSP(env, isDevServer) {
       'https://s3.amazonaws.com/cla-project-logo-prod/',
       'https://linuxfoundation-dev.auth0.com',
       'https://linuxfoundation-staging.auth0.com',
-      'https://linuxfoundation.auth0.com'
+      'https://linuxfoundation.auth0.com',
+      'https://sso.linuxfoundation.org/'
     ],
     'child-src': [],
     'media-src': [],

@@ -1,16 +1,15 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppSettings } from 'src/app/config/app-settings';
-import { GerritUserModel } from 'src/app/core/models/gerrit';
-import { ProjectModel } from 'src/app/core/models/project';
-import { UpdateUserModel, UserModel } from 'src/app/core/models/user';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
-import { AlertService } from '../../services/alert.service';
-import { AuthService } from '../../services/auth.service';
-import { StorageService } from '../../services/storage.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AppSettings} from 'src/app/config/app-settings';
+import {GerritUserModel} from 'src/app/core/models/gerrit';
+import {ProjectModel} from 'src/app/core/models/project';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import {AlertService} from '../../services/alert.service';
+import {AuthService} from '../../services/auth.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-auth',
@@ -32,7 +31,8 @@ export class AuthComponent implements OnInit {
     private claContributorService: ClaContributorService,
     private alertService: AlertService,
     private authService: AuthService,
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.contractType = JSON.parse(this.storageService.getItem(AppSettings.CONTRACT_TYPE));
@@ -47,32 +47,23 @@ export class AuthComponent implements OnInit {
       if (!loading) {
         this.authService.isAuthenticated$.subscribe(authenticated => {
           if (authenticated) {
-            this.handleRedirection()
+            this.handleRedirection();
           } else {
             this.authService.login();
           }
-        })
+        });
       }
-    })    
+    });
   }
 
   handleRedirection() {
-    if (this.hasGerrit) {
-      this.performActionAsPerType();
-    } else {
-      if (this.claContributorService.getUserLFID()) {
-        this.performActionAsPerType();
-      } else {
-        this.updateUserInfo();
-      }
-    }
+    this.performActionAsPerType();
   }
 
   setMessage() {
     if (this.actionType === AppSettings.SIGN_CLA) {
       this.message = 'Wait... You are being redirected to the Configure CLA Manager.';
-    }
-    else if (this.hasGerrit) {
+    } else if (this.hasGerrit) {
       this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
     } else {
       if (this.previousURL) {
@@ -111,29 +102,30 @@ export class AuthComponent implements OnInit {
     );
   }
 
-  updateUserInfo() {
-    const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
-    const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
-    const data = {
-      lfEmail: autData.user_email,
-      lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
-      githubUsername: user.user_github_username,
-      githubID: user.user_github_id
-    }
-    this.claContributorService.updateUser(data).subscribe(
-      (response: UpdateUserModel) => {
-        // Update new values in local storage.
-        user.lf_username = response.lfUsername;
-        user.lf_email = response.lfEmail;
-        this.storageService.setItem(AppSettings.USER, user);
-        this.performActionAsPerType();
-      },
-      (exception) => {
-        this.alertService.error(exception.error.Message);
-        this.message = 'Error occured during updating user info. Please contact to your administrator.';
-      }
-    );
-  }
+  // No need to call update endpoint.
+  // updateUserInfo() {
+  //   const autData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+  //   const user: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+  //   const data = {
+  //     lfEmail: autData.user_email,
+  //     lfUsername: autData.userid, //LF username is actually userId in the auth service/EasyCLA.
+  //     githubUsername: user.user_github_username,
+  //     githubID: user.user_github_id
+  //   }
+  //   this.claContributorService.updateUser(data).subscribe(
+  //     (response: UpdateUserModel) => {
+  //       // Update new values in local storage.
+  //       user.lf_username = response.lfUsername;
+  //       user.lf_email = response.lfEmail;
+  //       this.storageService.setItem(AppSettings.USER, user);
+  //       this.performActionAsPerType();
+  //     },
+  //     (exception) => {
+  //       this.alertService.error(exception.error.Message);
+  //       this.message = 'Error occured during updating user info. Please contact to your administrator.';
+  //     }
+  //   );
+  // }
 
   getGerritProjectInfo() {
     this.claContributorService.getGerritProjectInfo(this.projectId).subscribe(

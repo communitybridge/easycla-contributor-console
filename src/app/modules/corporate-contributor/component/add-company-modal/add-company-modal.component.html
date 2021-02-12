@@ -2,17 +2,13 @@
  SPDX-License-Identifier: MIT -->
 
 <div class="add-company-container">
-
-    <div *ngIf="hasOrganizationExist" class="col-12 error">
-        Your Organization already exists in our database.
-    </div>
-
     <form [formGroup]="form">
         <div class="container">
             <div class="row">
-                <div class="col-10 element">
-                    <input #organizationWebsite type="text" name="companyWebsite" (input)="onWebsiteKeypress()"
-                        placeholder="Enter Organization Website (http://www.example.com)"
+                <div class="col-11 element">
+                    <div class="title">Your Organization Website</div>
+                    <input #organizationWebsite type="text" autocomplete="off" name="companyWebsite"
+                        (input)="onWebsiteKeypress()" placeholder="Your Organization Website"
                         formControlName="companyWebsite" (focusout)="onFocusOut()" tabindex="1" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_WEBSITE'; then dropdownList;">
                     </ng-container>
@@ -20,9 +16,6 @@
                         *ngIf="form.controls.companyWebsite.errors  && (form.controls.companyWebsite.dirty || form.controls.companyWebsite.touched)">
                         <div [hidden]="!form.controls.companyWebsite.errors.required" class="error">
                             Organization website is required.
-                        </div>
-                        <div [hidden]="!form.controls.companyWebsite.errors.minlength" class="error">
-                            Organization website should be at least 8 characters.
                         </div>
                         <div [hidden]="!form.controls.companyWebsite.errors.maxlength" class="error">
                             Organization website should not exceed 255 characters.
@@ -34,10 +27,11 @@
                     </div>
                 </div>
 
-                <div class="col-10 element">
-                    <input #organizationName type="text" name="companyName" placeholder="Enter Organization Name"
-                        (input)="onNameKeypress()" (focusout)="onFocusOut()" formControlName="companyName" tabindex="2"
-                        class="form-control" />
+                <div class="col-11 element">
+                    <div class="title">Organization Name</div>
+                    <input #organizationName type="text" autocomplete="off" name="companyName"
+                        placeholder="Organization Name" (input)="onNameKeypress()" [readonly]="hasReadonly"
+                        formControlName="companyName" tabindex="2" class="form-control" />
                     <ng-container *ngIf="searchType === 'ORGANIZATION_NAME'; then dropdownList;">
                     </ng-container>
                     <div
@@ -53,7 +47,7 @@
                         </div>
                         <div *ngIf="form.controls.companyName.value.length > 1"
                             [hidden]="!form.controls.companyName.errors.pattern" class="error">
-                            Organization name may only contain alphanumeric characters or special characters -,.
+                            HTML tags are not allowed.
                         </div>
                     </div>
                 </div>
@@ -85,37 +79,31 @@
     </div>
 </div>
 
-<ng-template #successModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <div class="row justify-content-center success-dialog">
-                <div class="col-auto">
-                    <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
-                    <i *ngIf="hasError" class="fas fa-exclamation-circle logo red"></i>
+
+<ng-template #dropdownList>
+    <div class="dropdown-container" *ngIf="hasShowDropdown">
+        <div class="dropdown-content">
+            <div class="item" *ngFor="let organization of organizationList.list">
+                <div class="row" (click)="onSelectOrganization($event,organization)">
+                    <div class="col-6 ellipsis">{{organization.organization_name}}</div>
+                    <div class="col-6 ellipsis">{{organization.organization_website}}
+                    </div>
                 </div>
-                <div class="col-12 title">{{title}}</div>
-                <p class="col-11 success-message">{{message}}</p>
-                <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickDialogBtn()">
-                        {{hasError?'Go Back':'Proceed'}}
-                    </button>
-                </div>
+                <ng-container [ngTemplateOutlet]="treeView" [ngTemplateOutletContext]="{organization:organization}">
+                </ng-container>
             </div>
         </div>
     </div>
 </ng-template>
 
-
-<ng-template #dropdownList>
-    <div class="dropdown-container" *ngIf="hasShowDropdown">
-        <div class="dropdown-content">
-            <div class="item" *ngFor="let organization of organizationList.list"
-                (click)="onSelectOrganization(organization)">
-                <div class="row">
-                    <div class="col-6 ellipsis">{{organization.organization_name}}</div>
-                    <div class="col-6 ellipsis">{{organization.organization_website}}
-                    </div>
-                </div>
+<ng-template #treeView let-organization="organization">
+    <div class="col-12" *ngFor="let entity of organization.signing_entity_names">
+        <div class="row" (click)="onSelectOrganization($event,organization)">
+            <div class="col-6 ellipsis child">
+                {{entity}}
+            </div>
+            <div class="col-6 ellipsis">
+                {{organization.organization_website}}
             </div>
         </div>
     </div>
@@ -130,7 +118,7 @@
                     your email address so that we can proceed to next step</p>
                 <div class="row justify-content-center success-dialog">
                     <div class="col-11 element">
-                        <input type="text" name="publicEmail" placeholder="Enter email address"
+                        <input type="text" autocomplete="off" name="publicEmail" placeholder="Enter email address"
                             formControlName="publicEmail" tabindex="-1" />
                         <div
                             *ngIf="publicEmailform.controls.publicEmail.errors  && (publicEmailform.controls.publicEmail.dirty || publicEmailform.controls.publicEmail.touched)">

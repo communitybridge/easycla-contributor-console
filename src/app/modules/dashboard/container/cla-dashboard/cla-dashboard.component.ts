@@ -1,13 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ProjectModel } from 'src/app/core/models/project';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { AppSettings } from 'src/app/config/app-settings';
-import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ProjectModel} from 'src/app/core/models/project';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {AppSettings} from 'src/app/config/app-settings';
+import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+
 @Component({
   selector: 'app-cla-dashboard',
   templateUrl: './cla-dashboard.component.html',
@@ -45,7 +46,7 @@ export class ClaDashboardComponent implements OnInit {
       'If you are making a contribution of content owned by your employer, you should proceed as a corporate contributor.',
       'The Corporate CLA process requires you to be approved by your organization\'s CLA Manager. A CLA Manager at your organization will receive your request via email immediately after you submit it. To expedite the process, you can follow up with them directly.',
       'If your organization has not yet signed a CLA for this project, you will be able to coordinate designating a CLA Manager and having the CLA signed by someone at your organization who is authorized to sign.',
-      'If your organization is not registered in CommunityBridge, then you can also optionally create a profile for your organization in CommunityBridge if you would like.'
+      'If your organization is not registered, then you can optionally create a profile for your organization during the CLA authorization process.'
     ];
 
     this.individualHightlights = [

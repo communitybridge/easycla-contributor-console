@@ -27,7 +27,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   company: OrganizationModel;
   hasCLAManagerDesignee: boolean;
   spinnerMessage: string;
-  companyId: string;
+  failedCount: number;
+  showRetryBtn: boolean;
 
   constructor(
     private claContributorService: ClaContributorService,
@@ -45,6 +46,8 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.showRetryBtn = false;
+    this.failedCount = 0;
     this.company = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
   }
 
@@ -74,13 +77,12 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     this.claContributorService.addCompany(userModel.user_id, data).subscribe(
       (response: CompanyModel) => {
-        this.companyId = response.companyID;
         this.storageService.removeItem(AppSettings.NEW_ORGANIZATIONS);
-        this.getOrganizationInformation(this.companyId);
+        this.getOrganizationInformation(response.companyID);
       },
       (exception) => {
         this.title = 'Request Failed';
-        this.message = exception.error.Message;
+        this.message = exception.error.Message ? exception.error.Message : exception.error.message;
         this.openDialog(this.errorModal);
       }
     );
@@ -93,10 +95,17 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.company = response;
         this.manageAuthRedirection();
       },
-      () => {
+      (exception) => {
         // To add org in salesforce take couple of seconds
         // So called getOrganizationInformation metod till result comes
-        this.getOrganizationInformation(this.companyId);
+        this.failedCount++;
+        if (this.failedCount >= AppSettings.MAX_FAILED_COUNT) { // end API call after 20 time failed
+          this.title = 'Request Failed';
+          this.message = exception.error.Message;
+          this.openDialog(this.errorModal);
+        } else {
+          this.getOrganizationInformation(companySFID);
+        }
       }
     );
   }
@@ -122,34 +131,94 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   }
 
   addContributorAsDesignee() {
-    const data = {
-      userEmail: this.claContributorService.getUserPublicEmail()
-    };
-    this.addAsCLAManagerDesignee(data);
+    this.failedCount = 0;
+    const interval = setInterval(() => {
+      const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+      if (authData) {
+        console.log('Auth data Found');
+        const data = {
+          userEmail: authData.user_email
+        };
+        this.addAsCLAManagerDesignee(data);
+        clearInterval(interval);
+      } else {
+        // Wait 15 sec to get response from Auth0 otherwise show an error.
+        this.failedCount++;
+        if (this.failedCount > 15) {
+          this.failedCount = 0;
+          this.title = 'Request Failed';
+          this.message = 'Error while fetching user info from Auth0 service, please refresh the page.';
+          this.openDialog(this.errorModal);
+          clearInterval(interval);
+        }
+      }
+    }, 1000);
   }
 
   addAsCLAManagerDesignee(data: any) {
     const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-    this.claContributorService.addAsCLAManagerDesignee(this.company.companyExternalID, projectId, data).subscribe(
+    this.claContributorService.addAsCLAManagerDesignee(this.company.companyID, projectId, data).subscribe(
       () => {
-        this.hasCLAManagerDesignee = true;
-        this.proceedToCorporateConsole();
+        this.failedCount = 0;
+        this.checkRoleAssignment();
       },
       (exception) => {
         if (exception.status === 409) {
           // User has already CLA manager designee.
           this.hasCLAManagerDesignee = true;
           this.proceedToCorporateConsole();
-        } if (exception.status === 401) {
+        } else if (exception.status === 401) {
           this.authService.login();
         } else {
-          this.title = 'Request Failed';
-          this.storageService.removeItem(AppSettings.ACTION_TYPE);
-          this.message = exception.error.Message;
-          this.openDialog(this.errorModal);
+          this.failedCount++;
+          if (this.failedCount <= AppSettings.MAX_CLA_MANAGER_DESIGNEE_RETRY_COUNT) {
+            setTimeout(() => {
+              this.addAsCLAManagerDesignee(data);
+            }, 200);
+          } else {
+            this.title = 'Request Failed';
+            this.storageService.removeItem(AppSettings.ACTION_TYPE);
+            this.message = exception.error.Message ? exception.error.Message : exception.error.message;
+            this.openDialog(this.errorModal);
+          }
         }
       }
     );
+  }
+
+  checkRoleAssignment() {
+    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
+    const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
+    this.claContributorService.hasRoleAssigned(this.company.companyExternalID, projectId, authData.userid).subscribe(
+      (result) => {
+        if (result.hasRole) {
+          this.hasCLAManagerDesignee = true;
+          this.proceedToCorporateConsole();
+        } else {
+          this.retryRoleAssignement();
+        }
+      },
+      (exception) => {
+        this.title = 'Request Failed';
+        this.message = exception.error.Message;
+        this.openDialog(this.errorModal);
+      }
+    );
+  }
+
+  retryRoleAssignement() {
+    this.failedCount++;
+    if (this.failedCount <= AppSettings.MAX_ROLE_ASSIGN_FAILED_COUNT) {
+      this.checkRoleAssignment();
+    } else {
+      this.showRetryBtn = true;
+      this.title = 'Request Failed';
+      this.message = 'The initial CLA manager settings could not be assigned.</br>' +
+        'Please click on Retry to allow platform more time to assign settings.</br>' +
+        'Otherwise you can file a <a href="' + AppSettings.TICKET_URL + '" target="_blank"><b>support ticket</b>.</a>' +
+        ' Once the support ticket is resolved, you will be able to proceed with the CLA.';
+      this.openDialog(this.errorModal);
+    }
   }
 
   proceedToCorporateConsole() {
@@ -175,7 +244,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
       const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
       this.alertService.success(flashMsg);
-
       const corporateUrl = this.claContributorService.getLFXCorporateURL();
       if (corporateUrl !== '') {
         setTimeout(() => {
@@ -207,12 +275,21 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const data = {
       action: 'CLA_NOT_SIGN',
       payload: false
-    }
+    };
     this.claContributorService.openDialogModalEvent.next(data);
   }
 
   onClickClose() {
     this.modalService.dismissAll();
+  }
+
+  onClickRetry() {
+    this.modalService.dismissAll();
+    const data = {
+      action: 'RETRY_CONFIG_CLA_MANAGER',
+      payload: false
+    };
+    this.claContributorService.openDialogModalEvent.next(data);
   }
 
   openDialog(content) {

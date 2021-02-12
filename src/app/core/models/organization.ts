@@ -7,6 +7,7 @@ export class OrganizationModel {
     companyID: string;
     companyManagerID: string;
     companyName: string;
+    signingEntityName: string;
     created: string;
     updated: string;
 }
@@ -14,10 +15,12 @@ export class OrganizationModel {
 export class OrganizationListModel {
     list: Organization[];
 }
+
 export class Organization {
     organization_id: string;
     organization_name: string;
     organization_website: string;
+    signing_entity_names: string[];
 }
 
 export class CompanyModel {
@@ -25,4 +28,14 @@ export class CompanyModel {
     companyName: string;
     companyWebsite: string;
     logoURL: string;
+}
+export class ClearBitModel {
+    Employees: string;
+    ID: string;
+    Industry: string;
+    Link: string;
+    Name: string;
+    Sector: string;
+    Source: string;
+    signingEntityNames: string[];
 }

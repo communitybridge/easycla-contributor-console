@@ -4,17 +4,10 @@
 // SPDX-License-Identifier: MIT
 
 import { Injectable } from '@angular/core';
-import {
-  from,
-  of,
-  Observable,
-  BehaviorSubject,
-  combineLatest,
-  throwError,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, from, Observable, of, throwError } from 'rxjs';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
-import { tap, catchError, concatMap, shareReplay } from 'rxjs/operators';
+import { catchError, concatMap, shareReplay, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import * as querystring from 'query-string';
 import Url from 'url-parse';
@@ -90,6 +83,7 @@ export class AuthService {
     // Set up local auth streams if user is already authenticated
     const params = this.currentHref;
     if (params.includes('code=') && params.includes('state=')) {
+      console.log('Auth0 code and state are found.');
       this.handleAuthCallback();
       return;
     }
@@ -99,6 +93,8 @@ export class AuthService {
   }
 
   handlerReturnToAferlogout() {
+    console.log('In handlerReturnToAferlogout()');
+    this.storageService.removeItem(AppSettings.AUTH_DATA);
     const { query } = querystring.parseUrl(this.currentHref);
     const returnTo = query.returnTo;
     if (returnTo) {
@@ -114,6 +110,8 @@ export class AuthService {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap((user) => {
+        console.log('In getUser$');
+        console.log(user);
         this.setSession(user);
         this.userProfileSubject$.next(user);
       })
@@ -121,15 +119,16 @@ export class AuthService {
   }
 
   login() {
-   
+    // Need to increase timeout to 1500 as for slower network it gives an error
+    // Cannot read property 'querySelector' of null
     setTimeout(() => {
       const button = document
-      .querySelector('#lfx-header')
-      .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
-    if (button) {
-      button.click();
-    }
-    }, 500)
+        .querySelector('#lfx-header')
+        .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
+      if (button) {
+        button.click();
+      }
+    }, 1500);
   }
 
   logout() {
@@ -176,6 +175,7 @@ export class AuthService {
     // Set up local authentication streams
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
+        console.log('In localAuthSetup() and loggedIn=' + loggedIn);
         if (loggedIn) {
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
@@ -229,10 +229,10 @@ export class AuthService {
 
     for (let i = 0; i < ca.length; i++) {
       let c = ca[i];
-      while (c.charAt(0) == ' ') {
+      while (c.charAt(0) === ' ') {
         c = c.substring(1);
       }
-      if (c.indexOf(name) == 0) {
+      if (c.indexOf(name) === 0) {
         return c.substring(name.length, c.length);
       }
     }
@@ -275,7 +275,7 @@ export class AuthService {
           targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
         }),
         concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
-        catchError(() => of(true))
+        catchError((err) => of(console.log('Error occured while getting Auth0 data ' + err)))
       );
       // Subscribe to authentication completion observable
       // Response will be an array of user and login status
@@ -284,7 +284,7 @@ export class AuthService {
         if (!targetRoute) {
           return this.router.navigateByUrl('/auth');
         }
-        const url = '/auth?targetRoute=' + (targetRoute || '')
+        const url = '/auth?targetRoute=' + (targetRoute || '');
         this.router.navigateByUrl(url);
       });
     }
@@ -297,7 +297,7 @@ export class AuthService {
       userid: authResult.nickname,
       user_email: authResult.email,
       user_name: authResult.name
-    }
+    };
     this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
   }
 }

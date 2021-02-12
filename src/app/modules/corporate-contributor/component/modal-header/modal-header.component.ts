@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'app-modal-header',
@@ -13,10 +13,10 @@ export class ModalHeaderComponent {
   @Input() showCloseBtn: boolean;
   @Output() closeDialogEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor() { }
+  constructor() {
+  }
 
   onClickClose() {
     this.closeDialogEmitter.emit();
   }
-
 }

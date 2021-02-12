@@ -11,6 +11,7 @@
     "ng": "./node_modules/@angular/cli/bin/ng",
     "serve": "./node_modules/@angular/cli/bin/ng serve",
     "build": "./node_modules/@angular/cli/bin/ng build",
+    "serve:dev:local": "yarn prebuild:dev && ng serve --port 8100",
     "build:dev": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=dev",
     "build:staging": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=staging",
     "build:prod": "yarn prebuild:dev && ./node_modules/@angular/cli/bin/ng build --prod --configuration=production",
@@ -45,21 +46,22 @@
     "@angular/compiler": "~10.0.3",
     "@angular/core": "~10.0.3",
     "@angular/forms": "~10.0.3",
-    "@angular/localize": "~10.0.3",
+    "@angular/localize": "~10.2.4",
     "@angular/platform-browser": "~10.0.3",
     "@angular/platform-browser-dynamic": "~10.0.3",
     "@angular/router": "~10.0.3",
-    "@fortawesome/fontawesome-free": "^5.13.0",
+    "@fortawesome/fontawesome-free": "^5.15.1",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.1.1",
     "@types/auth0-js": "^8.11.7",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.19.11",
     "auth0-spa-js": "^1.6.5",
-    "aws-sdk": "^2.733.0",
+    "aws-sdk": "^2.820.0",
     "bootstrap": "^4.4.0",
-    "file-saver": "^2.0.2",
-    "query-string": "^6.13.6",
-    "rxjs": "~6.5.4",
+    "file-saver": "^2.0.5",
+    "query-string": "^6.13.8",
+
+    "rxjs": "~6.6.3",
     "serverless": "^2.3.0",
     "serverless-cloudfront-invalidate": "^1.4.0",
     "serverless-finch": "^2.3.2",
@@ -68,9 +70,9 @@
     "serverless-plugin-tracing": "^2.0.0",
     "serverless-prune-plugin": "^1.4.3",
     "serverless-pseudo-parameters": "^2.5.0",
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.3",
     "url-parse": "^1.4.7",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.11.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.2",
@@ -79,7 +81,7 @@
     "@angular/language-service": "~10.0.3",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
-    "@types/node": "^12.11.1",
+    "@types/node": "^12.19.11",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/eslint-plugin-tslint": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
@@ -97,6 +99,9 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.9.6"
+  },
+  "resolutions": {
+    "ini": "^1.3.7"
   },
   "husky": {
     "hooks": {
