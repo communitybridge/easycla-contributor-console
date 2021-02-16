@@ -40,6 +40,8 @@ export class AppSettings {
     public static TICKET_URL = 'https://jira.linuxfoundation.org/servicedesk/customer/portal/4/create/143';
     public static LFX_FOOTER = 'lfx-footer';
     public static LFX_HEADER = 'lfx-header';
+    public static PROJECT_CONSOLE_LINK_V2 = 'admin-v2-base';
+    public static CORPORATE_CONSOLE_LINK_V2 = 'corporate-v2-base';
     public static MAX_CLA_MANAGER_DESIGNEE_RETRY_COUNT = 5;
     public static MAX_FAILED_COUNT = 12;
     public static MAX_ROLE_ASSIGN_FAILED_COUNT = 30;
