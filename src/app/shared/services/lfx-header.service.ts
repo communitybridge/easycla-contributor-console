@@ -5,7 +5,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { EnvConfig } from '../../config/cla-env-utils';
 import { AppSettings } from '../../config/app-settings';
-import { environment } from '../../../environments/environment';
 
 const script = document.createElement('script');
 script.setAttribute(
