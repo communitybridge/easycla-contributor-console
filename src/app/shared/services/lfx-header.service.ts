@@ -1,11 +1,10 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Injectable} from '@angular/core';
-import {AuthService} from './auth.service';
-import {EnvConfig} from '../../config/cla-env-utils';
-import {AppSettings} from '../../config/app-settings';
-import {environment} from '../../../environments/environment';
+import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
+import { EnvConfig } from '../../config/cla-env-utils';
+import { AppSettings } from '../../config/app-settings';
 
 const script = document.createElement('script');
 script.setAttribute(
@@ -32,11 +31,11 @@ export class LfxHeaderService {
     this.links = [
       {
         title: 'Project Login',
-        url: environment.PROJECT_CONSOLE,
+        url: EnvConfig.default[AppSettings.PROJECT_CONSOLE_LINK_V2],
       },
       {
         title: 'CLA Manager Login',
-        url: environment.CORPORATE_CONSOLE,
+        url: EnvConfig.default[AppSettings.CORPORATE_CONSOLE_LINK_V2],
       },
       {
         title: 'Developer',
