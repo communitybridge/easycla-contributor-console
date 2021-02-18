@@ -339,8 +339,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;
         }
-        // Changed error message from organization not found to 3 char required.
-        if (this.form.controls.companyName.value.length < 3) {
+        // Changed error message from organization not found to 2 char required.
+        if (this.form.controls.companyName.value.length < 2) {
           this.organizationList.list = [];
         }
         this.resetEmptySearchMessage();
