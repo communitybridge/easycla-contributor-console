@@ -13,7 +13,6 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
 import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
-import { bool } from 'aws-sdk/clients/signer';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
