@@ -111,12 +111,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.noCompanyFound = false;
     this.hideDialogCloseBtn = false;
 
-    this.minLengthValidationMsg = 'Minimum 3 characters are required to search organization name';
+    this.minLengthValidationMsg = 'Minimum 2 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
       companyName: ['', Validators.compose([
         Validators.required,
-        Validators.minLength(3),
+        Validators.minLength(2),
         Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))
       ])],
     });
@@ -339,8 +339,8 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         if (this.organizationList.list.length <= 0) {
           this.noCompanyFound = true;
         }
-        // Changed error message from organization not found to 3 char required.
-        if (this.form.controls.companyName.value.length < 3) {
+        // Changed error message from organization not found to 2 char required.
+        if (this.form.controls.companyName.value.length < 2) {
           this.organizationList.list = [];
         }
         this.resetEmptySearchMessage();
