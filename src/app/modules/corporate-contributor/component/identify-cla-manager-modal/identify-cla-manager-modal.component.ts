@@ -13,6 +13,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { EmailValidator } from 'src/app/shared/validators/email-validator';
 import { AppSettings } from 'src/app/config/app-settings';
 import { CompanyAdminDesigneeModel, CompnayAdminListModel } from 'src/app/core/models/company-admin-designee';
+import { bool } from 'aws-sdk/clients/signer';
 
 @Component({
   selector: 'app-identify-cla-manager-modal',
@@ -24,6 +25,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   @ViewChild('inputBox') element: ElementRef;
 
   hasShowContactAdmin: boolean;
+  loading: boolean;
   form: FormGroup;
   message: string;
   title: string;
@@ -42,6 +44,7 @@ export class IdentifyClaManagerModalComponent implements OnInit {
   ngOnInit(): void {
     this.failedCount = 0;
     this.hasShowContactAdmin = false;
+    this.loading = true;
 
     setTimeout(() => {
       this.hasShowContactAdminSection();
@@ -75,6 +78,10 @@ export class IdentifyClaManagerModalComponent implements OnInit {
 
   onClickContactAdmin() {
     this.inviteCLAManager(true);
+  }
+
+  onClickSupporticket() {
+    window.open(AppSettings.SUPPORT_TICKET_LINK, '_blank');
   }
 
   addNewOrganization(data) {
@@ -184,12 +191,14 @@ export class IdentifyClaManagerModalComponent implements OnInit {
     const selectedCompany: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
     this.claContributorService.getCompanyAdminList(selectedCompany.companyExternalID).subscribe(
       (response: CompnayAdminListModel) => {
+        this.loading = false;
         this.element.nativeElement.focus();
         if (response.list.length > 0) {
           this.hasShowContactAdmin = true;
         }
       },
       (exception) => {
+        this.loading = false;
         this.hasShowContactAdmin = false;
         this.claContributorService.handleError(exception);
       }
