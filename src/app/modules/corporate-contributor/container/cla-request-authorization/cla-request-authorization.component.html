@@ -20,8 +20,8 @@
                             <div class="row justify-content-center align-items-center">
                                 <div class="col-12 header">CLA Manager(s) for your Organization
                                 </div>
-                                <div *ngIf="managers">
-                                    <div class="col-12 error" *ngIf="!managers.list">{{claManagerError}}</div>
+                                <div *ngIf="managers" class="col-12">
+                                    <div *ngIf="!managers.list" class="col-12 error">{{claManagerError}}</div>
                                     <div *ngIf="managers.list" class="col-12 manager-list">
                                         <div class="item">
                                             <app-checkbox [checked]="hasSelectAll" text="Select All"

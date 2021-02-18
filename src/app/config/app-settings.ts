@@ -45,4 +45,5 @@ export class AppSettings {
     public static MAX_CLA_MANAGER_DESIGNEE_RETRY_COUNT = 5;
     public static MAX_FAILED_COUNT = 12;
     public static MAX_ROLE_ASSIGN_FAILED_COUNT = 30;
+    public static SUPPORT_TICKET_LINK = 'https://jira.linuxfoundation.org/plugins/servlet/theme/portal/4/create/143';
 }
