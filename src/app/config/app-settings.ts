@@ -36,7 +36,7 @@ export class AppSettings {
     public static USER_FIRST_LAST_NAME_REGEX = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z.]*)*$/;
     public static GITHUB_EMAIL_CONTENT = 'noreply.github.com';
     public static NEW_ORGANIZATIONS = 'newOrganizations';
-    public static LEARN_MORE = 'https://docs.linuxfoundation.org/docs/communitybridge/easycla';
+    public static LEARN_MORE = 'https://docs.linuxfoundation.org/lfx/easycla/contributors';
     public static TICKET_URL = 'https://jira.linuxfoundation.org/servicedesk/customer/portal/4/create/143';
     public static LFX_FOOTER = 'lfx-footer';
     public static LFX_HEADER = 'lfx-header';
