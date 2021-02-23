@@ -113,9 +113,15 @@ export class AuthService {
         console.log('In getUser$');
         console.log(user);
         this.setSession(user);
+        this.setUserInHeader(user);
         this.userProfileSubject$.next(user);
       })
     );
+  }
+
+  setUserInHeader(user) {
+    const lfHeaderEl: any = document.getElementById('lfx-header');
+    lfHeaderEl.authuser = user;
   }
 
   login() {
