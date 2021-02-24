@@ -122,9 +122,10 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       if (this.authService.loggedIn) {
         this.addContributorAsDesignee();
       } else {
-        this.message = '<p>You will need to create an SSO account with the Linux Foundation to proceed.</p>' +
-          '<p>On successful creation of your account, you will be redirected to sign in with your SSO account' +
-          ' into the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
+        this.message = '<p>You will need to use your LF account to access the CLA Manager console,' +
+          ' or create an LF Login account if you do not have one already.</p>' +
+          '<p>After logging in, you will be redirected to ' +
+          'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
         this.openDialog(this.warningModal);
       }
     }
@@ -135,7 +136,6 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     const interval = setInterval(() => {
       const authData = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
       if (authData) {
-        console.log('Auth data Found');
         const data = {
           userEmail: authData.user_email
         };
