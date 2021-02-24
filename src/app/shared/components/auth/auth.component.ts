@@ -63,28 +63,36 @@ export class AuthComponent implements OnInit {
   setMessage() {
     if (this.actionType === AppSettings.SIGN_CLA) {
       this.message = 'Wait... You are being redirected to the Configure CLA Manager.';
-    } else if (this.hasGerrit) {
-      this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
-    } else {
-      if (this.previousURL) {
-        this.router.navigateByUrl(this.previousURL);
-      } else {
-        this.message = 'The page you are looking for was not found.';
-      }
-
+      return;
     }
+
+    if (this.hasGerrit) {
+      this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
+      return;
+    }
+
+    this.message = 'The page you are looking for was not found.';
   }
 
   performActionAsPerType() {
     if (this.actionType === AppSettings.SIGN_CLA) {
-      // redirect to CLA not Sign.
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url], { queryParams: { view: AppSettings.SIGN_CLA } });
-    } else if (this.hasGerrit) {
+      return;
+    }
+
+    if (this.hasGerrit) {
       this.getGerritProjectInfo();
       this.getUserInfo();
-
+      return;
     }
+
+    if (this.previousURL) {
+      this.router.navigateByUrl(this.previousURL);
+      return;
+    }
+
+    // *todo: handle default case
   }
 
   getUserInfo() {

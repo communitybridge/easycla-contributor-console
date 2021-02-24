@@ -48,23 +48,21 @@ export class LfxHeaderService {
 
   setCallBackUrl() {
     const lfHeaderEl: any = document.getElementById('lfx-header');
-    if (!lfHeaderEl) {
-      return;
+    if (lfHeaderEl) {
+      lfHeaderEl.callbackurl = this.auth.auth0Options.callbackUrl;
     }
-    lfHeaderEl.callbackurl = this.auth.auth0Options.callbackUrl;
   }
 
   setUserInLFxHeader(): void {
     setTimeout(() => {
       const lfHeaderEl: any = document.getElementById('lfx-header');
-      if (!lfHeaderEl) {
-        return;
+      if (lfHeaderEl) {
+        this.auth.userProfile$.subscribe((data) => {
+          if (data) {
+            lfHeaderEl.authuser = data;
+          }
+        });
       }
-      this.auth.userProfile$.subscribe((data) => {
-        if (data) {
-          lfHeaderEl.authuser = data;
-        }
-      });
     }, 2000);
   }
 }
