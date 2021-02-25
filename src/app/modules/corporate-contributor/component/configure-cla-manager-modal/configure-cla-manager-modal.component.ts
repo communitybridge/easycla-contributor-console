@@ -230,8 +230,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   onClickProceedBtn() {
     this.modalService.dismissAll();
-    this.message = '<p>You will be redirected to the organization dashboard where you can sign the CLAs and approve contributors on behalf of your organization.</p>';
-    this.message += '<p>Note: To continue please disable pop-up blocker for this site.</p>';
+    this.message = '<p>You will be redirected to the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
     this.openDialog(this.warningModal);
   }
 
@@ -241,26 +240,12 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     } else {
       this.modalService.dismissAll();
       this.loaderService.show();
-      const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
-      const flashMsg = 'Your ' + (hasGerrit ? 'Gerrit' : 'GitHub') + ' session has been preserved in the current tab so that you can always come back to it after completing CLA signing';
-      this.alertService.success(flashMsg);
       const corporateUrl = this.claContributorService.getLFXCorporateURL();
       if (corporateUrl !== '') {
-        setTimeout(() => {
-          this.storageService.removeItem(AppSettings.ACTION_TYPE);
-          window.open(corporateUrl, '_blank');
-        }, 4500);
-
-        setTimeout(() => {
-          const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-          if (redirectUrl) {
-            window.open(redirectUrl, '_self');
-          } else {
-            this.loaderService.hide();
-            this.alertService.error('Error occurred while redirection please confirm you come to the contributor console by following proper steps.');
-          }
-        }, 4000);
+        this.storageService.removeItem(AppSettings.ACTION_TYPE);
+        window.open(corporateUrl, '_self');
       } else {
+        this.alertService.error('Error occured during redirecting to the corporate console.');
         this.loaderService.hide();
       }
     }
