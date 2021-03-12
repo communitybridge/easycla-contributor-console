@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AppSettings } from 'src/app/config/app-settings';
 import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { ProjectModel } from 'src/app/core/models/project';
@@ -30,8 +30,7 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private claContributorService: ClaContributorService,
     private alertService: AlertService,
-    private authService: AuthService,
-    private route: ActivatedRoute
+    private authService: AuthService
   ) {
   }
 
@@ -42,10 +41,6 @@ export class AuthComponent implements OnInit {
     this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
     this.previousURL = decodeURIComponent(window.location.hash.split('=')[1]);
-
-    if (!this.previousURL) {
-      this.previousURL = this.route.snapshot.paramMap.get('targetRoute');
-    }
 
     this.setMessage();
 
