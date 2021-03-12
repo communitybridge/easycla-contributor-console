@@ -1,15 +1,15 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AppSettings} from 'src/app/config/app-settings';
-import {GerritUserModel} from 'src/app/core/models/gerrit';
-import {ProjectModel} from 'src/app/core/models/project';
-import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
-import {AlertService} from '../../services/alert.service';
-import {AuthService} from '../../services/auth.service';
-import {StorageService} from '../../services/storage.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppSettings } from 'src/app/config/app-settings';
+import { GerritUserModel } from 'src/app/core/models/gerrit';
+import { ProjectModel } from 'src/app/core/models/project';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { AlertService } from '../../services/alert.service';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-auth',
@@ -30,7 +30,7 @@ export class AuthComponent implements OnInit {
     private router: Router,
     private claContributorService: ClaContributorService,
     private alertService: AlertService,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
   }
 
@@ -41,6 +41,7 @@ export class AuthComponent implements OnInit {
     this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
     this.previousURL = decodeURIComponent(window.location.hash.split('=')[1]);
+
     this.setMessage();
 
     this.authService.loading$.subscribe((loading) => {
@@ -87,9 +88,14 @@ export class AuthComponent implements OnInit {
       return;
     }
 
-    if (this.previousURL) {
+    if (this.previousURL !== undefined && this.previousURL !== 'undefined') {
       this.router.navigateByUrl(this.previousURL);
       return;
+    } else {
+      // Redirect to landing page.
+      const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+      this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
+        { queryParams: { redirect: redirectUrl } });
     }
 
     // *todo: handle default case
