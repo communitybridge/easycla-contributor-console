@@ -94,8 +94,8 @@ export class AuthService {
 
   handlerReturnToAferlogout() {
     const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    this.storageService.removeItem(AppSettings.AUTH_DATA);
     if (!hasGerrit) {
-      this.storageService.removeItem(AppSettings.AUTH_DATA);
       const { query } = querystring.parseUrl(this.currentHref);
       const returnTo = query.returnTo;
       if (returnTo) {
