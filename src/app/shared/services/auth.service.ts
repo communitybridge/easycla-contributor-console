@@ -93,16 +93,19 @@ export class AuthService {
   }
 
   handlerReturnToAferlogout() {
-    console.log('In handlerReturnToAferlogout()');
-    this.storageService.removeItem(AppSettings.AUTH_DATA);
-    const { query } = querystring.parseUrl(this.currentHref);
-    const returnTo = query.returnTo;
-    if (returnTo) {
-      const target = this.getTargetRouteFromReturnTo(returnTo);
-      this.router.navigate([target]);
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    if (!hasGerrit) {
+      this.storageService.removeItem(AppSettings.AUTH_DATA);
+      const { query } = querystring.parseUrl(this.currentHref);
+      const returnTo = query.returnTo;
+      if (returnTo) {
+        const target = this.getTargetRouteFromReturnTo(returnTo);
+        this.router.navigate([target]);
+      }
+    } else {
+      this.login();
     }
   }
-
   // When calling, options can be passed if desired
   // https://auth0.github.io/auth0-spa-js/classes/auth0client.html#getuser
 
@@ -297,7 +300,7 @@ export class AuthService {
           this.login();
           return;
         }
-        
+
         if (!targetRoute) {
           return this.router.navigateByUrl('/auth');
         }
