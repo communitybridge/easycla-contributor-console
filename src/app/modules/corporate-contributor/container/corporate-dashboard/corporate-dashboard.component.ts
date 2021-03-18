@@ -255,9 +255,14 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   showSuccessAndRedirectToGit() {
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     this.hasError = false;
     this.title = 'You are done!';
     this.message = 'You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.';
+    if (hasGerrit) {
+      this.message = 'You have completed the CLA steps necessary to contribute. Please note that you will need to logout and login on Gerrit to get the updated permissions.' +
+        ' You can now return to writing awesome stuff.';
+    }
     this.openWithDismiss(this.successModal);
   }
 
