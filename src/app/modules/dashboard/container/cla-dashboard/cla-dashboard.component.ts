@@ -1,13 +1,13 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ProjectModel} from 'src/app/core/models/project';
-import {StorageService} from 'src/app/shared/services/storage.service';
-import {AlertService} from 'src/app/shared/services/alert.service';
-import {AppSettings} from 'src/app/config/app-settings';
-import {ClaContributorService} from 'src/app/core/services/cla-contributor.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProjectModel } from 'src/app/core/models/project';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { AppSettings } from 'src/app/config/app-settings';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 
 @Component({
   selector: 'app-cla-dashboard',
