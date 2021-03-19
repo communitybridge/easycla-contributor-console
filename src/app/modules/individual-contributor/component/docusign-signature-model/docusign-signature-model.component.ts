@@ -41,7 +41,7 @@ export class DocusignSignatureModelComponent {
 
   showGerritMessage() {
     this.title = 'Important Note';
-    this.message = 'Please note that after you have signed the CLA, you will need to logout and login on Gerrit to get the updated permissions. After completing this, ' +
+    this.message = 'Please note that after you have signed the CLA, you will need to logout and log back in to your Gerrit account to get the updated permissions. After completing this, ' +
       'the EasyCLA check will be complete and enabled for all future code contributions for this project.';
     this.modalService.open(this.successModal, {
       centered: true,
