@@ -58,7 +58,7 @@ export class ClaDashboardComponent implements OnInit {
 
   onClickCorporateProceed() {
     if (!this.project.project_ccla_enabled) {
-      this.alertService.error('CCLA is not enabled to this project please contact to your administrator.');
+      this.alertService.error('The Corporate CLA option is not enabled for this project. Please contact to your administrator to enable the Corporate CLA option for this project.');
       return false;
     }
     if (!this.hasError) {
@@ -69,7 +69,7 @@ export class ClaDashboardComponent implements OnInit {
 
   onClickIndividualProceed() {
     if (!this.project.project_icla_enabled) {
-      this.alertService.error('ICLA is not enabled to this project please contact to your administrator.');
+      this.alertService.error('The Individual CLA option is not enabled for this project. Please to your administrator to enable the Individual CLA option for this project.');
       return false;
     }
     if (!this.hasError) {
