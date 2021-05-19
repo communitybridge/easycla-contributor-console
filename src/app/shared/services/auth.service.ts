@@ -113,8 +113,6 @@ export class AuthService {
     return this.auth0Client$.pipe(
       concatMap((client: Auth0Client) => from(client.getUser(options))),
       tap((user) => {
-        console.log('In getUser$');
-        console.log(user);
         this.setSession(user);
         this.setUserInHeader(user);
         this.userProfileSubject$.next(user);
@@ -184,7 +182,6 @@ export class AuthService {
     // Set up local authentication streams
     const checkAuth$ = this.isAuthenticated$.pipe(
       concatMap((loggedIn: boolean) => {
-        console.log('In localAuthSetup() and loggedIn=' + loggedIn);
         if (loggedIn) {
           // If authenticated, get user and set in app
           // NOTE: you could pass options here if needed
