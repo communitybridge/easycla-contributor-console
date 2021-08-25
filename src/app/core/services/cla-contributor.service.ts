@@ -303,6 +303,21 @@ export class ClaContributorService {
     oReq.send();
   }
 
+  public getTypeByUrl(): string {
+    const redirectUrl = JSON.parse(
+      this.storageService.getItem(AppSettings.REDIRECT)
+    );
+    if(redirectUrl){
+        if (redirectUrl.indexOf(AppSettings.GITHUB_DOMAIN) >= 0) {
+          return AppSettings.GITHUB;
+        }
+        if (redirectUrl.indexOf(AppSettings.GITLAB_DOMAIN) >= 0) {
+          return AppSettings.GITLAB;
+        }
+    }
+    return AppSettings.GITHUB;
+  }
+
   /**
    * Constructs a URL based on the path and endpoint host:port.
    * @param path the URL path

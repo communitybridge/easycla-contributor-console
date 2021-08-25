@@ -214,7 +214,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       project_id: this.projectId,
       company_id: this.organization.companyID,
       user_id: this.userId,
-      return_url_type: hasGerrit ? AppSettings.GERRIT : AppSettings.GITHUB
+      return_url_type: hasGerrit ? AppSettings.GERRIT : this.claContributorService.getTypeByUrl()
     };
     this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
       () => {
