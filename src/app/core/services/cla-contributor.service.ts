@@ -303,6 +303,20 @@ export class ClaContributorService {
     oReq.send();
   }
 
+  public getTypeByUrl(): string {
+    const redirectUrl = JSON.parse(
+      this.storageService.getItem(AppSettings.REDIRECT)
+    );
+    if (redirectUrl.indexOf(AppSettings.GITHUB_DOMAIN) >= 0) {
+      return AppSettings.GITHUB;
+    }
+    if (redirectUrl.indexOf(AppSettings.GITLAB_DOMAIN) >= 0) {
+      return AppSettings.GITLAB;
+    }
+    // default is Github.
+    return AppSettings.GITHUB;
+  }
+
   /**
    * Constructs a URL based on the path and endpoint host:port.
    * @param path the URL path
@@ -327,11 +341,11 @@ export class ClaContributorService {
    */
   private getV2Endpoint(path: string): string {
     let url: URL;
-    // if (this.localTesting) {
-    //   url = new URL(this.v2ClaAPIURLLocal + path);
-    // } else {
+    if (this.localTesting) {
+      url = new URL(this.v2ClaAPIURLLocal + path);
+    } else {
       url = new URL(this.baseURL + path);
-    // }
+    }
     return url.toString();
   }
 
@@ -365,19 +379,5 @@ export class ClaContributorService {
       url = new URL(this.v4BaseUrl + path);
     }
     return url.toString();
-  }
-
-  public getTypeByUrl(): string {
-    const redirectUrl = JSON.parse(
-      this.storageService.getItem(AppSettings.REDIRECT)
-    );
-    if (redirectUrl.indexOf(AppSettings.GITHUB_DOMAIN) >= 0) {
-      return AppSettings.GITHUB;
-    }
-    if (redirectUrl.indexOf(AppSettings.GITLAB_DOMAIN) >= 0) {
-      return AppSettings.GITLAB;
-    }
-    // default is Github.
-    return AppSettings.GITHUB;
   }
 }
