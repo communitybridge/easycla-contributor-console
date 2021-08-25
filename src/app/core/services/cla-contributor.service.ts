@@ -307,13 +307,14 @@ export class ClaContributorService {
     const redirectUrl = JSON.parse(
       this.storageService.getItem(AppSettings.REDIRECT)
     );
-    if (redirectUrl.indexOf(AppSettings.GITHUB_DOMAIN) >= 0) {
-      return AppSettings.GITHUB;
+    if(redirectUrl){
+        if (redirectUrl.indexOf(AppSettings.GITHUB_DOMAIN) >= 0) {
+          return AppSettings.GITHUB;
+        }
+        if (redirectUrl.indexOf(AppSettings.GITLAB_DOMAIN) >= 0) {
+          return AppSettings.GITLAB;
+        }
     }
-    if (redirectUrl.indexOf(AppSettings.GITLAB_DOMAIN) >= 0) {
-      return AppSettings.GITLAB;
-    }
-    // default is Github.
     return AppSettings.GITHUB;
   }
 
