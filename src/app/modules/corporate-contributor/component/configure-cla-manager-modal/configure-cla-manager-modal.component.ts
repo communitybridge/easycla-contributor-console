@@ -241,6 +241,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       this.modalService.dismissAll();
       this.loaderService.show();
       const corporateUrl = this.claContributorService.getLFXCorporateURL();
+      console.log('corporateURL: ', corporateUrl);
       if (corporateUrl !== '') {
         this.storageService.removeItem(AppSettings.ACTION_TYPE);
         window.open(corporateUrl, '_self');
