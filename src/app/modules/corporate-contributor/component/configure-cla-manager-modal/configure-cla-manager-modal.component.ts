@@ -245,7 +245,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.storageService.removeItem(AppSettings.ACTION_TYPE);
         window.open(corporateUrl, '_self');
       } else {
-        this.alertService.error('Error occured during redirecting to the corporate console.');
+        this.alertService.error('Error occurred during redirecting to the corporate console.');
         this.loaderService.hide();
       }
     }
