@@ -204,9 +204,9 @@ export class ClaContributorService {
   getLFXCorporateURL(): string {
     let url = '';
     // Load the CLA Group models from local storage - should only be 1 CLA Group
-    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
+    const claGroupModel: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     // We may have zero or more SF Projects attached to this CLA Group
-    const projectDetails = project.projects;
+    const projectDetails = claGroupModel.projects;
 
     // TODO: figure out the github repository that was used to come here...
     // pick the matching SF Project based on the repository name, instead of just using the first project in the list
@@ -215,7 +215,7 @@ export class ClaContributorService {
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
       url = this.corporateV2Base + 'company/dashboard';
-    } else if (project.signed_at_foundation_level) {
+    } else if (claGroupModel.signed_at_foundation_level) {
       // Signed at foundation level.
       url = this.corporateV2Base + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
     } else {
