@@ -68,10 +68,29 @@ export class Project {
   version: string;
   github_repos: GithubRepository[];
   gerrit_repos: GerritRepository[];
+  gitlab_repos: GitlabRepository[];
 }
 
 // Github Repository Model
 export class GithubRepository {
+  date_created: string;
+  date_modified: string;
+  enabled: boolean;
+  note?: any;
+  project_sfid: string;
+  repository_external_id: string;
+  repository_id: string;
+  repository_name: string;
+  repository_organization_name: string;
+  repository_project_id: string;
+  repository_sfdc_id: string;
+  repository_type: string;
+  repository_url: string;
+  version: string;
+}
+
+// Gitlab Repository Model
+export class GitlabRepository {
   date_created: string;
   date_modified: string;
   enabled: boolean;

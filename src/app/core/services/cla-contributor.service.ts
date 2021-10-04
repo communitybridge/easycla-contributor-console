@@ -247,6 +247,17 @@ export class ClaContributorService {
             }
           }
         }
+
+        // Checked in Gitlab Repo
+        if (project.gitlab_repos.length > 0) {
+          const repos = project.gitlab_repos;
+          for (const repo of repos) {
+            if (repoURL.indexOf(repo.repository_name) >= 0) {
+              return project;
+            }
+          }
+        }
+        
         // Checked in Gerrit Repo
         if (project.gerrit_repos.length > 0) {
           const repos = project.gerrit_repos;
