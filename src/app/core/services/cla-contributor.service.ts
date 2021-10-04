@@ -207,8 +207,6 @@ export class ClaContributorService {
     const claGroupModel: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     // We may have zero or more SF Projects attached to this CLA Group
     const projectDetails = claGroupModel.projects;
-    console.log('projectDetails: ', projectDetails);
-
     // TODO: figure out the github repository that was used to come here...
     // pick the matching SF Project based on the repository name, instead of just using the first project in the list
 
@@ -220,7 +218,6 @@ export class ClaContributorService {
       // Signed at foundation level.
       url = this.corporateV2Base + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
     } else {
-      console.log('determining project from repo');
       const project = this.getProjectFromRepo(projectDetails);
       console.log('project: ', project);
       if (project !== null) {
