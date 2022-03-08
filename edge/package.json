@@ -23,6 +23,7 @@
     "webpack": "^4.43.0"
   },
   "resolutions": {
+    "ansi-regex": "^5.0.1",
     "browserslist": "^4.16.5",
     "dns-packet": "^5.2.2",
     "hosted-git-info": "^3.0.8",
@@ -36,6 +37,7 @@
     "set-getter": "^0.1.1",
     "socket.io-parser": "^4.0.4",
     "tar": "^6.1.9",
+    "unset-value": "^2.0.1",
     "url-parse": "^1.5.2",
     "ws": "^7.4.6"
   }
