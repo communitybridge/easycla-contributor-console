@@ -71,7 +71,7 @@
     "serverless-prune-plugin": "^1.4.3",
     "serverless-pseudo-parameters": "^2.5.0",
     "tslib": "^2.0.3",
-    "url-parse": "^1.4.7",
+    "url-parse": "^1.5.9",
     "zone.js": "~0.11.3"
   },
   "devDependencies": {
