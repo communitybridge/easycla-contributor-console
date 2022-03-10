@@ -117,6 +117,7 @@
     "pac-resolver": "^5.0.0",
     "path-parse": "^1.0.7",
     "set-getter": "^0.1.1",
+    "set-value": "^4.1.0",
     "socket.io": "^2.4.0",
     "socket.io-parser": "^4.0.4",
     "ssri": "^8.0.1",
@@ -124,6 +125,7 @@
     "ua-parser-js": "^0.7.24",
     "underscore": "^1.12.1",
     "url-parse": "^1.5.3",
+    "vm2": "^3.9.9",
     "ws": "^7.4.6",
     "xmlhttprequest-ssl": "^1.6.1",
     "y18n": "^5.0.5"
