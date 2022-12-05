@@ -36,11 +36,12 @@
     "pac-resolver": "^5.0.0",
     "path-parse": "^1.0.7",
     "set-getter": "^0.1.1",
-    "socket.io-parser": "^4.0.4",
+    "socket.io-parser": "^4.1.1",
     "tar": "^6.1.9",
     "terser": "^4.8.1",
     "unset-value": "^2.0.1",
     "url-parse": "^1.5.2",
+    "vm2": "^3.9.12",
     "ws": "^7.4.6"
   }
 }
