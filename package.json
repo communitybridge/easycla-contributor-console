@@ -143,7 +143,7 @@
     "set-value": "^4.0.1",
     "simple-git": "^3.3.0",
     "socket.io": "^2.4.0",
-    "socket.io-parser": "^4.0.5",
+    "socket.io-parser": "^4.2.1",
     "ssri": "^8.0.1",
     "tar": "^6.1.9",
     "terser": "^4.8.1",
