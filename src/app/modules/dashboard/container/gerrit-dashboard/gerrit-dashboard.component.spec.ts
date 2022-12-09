@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GerritDashboardComponent } from './gerrit-dashboard.component';
 
@@ -9,7 +9,7 @@ describe('GerritDashboardComponent', () => {
   let component: GerritDashboardComponent;
   let fixture: ComponentFixture<GerritDashboardComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GerritDashboardComponent ]
     })

@@ -1,14 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ClaNotSignedModalComponent } from './cla-not-signed-modal.component';
 
 describe('ClaNotSignedModalComponent', () => {
     let component: ClaNotSignedModalComponent;
     let fixture: ComponentFixture<ClaNotSignedModalComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ClaNotSignedModalComponent],
         })

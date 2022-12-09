@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IdentifyClaManagerModalComponent } from './identify-cla-manager-modal.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,7 +13,7 @@ describe('IdentifyClaManagerModalComponent', () => {
     let component: IdentifyClaManagerModalComponent;
     let fixture: ComponentFixture<IdentifyClaManagerModalComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [IdentifyClaManagerModalComponent],
             imports: [FormsModule, ReactiveFormsModule, HttpClientModule, RouterTestingModule],
