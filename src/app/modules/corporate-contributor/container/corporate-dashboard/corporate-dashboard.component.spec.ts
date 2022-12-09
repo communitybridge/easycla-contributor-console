@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CorporateDashboardComponent } from './corporate-dashboard.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,7 +14,7 @@ describe('CorporateDashboardComponent', () => {
     let component: CorporateDashboardComponent;
     let fixture: ComponentFixture<CorporateDashboardComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [CorporateDashboardComponent],
             imports: [FormsModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
