@@ -177,18 +177,18 @@ jobs:
       - run:
           name: Deploy Cloudfront and LambdaEdge
           command: |
-            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --cloudfront=true --verbose"
-            SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --cloudfront=true --verbose
+            echo "Running: yarn sls deploy --stage=\"${STAGE}\" --verbose"
+            SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --verbose
       - run:
           name: Deploy Frontend Bucket
           command: |
-            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose"
-            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --cloudfront=true --no-confirm --no-policy-change --no-config-change --verbose
+            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --verbose"
+            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose
       - run:
           name: Invalidate Cache
           command: |
-            echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" --cloudfront=\"true\""
-            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --cloudfront="true" --verbose
+            echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" "
+            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --verbose
 
   deployContributorConsoleDev:
     <<: *deployFrontendAnchor
@@ -226,7 +226,7 @@ jobs:
 
 workflows:
   build_and_deploy:
-   jobs:
+    jobs:
       - setup:
           filters:
             tags:
