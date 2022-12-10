@@ -182,8 +182,8 @@ jobs:
       - run:
           name: Deploy Frontend Bucket
           command: |
-            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --verbose"
-            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose
+            echo "Running: yarn sls client deploy --stage=\"${STAGE}\" --verbose --no-confirm"
+            SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose --no-confirm
       - run:
           name: Invalidate Cache
           command: |
