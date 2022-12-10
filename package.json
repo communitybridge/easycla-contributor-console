@@ -95,7 +95,7 @@
     "serverless-plugin-tracing": "^2.0.0",
     "serverless-prune-plugin": "^2.0.1",
     "serverless-cloudfront-invalidate": "^1.4.0",
-    "serverless-finch": "^2.3.2",
+    "serverless-finch": "^4.0.0",
     "serverless-lambda-version": "^0.1.2",
     "serverless-layers": "^1.4.3"
   },
