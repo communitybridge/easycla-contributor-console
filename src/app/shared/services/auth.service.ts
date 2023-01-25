@@ -121,16 +121,17 @@ export class AuthService {
   }
 
   setUserInHeader(user) {
-    const lfHeaderEl: any = document.getElementById('lfx-header');
+    const lfHeaderEl: any = document.getElementById('lfx-header-v2');
     lfHeaderEl.authuser = user;
   }
 
   login() {
     // Need to increase timeout to 1500 as for slower network it gives an error
     // Cannot read property 'querySelector' of null
+    // TODO: verify this still works
     setTimeout(() => {
       const button = document
-        .querySelector('#lfx-header')
+        .querySelector('#lfx-header-v2')
         .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
       if (button) {
         button.click();
