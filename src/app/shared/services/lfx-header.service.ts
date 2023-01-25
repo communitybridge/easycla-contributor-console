@@ -42,12 +42,12 @@ export class LfxHeaderService {
         url: AppSettings.LEARN_MORE
       }
     ];
-    const element: any = document.getElementById('lfx-header');
+    const element: any = document.getElementById('lfx-header-v2');
     element.links = this.links;
   }
 
   setCallBackUrl() {
-    const lfHeaderEl: any = document.getElementById('lfx-header');
+    const lfHeaderEl: any = document.getElementById('lfx-header-v2');
     if (lfHeaderEl) {
       lfHeaderEl.callbackurl = this.auth.auth0Options.callbackUrl;
     }
@@ -55,7 +55,7 @@ export class LfxHeaderService {
 
   setUserInLFxHeader(): void {
     setTimeout(() => {
-      const lfHeaderEl: any = document.getElementById('lfx-header');
+      const lfHeaderEl: any = document.getElementById('lfx-header-v2');
       if (lfHeaderEl) {
         this.auth.userProfile$.subscribe((data) => {
           if (data) {
