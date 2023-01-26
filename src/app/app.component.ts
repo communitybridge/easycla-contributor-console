@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import { AppSettings } from './config/app-settings';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
 import { EnvConfig } from './config/cla-env-utils';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +28,16 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.setScript();
     this.hasExpanded = true;
     this.mountFooter();
+  }
+
+  private setScript() {
+    const script = document.createElement('script');
+    script.setAttribute('src', environment.lfxHeader + '/lfx-header-v2.js');
+    script.setAttribute('async', 'true');
+    document.head.appendChild(script);
   }
 
 
