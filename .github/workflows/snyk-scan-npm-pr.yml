@@ -27,8 +27,6 @@ jobs:
         run: yarn install
       - name: Snyk version
         run: echo "${{ steps.snyk.outputs.version }}"
-      - name: Snyk Auth
-        run: snyk auth ${{ secrets.SNYK_TOKEN }}
       - name: Scan for NPM Vulnerabilities
         run: |
           snyk test --org=${{ secrets.SNYK_ORG }} --file=package.json
