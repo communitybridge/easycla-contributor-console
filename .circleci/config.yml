@@ -106,17 +106,6 @@ jobs:
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
 
-  buildStaging:
-    <<: *buildAnchor
-    environment:
-      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
-      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
-      AWS_PROFILE: easycla
-      AWS_REGION: us-east-1
-      STAGE: staging
-      ROOT_DOMAIN: staging.communitybridge.org
-      PRODUCT_DOMAIN: easycla.staging.communitybridge.org
-
   buildProd:
     <<: *buildAnchor
     environment:
@@ -201,17 +190,6 @@ jobs:
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
 
-  deployContributorConsoleStaging:
-    <<: *deployFrontendAnchor
-    environment:
-      AWS_ACCESS_KEY_ID_ENV_VAR: AWS_ACCESS_KEY_ID_STAGING
-      AWS_SECRET_ACCESS_KEY_ENV_VAR: AWS_SECRET_ACCESS_KEY_STAGING
-      AWS_PROFILE: easycla
-      AWS_REGION: us-east-1
-      STAGE: staging
-      ROOT_DOMAIN: staging.communitybridge.org
-      PRODUCT_DOMAIN: easycla.staging.communitybridge.org
-
   deployContributorConsoleProd:
     <<: *deployFrontendAnchor
     environment:
@@ -222,7 +200,6 @@ jobs:
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org
-
 
 workflows:
   build_and_deploy:
@@ -254,35 +231,6 @@ workflows:
               only:
                 - main
 
-      # Deploy Staging
-      - buildStaging:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              # see semver examples https://regex101.com/r/Ly7O1x/201/
-              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - approveStaging:
-          type: approval
-          requires:
-            - buildStaging
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              # see semver examples https://regex101.com/r/Ly7O1x/201/
-              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-      - deployContributorConsoleStaging:
-          requires:
-            - approveStaging
-            - buildStaging
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              # see semver examples https://regex101.com/r/Ly7O1x/201/
-              only: /^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/
-
       # Deploy Prod
       - buildProd:
           filters:
@@ -294,7 +242,6 @@ workflows:
       - approveProd:
           type: approval
           requires:
-            - deployContributorConsoleStaging
             - buildProd
           filters:
             branches:
