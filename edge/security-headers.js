@@ -43,9 +43,11 @@ function generateCSP(env, isDevServer) {
     'https://api.lfcla.dev.platform.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
-    'https://cdn.dev.platform.linuxfoundation.org/lfx-header-no-zone.js',
-    'https://cdn.staging.platform.linuxfoundation.org/lfx-header-no-zone.js',
-    'https://cdn.platform.linuxfoundation.org/lfx-header-no-zone.js',
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-header-v2.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-header-v2.js',
+    'https://cdn.dev.platform.linuxfoundation.org/lfx-header-v2-no-zone.js',
+    'https://cdn.staging.platform.linuxfoundation.org/lfx-header-v2-no-zone.js',
+    'https://cdn.platform.linuxfoundation.org/lfx-header-v2-no-zone.js',
     'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js'
