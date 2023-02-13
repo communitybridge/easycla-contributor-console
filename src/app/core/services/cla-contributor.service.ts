@@ -210,16 +210,17 @@ export class ClaContributorService {
     // TODO: figure out the github repository that was used to come here...
     // pick the matching SF Project based on the repository name, instead of just using the first project in the list
 
+    const project = this.getProjectFromRepo(projectDetails);
+    console.log('project: ', project);
+
     // No SF Projects for this CLA Group
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
       url = this.corporateV2Base + 'company/dashboard';
-    } else if (claGroupModel.signed_at_foundation_level) {
+    } else if (claGroupModel.signed_at_foundation_level && claGroupModel.foundation_sfid === project.project_sfid) {
       // Signed at foundation level.
       url = this.corporateV2Base + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
     } else {
-      const project = this.getProjectFromRepo(projectDetails);
-      console.log('project: ', project);
       if (project !== null) {
         // For standalone project we must redirect to the SFID of The Linux Foundation
         url = this.corporateV2Base + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
@@ -254,7 +255,7 @@ export class ClaContributorService {
             }
           }
         }
-        
+
         // Checked in Gerrit Repo
         if (project.gerrit_repos.length > 0) {
           const repos = project.gerrit_repos;
