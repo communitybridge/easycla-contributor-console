@@ -132,7 +132,7 @@ export class AuthService {
     setTimeout(() => {
       const button = document
         .querySelector('#lfx-header-v2')
-        .shadowRoot.querySelector('.lfx-header.is-login-link') as HTMLElement;
+        .shadowRoot.querySelector('app-lfx-user-icon') as HTMLElement;
       if (button) {
         button.click();
       }
