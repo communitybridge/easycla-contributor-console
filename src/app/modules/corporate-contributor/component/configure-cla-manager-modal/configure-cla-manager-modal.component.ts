@@ -8,28 +8,28 @@ import {
   Output,
   TemplateRef,
   ViewChild,
-} from "@angular/core";
-import { ClaContributorService } from "src/app/core/services/cla-contributor.service";
-import { AuthService } from "src/app/shared/services/auth.service";
-import { AppSettings } from "src/app/config/app-settings";
-import { StorageService } from "src/app/shared/services/storage.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+} from '@angular/core';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { AppSettings } from 'src/app/config/app-settings';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CompanyModel,
   OrganizationModel,
-} from "src/app/core/models/organization";
-import { AlertService } from "src/app/shared/services/alert.service";
-import { UserModel } from "src/app/core/models/user";
-import { LoaderService } from "src/app/shared/services/loader.service";
+} from 'src/app/core/models/organization';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { UserModel } from 'src/app/core/models/user';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
-  selector: "app-configure-cla-manager-modal",
-  templateUrl: "./configure-cla-manager-modal.component.html",
-  styleUrls: ["./configure-cla-manager-modal.component.scss"],
+  selector: 'app-configure-cla-manager-modal',
+  templateUrl: './configure-cla-manager-modal.component.html',
+  styleUrls: ['./configure-cla-manager-modal.component.scss'],
 })
 export class ConfigureClaManagerModalComponent implements OnInit {
-  @ViewChild("errorModal") errorModal: TemplateRef<any>;
-  @ViewChild("warningModal") warningModal: TemplateRef<any>;
+  @ViewChild('errorModal') errorModal: TemplateRef<any>;
+  @ViewChild('warningModal') warningModal: TemplateRef<any>;
   @Output() showCloseBtnEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   title: string;
@@ -65,7 +65,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   manageAuthRedirection() {
     this.spinnerMessage =
-      "Please wait while we configure the initial CLA Manager settings for this CLA.";
+      'Please wait while we configure the initial CLA Manager settings for this CLA.';
     const actionType = JSON.parse(
       this.storageService.getItem(AppSettings.ACTION_TYPE)
     );
@@ -83,7 +83,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
     if (data !== undefined && data !== null) {
       // Add organization if it is not created.
       this.spinnerMessage =
-        "Please wait for a moment, we are adding the organization.";
+        'Please wait for a moment, we are adding the organization.';
       this.addNewOrganization(data);
     } else {
       this.manageAuthRedirection();
@@ -100,7 +100,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.getOrganizationInformation(response.companyID);
       },
       (exception) => {
-        this.title = "Request Failed";
+        this.title = 'Request Failed';
         this.message = exception.error.Message
           ? exception.error.Message
           : exception.error.message;
@@ -122,7 +122,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.failedCount++;
         if (this.failedCount >= AppSettings.MAX_FAILED_COUNT) {
           // end API call after 20 time failed
-          this.title = "Request Failed";
+          this.title = 'Request Failed';
           this.message = exception.error.Message;
           this.openDialog(this.errorModal);
         } else {
@@ -145,10 +145,10 @@ export class ConfigureClaManagerModalComponent implements OnInit {
         this.addContributorAsDesignee();
       } else {
         this.message =
-          "<p>You will need to use your LF account to access the CLA Manager console," +
-          " or create an LF Login account if you do not have one already.</p>" +
-          "<p>After logging in, you will be redirected to " +
-          "the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>";
+          '<p>You will need to use your LF account to access the CLA Manager console,' +
+          ' or create an LF Login account if you do not have one already.</p>' +
+          '<p>After logging in, you will be redirected to ' +
+          'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
         this.openDialog(this.warningModal);
       }
     }
@@ -201,7 +201,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
                 this.addAsCLAManagerDesignee(data);
               }, 200);
             } else {
-              this.title = "Request Failed";
+              this.title = 'Request Failed';
               this.storageService.removeItem(AppSettings.ACTION_TYPE);
               this.message = exception.error.Message
                 ? exception.error.Message
@@ -236,7 +236,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
           }
         },
         (exception) => {
-          this.title = "Request Failed";
+          this.title = 'Request Failed';
           this.message = exception.error.Message;
           this.openDialog(this.errorModal);
         }
@@ -249,14 +249,14 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       this.checkRoleAssignment();
     } else {
       this.showRetryBtn = true;
-      this.title = "Request Failed";
+      this.title = 'Request Failed';
       this.message =
-        "The initial CLA manager settings could not be assigned.</br>" +
-        "Please click on Retry to allow platform more time to assign settings.</br>" +
-        'Otherwise you can file a <a href="' +
+        'The initial CLA manager settings could not be assigned.</br>' +
+        'Please click on Retry to allow platform more time to assign settings.</br>' +
+        'Otherwise you can file a <a href=""' +
         AppSettings.TICKET_URL +
-        '" target="_blank"><b>support ticket</b>.</a>' +
-        " Once the support ticket is resolved, you will be able to proceed with the CLA.";
+        'target="_blank"><b>support ticket</b>.</a>' +
+        ' Once the support ticket is resolved, you will be able to proceed with the CLA.';
       this.openDialog(this.errorModal);
     }
   }
@@ -271,7 +271,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   onClickProceedBtn() {
     this.modalService.dismissAll();
     this.message =
-      "<p>You will be redirected to the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>";
+      '<p>You will be redirected to the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
     this.openDialog(this.warningModal);
   }
 
@@ -282,13 +282,13 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       this.modalService.dismissAll();
       this.loaderService.show();
       const corporateUrl = this.claContributorService.getLFXCorporateURL();
-      console.log("corporateURL: ", corporateUrl);
-      if (corporateUrl !== "") {
+      console.log('corporateURL: ', corporateUrl);
+      if (corporateUrl !== '') {
         this.storageService.removeItem(AppSettings.ACTION_TYPE);
-        window.open(corporateUrl, "_self");
+        window.open(corporateUrl, '_self');
       } else {
         this.alertService.error(
-          "Error occurred during redirecting to the corporate console."
+          'Error occurred during redirecting to the corporate console.'
         );
         this.loaderService.hide();
       }
@@ -302,7 +302,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   onClickBackBtn() {
     const data = {
-      action: "CLA_NOT_SIGN",
+      action: 'CLA_NOT_SIGN',
       payload: false,
     };
     this.claContributorService.openDialogModalEvent.next(data);
@@ -315,7 +315,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   onClickRetry() {
     this.modalService.dismissAll();
     const data = {
-      action: "RETRY_CONFIG_CLA_MANAGER",
+      action: 'RETRY_CONFIG_CLA_MANAGER',
       payload: false,
     };
     this.claContributorService.openDialogModalEvent.next(data);
@@ -324,7 +324,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
   openDialog(content) {
     this.modalService.open(content, {
       centered: true,
-      backdrop: "static",
+      backdrop: 'static',
       keyboard: false,
     });
   }
