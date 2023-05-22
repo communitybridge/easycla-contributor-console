@@ -10,9 +10,8 @@ package-lock.json
 .serverless/
 
 # Ignore .yarn 
-.yarn
-.yarnrc.yml
-
+.yarn/
+yarnrc.yml
 
 # compiled output
 /dist
