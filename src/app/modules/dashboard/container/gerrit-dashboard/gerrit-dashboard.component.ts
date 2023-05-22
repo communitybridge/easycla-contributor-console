@@ -4,7 +4,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth.service';
 @Component({
   selector: 'app-gerrit-dashboard',
@@ -18,7 +18,8 @@ export class GerritDashboardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.storageService.removeGithubItems();
   }
@@ -31,7 +32,22 @@ export class GerritDashboardComponent implements OnInit {
     this.storageService.setItem(AppSettings.HAS_GERRIT, true);
     this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
     this.storageService.setItem(AppSettings.CONTRACT_TYPE, this.contractType);
-    this.authService.login();
+    setTimeout(() => {
+      if (!this.authService.loggedIn) {
+        this.authService.login();
+      } else {
+        const authData = JSON.parse(
+          this.storageService.getItem(AppSettings.AUTH_DATA)
+        );
+        if (this.contractType === 'individual') {
+          const url = '/individual-dashboard/' + this.projectId + '/' + authData.userid;
+          this.router.navigate([url]);
+        } else if (this.contractType === 'corporate') {
+          const url = '/corporate-dashboard/' + this.projectId + '/' + authData.userid;
+          this.router.navigate([url]);
+        }
+      }
+    }, 1000);
   }
 
 }
