@@ -9,6 +9,9 @@ package-lock.json
 # Ignore serverless
 .serverless/
 
+# Ignore .yarn 
+.yarn/*
+
 # compiled output
 /dist
 /tmp

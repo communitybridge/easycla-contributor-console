@@ -33,6 +33,7 @@ export class GerritDashboardComponent implements OnInit {
     this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
     this.storageService.setItem(AppSettings.CONTRACT_TYPE, this.contractType);
     setTimeout(() => {
+      console.log(this.authService.loggedIn)
       if (!this.authService.loggedIn) {
         this.authService.login();
       } else {
