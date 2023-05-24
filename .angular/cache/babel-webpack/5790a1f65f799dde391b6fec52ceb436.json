@@ -1,0 +1,1 @@
+{"ast":null,"code":"// Copyright The Linux Foundation and each contributor to CommunityBridge.\n// SPDX-License-Identifier: MIT\nimport * as env from './cla-env-config.json';\nexport const EnvConfig = env;","map":null,"metadata":{},"sourceType":"module"}
