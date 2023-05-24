@@ -9,6 +9,11 @@ package-lock.json
 # Ignore serverless
 .serverless/
 
+# Ignore .yarn 
+.yarn/*
+.yarn/install-state.gz
+.yarnrc.yml
+
 # compiled output
 /dist
 /tmp
