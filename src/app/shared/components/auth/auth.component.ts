@@ -5,13 +5,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppSettings } from 'src/app/config/app-settings';
 import { GerritUserModel } from 'src/app/core/models/gerrit';
-import { ProjectModel } from 'src/app/core/models/project';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AlertService } from '../../services/alert.service';
 import { StorageService } from '../../services/storage.service';
 import { AuthService } from '@auth0/auth0-angular';
-import { User } from '@auth0/auth0-spa-js';
-import { first } from 'rxjs/operators';
 import { LfxHeaderService } from '../../services/lfx-header.service';
 @Component({
   selector: 'app-auth',

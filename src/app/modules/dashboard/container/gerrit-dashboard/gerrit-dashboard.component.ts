@@ -9,7 +9,6 @@ import { AuthService } from '@auth0/auth0-angular';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { GerritUserModel } from 'src/app/core/models/gerrit';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import { GerritError, ProjectModel } from 'src/app/core/models/project';
 
 @Component({
   selector: 'app-gerrit-dashboard',
