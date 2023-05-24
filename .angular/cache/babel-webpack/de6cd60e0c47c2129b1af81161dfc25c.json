@@ -1,1 +1,0 @@
-{"ast":null,"code":"// Copyright The Linux Foundation and each contributor to CommunityBridge.\n// SPDX-License-Identifier: MIT\nexport class OrganizationModel {}\nexport class OrganizationListModel {}\nexport class Organization {}\nexport class CompanyModel {}\nexport class ClearBitModel {}","map":null,"metadata":{},"sourceType":"module"}
