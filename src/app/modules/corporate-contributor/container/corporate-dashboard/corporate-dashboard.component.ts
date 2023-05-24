@@ -7,35 +7,35 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-} from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { ClaContributorService } from "src/app/core/services/cla-contributor.service";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { PlatformLocation } from "@angular/common";
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PlatformLocation } from '@angular/common';
 import {
   Organization,
   OrganizationListModel,
   OrganizationModel,
-} from "src/app/core/models/organization";
-import { StorageService } from "src/app/shared/services/storage.service";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AlertService } from "src/app/shared/services/alert.service";
-import { ProjectModel } from "src/app/core/models/project";
-import { AppSettings } from "src/app/config/app-settings";
-import { Subscription } from "rxjs";
+} from 'src/app/core/models/organization';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertService } from 'src/app/shared/services/alert.service';
+import { ProjectModel } from 'src/app/core/models/project';
+import { AppSettings } from 'src/app/config/app-settings';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-corporate-dashboard",
-  templateUrl: "./corporate-dashboard.component.html",
-  styleUrls: ["./corporate-dashboard.component.scss"],
+  selector: 'app-corporate-dashboard',
+  templateUrl: './corporate-dashboard.component.html',
+  styleUrls: ['./corporate-dashboard.component.scss'],
 })
 export class CorporateDashboardComponent implements OnInit, OnDestroy {
-  @ViewChild("configureCLAManager") configureCLAManager: TemplateRef<any>;
-  @ViewChild("identifyCLAManager") identifyCLAManager: TemplateRef<any>;
-  @ViewChild("addCompany") addCompany: TemplateRef<any>;
-  @ViewChild("signedCLANotFoundModal") signedCLANotFoundModal: TemplateRef<any>;
-  @ViewChild("successModal") successModal: TemplateRef<any>;
-  @ViewChild("warningModal") warningModal: TemplateRef<any>;
+  @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
+  @ViewChild('identifyCLAManager') identifyCLAManager: TemplateRef<any>;
+  @ViewChild('addCompany') addCompany: TemplateRef<any>;
+  @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
+  @ViewChild('successModal') successModal: TemplateRef<any>;
+  @ViewChild('warningModal') warningModal: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -69,29 +69,29 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private alertService: AlertService
   ) {
-    this.projectId = this.route.snapshot.paramMap.get("projectId");
-    this.userId = this.route.snapshot.paramMap.get("userId");
-    this.openView = this.route.snapshot.queryParamMap.get("view");
-    this.searchBoxValue = "";
+    this.projectId = this.route.snapshot.paramMap.get('projectId');
+    this.userId = this.route.snapshot.paramMap.get('userId');
+    this.openView = this.route.snapshot.queryParamMap.get('view');
+    this.searchBoxValue = '';
     this.location.onPopState(() => {
       this.modalService.dismissAll();
     });
     this.mySubscription =
       this.claContributorService.openDialogModalEvent.subscribe((result) => {
         switch (result.action) {
-          case "CLA_NOT_SIGN":
+          case 'CLA_NOT_SIGN':
             this.openWithDismiss(this.signedCLANotFoundModal);
             break;
-          case "IDENTIFY_CLA_MANAGER":
+          case 'IDENTIFY_CLA_MANAGER':
             this.openWithDismiss(this.identifyCLAManager);
             break;
-          case "BACK_TO_ADD_ORGANIZATION":
+          case 'BACK_TO_ADD_ORGANIZATION':
             this.openWithDismiss(this.addCompany);
             break;
-          case "RETRY_CONFIG_CLA_MANAGER":
+          case 'RETRY_CONFIG_CLA_MANAGER':
             this.open(this.configureCLAManager);
             break;
-          case "ADD_NEW_ORGANIZATION":
+          case 'ADD_NEW_ORGANIZATION':
             if (result.payload !== undefined && result.payload !== null) {
               if (result.payload.organization_id) {
                 // If organization already exist in SF.
@@ -99,12 +99,12 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
                 this.onClickProceed();
               } else {
                 // If organization not in SF but present in clearbit.
-                this.form.controls.companyName.setValue("");
+                this.form.controls.companyName.setValue('');
                 this.openWithDismiss(this.signedCLANotFoundModal);
               }
             } else {
               // Newly created organization
-              this.form.controls.companyName.setValue("");
+              this.form.controls.companyName.setValue('');
               this.openWithDismiss(this.signedCLANotFoundModal);
             }
             break;
@@ -115,18 +115,18 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.selectedCompany = "";
+    this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hideDialogCloseBtn = false;
 
     this.minLengthValidationMsg =
-      "Minimum 2 characters are required to search organization name";
+      'Minimum 2 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
       companyName: [
-        "",
+        '',
         Validators.compose([
           Validators.required,
           Validators.minLength(2),
@@ -147,7 +147,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   openAuthRedirectionModal() {
     setTimeout(() => {
       if (this.openView === AppSettings.SIGN_CLA) {
-        window.location.href = window.location.href.split("?view=signCLA")[0];
+        window.location.href = window.location.href.split('?view=signCLA')[0];
         this.open(this.configureCLAManager);
       }
     }, 250);
@@ -189,17 +189,17 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         () => {
           this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
           const companyName = this.form.controls.companyName.value;
-          this.title = "Setup Required";
+          this.title = 'Setup Required';
           this.message =
-            "The selected company " +
+            'The selected company ' +
             companyName +
-            " has not been fully setup.</br>" +
+            ' has not been fully setup.</br>' +
             ' Please help us by <a href="' +
             AppSettings.TICKET_URL +
             '" target="_blank">filing a support ticket</a>' +
-            " to get the Organization Administrator assigned. Once the Organization Administrator is assigned to " +
+            ' to get the Organization Administrator assigned. Once the Organization Administrator is assigned to ' +
             companyName +
-            " you will be able to proceed with the CLA.";
+            ' you will be able to proceed with the CLA.';
           this.openWithDismiss(this.warningModal);
         }
       );
@@ -218,20 +218,20 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
           if (
             Object.prototype.hasOwnProperty.call(
               response.errors,
-              "missing_ccla"
+              'missing_ccla'
             )
           ) {
             this.openWithDismiss(this.signedCLANotFoundModal);
           } else if (
             Object.prototype.hasOwnProperty.call(
               response.errors,
-              "ccla_approval_list"
+              'ccla_approval_list'
             )
           ) {
             const url =
-              "/corporate-dashboard/request-authorization/" +
+              '/corporate-dashboard/request-authorization/' +
               this.projectId +
-              "/" +
+              '/' +
               this.userId;
             this.router.navigate([url]);
           } else {
@@ -312,13 +312,13 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.storageService.getItem(AppSettings.HAS_GERRIT)
     );
     this.hasError = false;
-    this.title = "You are done!";
+    this.title = 'You are done!';
     this.message =
-      "You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.";
+      'You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.';
     if (hasGerrit) {
       this.message =
-        "You have completed the CLA steps necessary to contribute. Please note that you will need to logout and log back in to your Gerrit account to get the updated permissions." +
-        " You can now return to writing awesome stuff.";
+        'You have completed the CLA steps necessary to contribute. Please note that you will need to logout and log back in to your Gerrit account to get the updated permissions.' +
+        ' You can now return to writing awesome stuff.';
     }
     this.openWithDismiss(this.successModal);
   }
@@ -328,17 +328,17 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.storageService.getItem(AppSettings.PROJECT)
     );
     this.hasError = true;
-    this.title = "Sign ICLA Required";
+    this.title = 'Sign ICLA Required';
     this.message =
       project.project_name +
-      " requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.";
+      ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
     this.openWithDismiss(this.successModal);
   }
 
   onClickModalSuccessBtn() {
     this.modalService.dismissAll();
     if (this.hasError) {
-      const url = "/individual-dashboard/" + this.projectId + "/" + this.userId;
+      const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
     } else {
       this.redirectToSource();
@@ -354,9 +354,9 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.storageService.getItem(AppSettings.REDIRECT)
     );
     if (redirectUrl !== null) {
-      window.open(redirectUrl, "_self");
+      window.open(redirectUrl, '_self');
     } else {
-      const error = "Unable to fetch redirect URL.";
+      const error = 'Unable to fetch redirect URL.';
       this.alertService.error(error);
     }
   }
@@ -368,7 +368,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       const companyName = event.target.value;
       if (this.selectedCompany !== companyName) {
-        this.selectedCompany = "";
+        this.selectedCompany = '';
       }
       if (this.searchTimeout !== null) {
         clearTimeout(this.searchTimeout);
@@ -377,14 +377,14 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         this.searchOrganization(encodeURIComponent(companyName));
       }, 400);
     } else {
-      this.selectedCompany = "";
+      this.selectedCompany = '';
       this.organizationList.list = [];
       this.resetEmptySearchMessage();
     }
   }
 
   resetEmptySearchMessage() {
-    if (this.form.controls.companyName.value === "") {
+    if (this.form.controls.companyName.value === '') {
       this.emptySearchError = true;
     }
   }
@@ -425,7 +425,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       this.storageService.getItem(AppSettings.REDIRECT)
     );
     this.router.navigate(
-      ["/cla/project/" + this.projectId + "/user/" + this.userId],
+      ['/cla/project/' + this.projectId + '/user/' + this.userId],
       { queryParams: { redirect: redirectUrl } }
     );
   }
@@ -433,7 +433,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   open(content) {
     this.modalService.open(content, {
       centered: true,
-      backdrop: "static",
+      backdrop: 'static',
       keyboard: false,
     });
   }

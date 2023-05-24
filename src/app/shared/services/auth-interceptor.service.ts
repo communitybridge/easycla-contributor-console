@@ -6,14 +6,14 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-} from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { AuthService } from "@auth0/auth0-angular";
-import { Observable, throwError } from "rxjs";
-import { catchError, mergeMap } from "rxjs/operators";
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
+import { Observable, throwError } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
   constructor(private authService: AuthService) {}
@@ -34,7 +34,7 @@ export class AuthInterceptorService implements HttpInterceptor {
         console.log(err);
 
         const tokenReq = req.clone({
-          setHeaders: { Authorization: "" },
+          setHeaders: { Authorization: '' },
         });
 
         return next.handle(tokenReq);
