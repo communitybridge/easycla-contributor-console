@@ -37,7 +37,6 @@ export class AppComponent {
     this.mountFooter();
 
     this.authService.user$.subscribe((sessionData) => {
-      console.log(sessionData);
       this.lfxHeaderService.setUserInLFxHeader(sessionData);
       this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
     });
