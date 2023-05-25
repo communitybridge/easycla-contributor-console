@@ -23,7 +23,9 @@ export class AppComponent {
     private lfxHeaderService: LfxHeaderService,
     private authService: AuthService,
     private storageService: StorageService
-  ) {}
+  ) {
+    this.storageService.removeAll();
+  }
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;

@@ -171,7 +171,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       );
       if (authData) {
         const data = {
-          userEmail: authData.email || authData.user_emails[0],
+          userEmail: authData.email,
         };
         this.addAsCLAManagerDesignee(data);
         clearInterval(interval);
@@ -233,7 +233,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       .hasRoleAssigned(
         this.company.companyExternalID,
         projectId,
-        authData.userid
+        authData.nickname
       )
       .subscribe(
         (result) => {

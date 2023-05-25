@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthModule } from '@auth0/auth0-angular';
 import { EnvConfig } from './config/cla-env-utils';
 import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent, AlertComponent],
@@ -36,6 +37,7 @@ import { AuthInterceptorService } from './shared/services/auth-interceptor.servi
       domain: EnvConfig.default['auth0-domain'],
       clientId: EnvConfig.default['auth0-clientId'],
       redirectUri: window.location.origin + '/#/auth',
+      audience: environment.auth0Audience,
       authorizationParams: {
         redirect_uri: window.location.origin + '/#/auth',
       },

@@ -7,8 +7,7 @@ import { AppSettings } from 'src/app/config/app-settings';
 @Injectable()
 export class StorageService {
   cookiesItems = [];
-  constructor(
-  ) { }
+  constructor() {}
 
   getItem<T>(key: string): T {
     const result = localStorage.getItem(key);
@@ -70,7 +69,7 @@ export class StorageService {
 
   removeAllCookies() {
     const that = this;
-    this.cookiesItems.forEach(key => {
+    this.cookiesItems.forEach((key) => {
       that.setItemInCookies(key, '');
     });
   }
