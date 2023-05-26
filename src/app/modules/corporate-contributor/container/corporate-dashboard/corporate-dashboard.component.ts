@@ -1,12 +1,22 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlatformLocation } from '@angular/common';
-import { Organization, OrganizationListModel, OrganizationModel } from 'src/app/core/models/organization';
+import {
+  Organization,
+  OrganizationListModel,
+  OrganizationModel,
+} from 'src/app/core/models/organization';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/shared/services/alert.service';
@@ -17,7 +27,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-corporate-dashboard',
   templateUrl: './corporate-dashboard.component.html',
-  styleUrls: ['./corporate-dashboard.component.scss']
+  styleUrls: ['./corporate-dashboard.component.scss'],
 })
 export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('configureCLAManager') configureCLAManager: TemplateRef<any>;
@@ -66,59 +76,63 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.location.onPopState(() => {
       this.modalService.dismissAll();
     });
-    this.mySubscription = this.claContributorService.openDialogModalEvent.subscribe((result) => {
-      switch (result.action) {
-        case 'CLA_NOT_SIGN':
-          this.openWithDismiss(this.signedCLANotFoundModal);
-          break;
-        case 'IDENTIFY_CLA_MANAGER':
-          this.openWithDismiss(this.identifyCLAManager);
-          break;
-        case 'BACK_TO_ADD_ORGANIZATION':
-          this.openWithDismiss(this.addCompany);
-          break;
-        case 'RETRY_CONFIG_CLA_MANAGER':
-          this.open(this.configureCLAManager);
-          break;
-        case 'ADD_NEW_ORGANIZATION':
-          if (result.payload !== undefined && result.payload !== null) {
-            if (result.payload.organization_id) {
-              // If organization already exist in SF.
-              this.onSelectCompany(result.payload);
-              this.onClickProceed();
+    this.mySubscription =
+      this.claContributorService.openDialogModalEvent.subscribe((result) => {
+        switch (result.action) {
+          case 'CLA_NOT_SIGN':
+            this.openWithDismiss(this.signedCLANotFoundModal);
+            break;
+          case 'IDENTIFY_CLA_MANAGER':
+            this.openWithDismiss(this.identifyCLAManager);
+            break;
+          case 'BACK_TO_ADD_ORGANIZATION':
+            this.openWithDismiss(this.addCompany);
+            break;
+          case 'RETRY_CONFIG_CLA_MANAGER':
+            this.open(this.configureCLAManager);
+            break;
+          case 'ADD_NEW_ORGANIZATION':
+            if (result.payload !== undefined && result.payload !== null) {
+              if (result.payload.organization_id) {
+                // If organization already exist in SF.
+                this.onSelectCompany(result.payload);
+                this.onClickProceed();
+              } else {
+                // If organization not in SF but present in clearbit.
+                this.form.controls.companyName.setValue('');
+                this.openWithDismiss(this.signedCLANotFoundModal);
+              }
             } else {
-              // If organization not in SF but present in clearbit.
+              // Newly created organization
               this.form.controls.companyName.setValue('');
               this.openWithDismiss(this.signedCLANotFoundModal);
             }
-          } else {
-            // Newly created organization
-            this.form.controls.companyName.setValue('');
-            this.openWithDismiss(this.signedCLANotFoundModal);
-          }
-          break;
-        default:
-          break;
-      }
-    });
+            break;
+          default:
+            break;
+        }
+      });
   }
 
   ngOnInit(): void {
-
     this.selectedCompany = '';
     this.hasShowDropdown = false;
     this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hideDialogCloseBtn = false;
 
-    this.minLengthValidationMsg = 'Minimum 2 characters are required to search organization name';
+    this.minLengthValidationMsg =
+      'Minimum 2 characters are required to search organization name';
 
     this.form = this.formBuilder.group({
-      companyName: ['', Validators.compose([
-        Validators.required,
-        Validators.minLength(2),
-        Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX))
-      ])],
+      companyName: [
+        '',
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(2),
+          Validators.pattern(new RegExp(AppSettings.NON_WHITE_SPACE_REGEX)),
+        ]),
+      ],
     });
     this.openAuthRedirectionModal();
     this.handledBrowserBack();
@@ -161,23 +175,34 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   getOrganizationInformation() {
-    this.claContributorService.getOrganizationDetails(this.selectedCompany).subscribe(
-      (response) => {
-        this.organization = response;
-        this.storageService.setItem(AppSettings.SELECTED_COMPANY, this.organization);
-        this.checkEmployeeeSignature();
-      },
-      () => {
-        this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
-        const companyName = this.form.controls.companyName.value;
-        this.title = 'Setup Required';
-        this.message = 'The selected company ' + companyName + ' has not been fully setup.</br>' +
-          ' Please help us by <a href="' + AppSettings.TICKET_URL + '" target="_blank">filing a support ticket</a>' +
-          ' to get the Organization Administrator assigned. Once the Organization Administrator is assigned to ' + companyName +
-          ' you will be able to proceed with the CLA.';
-        this.openWithDismiss(this.warningModal);
-      }
-    );
+    this.claContributorService
+      .getOrganizationDetails(this.selectedCompany)
+      .subscribe(
+        (response) => {
+          this.organization = response;
+          this.storageService.setItem(
+            AppSettings.SELECTED_COMPANY,
+            this.organization
+          );
+          this.checkEmployeeeSignature();
+        },
+        () => {
+          this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
+          const companyName = this.form.controls.companyName.value;
+          this.title = 'Setup Required';
+          this.message =
+            'The selected company ' +
+            companyName +
+            ' has not been fully setup.</br>' +
+            ' Please help us by <a href="' +
+            AppSettings.TICKET_URL +
+            '" target="_blank">filing a support ticket</a>' +
+            ' to get the Organization Administrator assigned. Once the Organization Administrator is assigned to ' +
+            companyName +
+            ' you will be able to proceed with the CLA.';
+          this.openWithDismiss(this.warningModal);
+        }
+      );
   }
 
   checkEmployeeeSignature() {
@@ -185,18 +210,36 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     const data = {
       project_id: this.projectId,
       company_id: this.organization.companyID,
-      user_id: this.userId
+      user_id: this.userId,
     };
     this.claContributorService.CheckPreparedEmployeeSignature(data).subscribe(
       (response) => {
         if (response.errors) {
-          if (Object.prototype.hasOwnProperty.call(response.errors, 'missing_ccla')) {
+          if (
+            Object.prototype.hasOwnProperty.call(
+              response.errors,
+              'missing_ccla'
+            )
+          ) {
             this.openWithDismiss(this.signedCLANotFoundModal);
-          } else if (Object.prototype.hasOwnProperty.call(response.errors, 'ccla_approval_list')) {
-            const url = '/corporate-dashboard/request-authorization/' + this.projectId + '/' + this.userId;
+          } else if (
+            Object.prototype.hasOwnProperty.call(
+              response.errors,
+              'ccla_approval_list'
+            )
+          ) {
+            const url =
+              '/corporate-dashboard/request-authorization/' +
+              this.projectId +
+              '/' +
+              this.userId;
             this.router.navigate([url]);
           } else {
-            this.alertService.error(response.errors.project_id);
+            if (response.errors.user_id) {
+              this.alertService.error(response.errors.user_id);
+            } else {
+              this.alertService.error(response.errors.project_id);
+            }
           }
         } else {
           this.postEmployeeSignatureRequest();
@@ -209,68 +252,86 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   postEmployeeSignatureRequest() {
-    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const hasGerrit = JSON.parse(
+      this.storageService.getItem(AppSettings.HAS_GERRIT)
+    );
     const signatureRequest = {
       project_id: this.projectId,
       company_id: this.organization.companyID,
       user_id: this.userId,
-      return_url_type: hasGerrit ? AppSettings.GERRIT : this.claContributorService.getTypeByUrl()
+      return_url_type: hasGerrit
+        ? AppSettings.GERRIT
+        : this.claContributorService.getTypeByUrl(),
     };
-    this.claContributorService.postEmployeeSignatureRequest(signatureRequest).subscribe(
-      () => {
-        const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
-        if (project.project_ccla_requires_icla_signature && !this.attempt) {
-          this.checkIndividualLastSignature();
-        } else {
-          this.showSuccessAndRedirectToGit();
+    this.claContributorService
+      .postEmployeeSignatureRequest(signatureRequest)
+      .subscribe(
+        () => {
+          const project: ProjectModel = JSON.parse(
+            this.storageService.getItem(AppSettings.PROJECT)
+          );
+          if (project.project_ccla_requires_icla_signature && !this.attempt) {
+            this.checkIndividualLastSignature();
+          } else {
+            this.showSuccessAndRedirectToGit();
+          }
+        },
+        (exception) => {
+          this.claContributorService.handleError(exception);
         }
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+      );
   }
 
   checkIndividualLastSignature() {
-    this.claContributorService.getLastIndividualSignature(this.userId, this.projectId).subscribe(
-      (response) => {
-        this.attempt = true;
-        if (response === null) {
-          // User has no icla, they need one. Redirect to ICLA/
-          this.showICLASignModal();
-        } else {
-          // get whether icla is up to date
-          if (response.requires_resigning) {
+    this.claContributorService
+      .getLastIndividualSignature(this.userId, this.projectId)
+      .subscribe(
+        (response) => {
+          this.attempt = true;
+          if (response === null) {
+            // User has no icla, they need one. Redirect to ICLA/
             this.showICLASignModal();
           } else {
-            // show success and redirect to github.
-            this.postEmployeeSignatureRequest();
+            // get whether icla is up to date
+            if (response.requires_resigning) {
+              this.showICLASignModal();
+            } else {
+              // show success and redirect to github.
+              this.postEmployeeSignatureRequest();
+            }
           }
+        },
+        (exception) => {
+          this.claContributorService.handleError(exception);
         }
-      },
-      (exception) => {
-        this.claContributorService.handleError(exception);
-      }
-    );
+      );
   }
 
   showSuccessAndRedirectToGit() {
-    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const hasGerrit = JSON.parse(
+      this.storageService.getItem(AppSettings.HAS_GERRIT)
+    );
     this.hasError = false;
     this.title = 'You are done!';
-    this.message = 'You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.';
+    this.message =
+      'You have completed the CLA steps necessary to contribute. You can now return to writing awesome stuff.';
     if (hasGerrit) {
-      this.message = 'You have completed the CLA steps necessary to contribute. Please note that you will need to logout and log back in to your Gerrit account to get the updated permissions.' +
+      this.message =
+        'You have completed the CLA steps necessary to contribute. Please note that you will need to logout and log back in to your Gerrit account to get the updated permissions.' +
         ' You can now return to writing awesome stuff.';
     }
     this.openWithDismiss(this.successModal);
   }
 
   showICLASignModal() {
-    const project: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
+    const project: ProjectModel = JSON.parse(
+      this.storageService.getItem(AppSettings.PROJECT)
+    );
     this.hasError = true;
     this.title = 'Sign ICLA Required';
-    this.message = project.project_name + ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
+    this.message =
+      project.project_name +
+      ' requires contributors covered by a corporate CLA to also sign an individual CLA. Click the button below to sign an individual CLA.';
     this.openWithDismiss(this.successModal);
   }
 
@@ -289,7 +350,9 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   redirectToSource() {
-    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+    const redirectUrl = JSON.parse(
+      this.storageService.getItem(AppSettings.REDIRECT)
+    );
     if (redirectUrl !== null) {
       window.open(redirectUrl, '_self');
     } else {
@@ -358,16 +421,20 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   onClickBack() {
-    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
-    this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
-      { queryParams: { redirect: redirectUrl } });
+    const redirectUrl = JSON.parse(
+      this.storageService.getItem(AppSettings.REDIRECT)
+    );
+    this.router.navigate(
+      ['/cla/project/' + this.projectId + '/user/' + this.userId],
+      { queryParams: { redirect: redirectUrl } }
+    );
   }
 
   open(content) {
     this.modalService.open(content, {
       centered: true,
       backdrop: 'static',
-      keyboard: false
+      keyboard: false,
     });
   }
 
@@ -385,8 +452,14 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   }
 
   handledBrowserBack() {
-    if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
-      const company: OrganizationModel = JSON.parse(this.storageService.getItem(AppSettings.SELECTED_COMPANY));
+    if (
+      window.performance &&
+      window.performance.navigation.type ===
+        window.performance.navigation.TYPE_BACK_FORWARD
+    ) {
+      const company: OrganizationModel = JSON.parse(
+        this.storageService.getItem(AppSettings.SELECTED_COMPANY)
+      );
       this.selectedCompany = company.companyExternalID;
     }
   }

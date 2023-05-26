@@ -2,9 +2,9 @@
 // SPDX-License-Identifier: MIT
 
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { EnvConfig } from '../../config/cla-env-utils';
 import { AppSettings } from '../../config/app-settings';
+import { AuthService } from '@auth0/auth0-angular';
 
 const script = document.createElement('script');
 script.setAttribute('src', EnvConfig.default[AppSettings.LFX_HEADER]);
@@ -16,8 +16,7 @@ document.head.appendChild(script);
 export class LfxHeaderService {
   links: any[];
 
-  constructor(private auth: AuthService) {
-    this.setUserInLFxHeader();
+  constructor(private authService: AuthService) {
     this.setLinks();
     this.setCallBackUrl();
   }
@@ -44,19 +43,17 @@ export class LfxHeaderService {
   setCallBackUrl() {
     const lfHeaderEl: any = document.getElementById('lfx-header-v2');
     if (lfHeaderEl) {
-      lfHeaderEl.callbackurl = this.auth.auth0Options.callbackUrl;
+      lfHeaderEl.callbackurl = window.location.origin + '/#/auth';
     }
   }
 
-  setUserInLFxHeader(): void {
+  setUserInLFxHeader(data): void {
     setTimeout(() => {
       const lfHeaderEl: any = document.getElementById('lfx-header-v2');
       if (lfHeaderEl) {
-        this.auth.userProfile$.subscribe((data) => {
-          if (data) {
-            lfHeaderEl.authuser = data;
-          }
-        });
+        if (data) {
+          lfHeaderEl.authuser = data;
+        }
       }
     }, 2000);
   }

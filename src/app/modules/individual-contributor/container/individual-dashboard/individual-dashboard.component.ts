@@ -67,7 +67,7 @@ export class IndividualDashboardComponent implements OnInit {
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
-      return_url_type: this.hasGerrit ? AppSettings.GERRIT :this.claContributorService.getTypeByUrl(),
+      return_url_type: this.hasGerrit ? AppSettings.GERRIT : this.claContributorService.getTypeByUrl(),
       return_url: this.hasGerrit ? '' : this.activeSignatureModel.return_url
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(

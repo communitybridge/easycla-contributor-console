@@ -2,11 +2,10 @@
  SPDX-License-Identifier: MIT */
 .fix-header-margin {
   transition: margin 0.3s;
-  margin-top: 25px;
+  margin-top: 35px;
   padding: 25px 0;
   min-height: calc(100vh - 167px);
   &.expanded {
-    margin-top: 100px;
     min-height: calc(100vh - 242px);
   }
 }
