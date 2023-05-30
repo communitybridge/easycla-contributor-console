@@ -78,6 +78,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
     this.mySubscription =
       this.claContributorService.openDialogModalEvent.subscribe((result) => {
+        console.log(result.action);
         switch (result.action) {
           case 'CLA_NOT_SIGN':
             this.openWithDismiss(this.signedCLANotFoundModal);

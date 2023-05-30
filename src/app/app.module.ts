@@ -38,11 +38,10 @@ import { environment } from 'src/environments/environment';
       clientId: EnvConfig.default['auth0-clientId'],
       redirectUri: window.location.origin + '/#/auth',
       audience: environment.auth0Audience,
-      authorizationParams: {
-        redirect_uri: window.location.origin + '/#/auth',
-      },
       useRefreshTokens: true,
-      scope: 'access:api openid email profile offline_access',
+      useRefreshTokensFallback: true,
+      useCookiesForTransactions: true,
+      scope: 'access:api openid email profile',
     }),
   ],
   providers: [
