@@ -23,9 +23,7 @@ export class AppComponent {
     private lfxHeaderService: LfxHeaderService,
     private authService: AuthService,
     private storageService: StorageService
-  ) {
-    this.storageService.removeAll();
-  }
+  ) {}
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;
@@ -37,6 +35,7 @@ export class AppComponent {
     this.mountFooter();
 
     this.authService.user$.subscribe((sessionData) => {
+      console.log(sessionData);
       this.lfxHeaderService.setUserInLFxHeader(sessionData);
       this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
     });
