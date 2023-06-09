@@ -18,7 +18,6 @@ import { CorporateContributorModule } from './modules/corporate-contributor/corp
 import { FormsModule } from '@angular/forms';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { EnvConfig } from './config/cla-env-utils';
-import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
 import { environment } from 'src/environments/environment';
 
 @NgModule({
