@@ -41,6 +41,7 @@ export class ProjectTitleComponent implements OnInit {
   }
 
   validateGithubFlow() {
+    console.log('called');
     this.getUser();
     this.getProject();
   }
