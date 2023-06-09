@@ -16,7 +16,7 @@ import { AlertComponent } from './shared/components/alert/alert.component';
 import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
 import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
 import { FormsModule } from '@angular/forms';
-import { AuthModule } from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { EnvConfig } from './config/cla-env-utils';
 import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
 import { environment } from 'src/environments/environment';
@@ -38,6 +38,12 @@ import { environment } from 'src/environments/environment';
       clientId: EnvConfig.default['auth0-clientId'],
       redirectUri: window.location.origin + '/#/auth',
       audience: environment.auth0Audience,
+      // httpInterceptor: {
+      //   allowedList: [
+      //     EnvConfig.default['api-base'] + '/*',
+      //     EnvConfig.default['api-v4-base'] + '/*',
+      //   ],
+      // },
       useRefreshTokens: true,
       useRefreshTokensFallback: true,
       useCookiesForTransactions: true,
@@ -50,6 +56,11 @@ import { environment } from 'src/environments/environment';
       useClass: LoaderInterceptorService,
       multi: true,
     },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthHttpInterceptor,
+    //   multi: true,
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
