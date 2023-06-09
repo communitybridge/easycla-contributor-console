@@ -16,7 +16,7 @@ import { AlertComponent } from './shared/components/alert/alert.component';
 import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
 import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
 import { FormsModule } from '@angular/forms';
-import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import { AuthModule } from '@auth0/auth0-angular';
 import { EnvConfig } from './config/cla-env-utils';
 import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
 import { environment } from 'src/environments/environment';
