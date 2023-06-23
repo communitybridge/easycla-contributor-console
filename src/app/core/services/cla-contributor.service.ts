@@ -1,37 +1,29 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Injectable, isDevMode } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
-import { Project, ProjectModel } from '../models/project';
-import { UpdateUserModel, UserModel } from '../models/user';
-import { AlertService } from 'src/app/shared/services/alert.service';
-import { ActiveSignatureModel } from '../models/active-signature';
-import { IndividualRequestSignatureModel } from '../models/individual-request-signature';
-import {
-  ClearBitModel,
-  CompanyModel,
-  OrganizationListModel,
-  OrganizationModel,
-} from '../models/organization';
-import { EmployeeSignatureModel } from '../models/employee-signature';
-import { InviteCompanyModel } from '../models/invite-company';
-import { CLAManagersModel } from '../models/cla-manager';
-import { AppSettings } from 'src/app/config/app-settings';
-import { StorageService } from 'src/app/shared/services/storage.service';
-import { GerritUserModel } from '../models/gerrit';
-import {
-  CompanyAdminDesigneeModel,
-  CompnayAdminListModel,
-} from '../models/company-admin-designee';
-import { EnvConfig } from 'src/app/config/cla-env-utils';
+import {Injectable, isDevMode} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, Subject} from 'rxjs';
+import {Project, ProjectModel} from '../models/project';
+import {UpdateUserModel, UserModel} from '../models/user';
+import {AlertService} from 'src/app/shared/services/alert.service';
+import {ActiveSignatureModel} from '../models/active-signature';
+import {IndividualRequestSignatureModel} from '../models/individual-request-signature';
+import {ClearBitModel, CompanyModel, OrganizationListModel, OrganizationModel} from '../models/organization';
+import {EmployeeSignatureModel} from '../models/employee-signature';
+import {InviteCompanyModel} from '../models/invite-company';
+import {CLAManagersModel} from '../models/cla-manager';
+import {AppSettings} from 'src/app/config/app-settings';
+import {StorageService} from 'src/app/shared/services/storage.service';
+import {GerritUserModel} from '../models/gerrit';
+import {CompanyAdminDesigneeModel, CompnayAdminListModel} from '../models/company-admin-designee';
+import {EnvConfig} from 'src/app/config/cla-env-utils';
 
 declare const require: any;
 const FileSaver = require('file-saver');
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ClaContributorService {
   public openDialogModalEvent = new Subject<any>();
@@ -49,7 +41,7 @@ export class ClaContributorService {
   constructor(
     private httpClient: HttpClient,
     private alertService: AlertService,
-    private storageService: StorageService
+    private storageService: StorageService,
   ) {
     // Determine if we're running in a local services (developer) mode - the USE_LOCAL_SERVICES environment variable
     // will be set to 'true', otherwise we're using normal services deployed in each environment
@@ -61,6 +53,7 @@ export class ClaContributorService {
     }
     // this.localTesting = isDevMode();
   }
+
 
   getUser(userId: string): Observable<UserModel> {
     const url = this.getV2Endpoint('/v2/user/' + userId);
@@ -82,10 +75,7 @@ export class ClaContributorService {
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
-  searchOrganization(
-    organizationName: string,
-    organizationWebsite?: string
-  ): Observable<OrganizationListModel> {
+  searchOrganization(organizationName: string, organizationWebsite?: string): Observable<OrganizationListModel> {
     let url = this.getV3Endpoint('/v3/organization/search?');
     if (organizationName) {
       url += 'companyName=' + organizationName;
@@ -98,16 +88,11 @@ export class ClaContributorService {
   }
 
   getClearBitData(organizationWebsite: string): Observable<ClearBitModel> {
-    const url = this.getV4Endpoint(
-      '/v4/company/lookup?websiteName=' + organizationWebsite
-    );
+    const url = this.getV4Endpoint('/v4/company/lookup?websiteName=' + organizationWebsite);
     return this.httpClient.get<ClearBitModel>(url);
   }
 
-  hasOrganizationExist(
-    organizationName: string,
-    organizationWebsite: string
-  ): Observable<OrganizationListModel> {
+  hasOrganizationExist(organizationName: string, organizationWebsite: string): Observable<OrganizationListModel> {
     let url = this.getV3Endpoint('/v3/organization/search?');
     if (organizationName) {
       url += '$filter=name eq ' + organizationName;
@@ -123,22 +108,12 @@ export class ClaContributorService {
     return this.httpClient.get<OrganizationModel>(url);
   }
 
-  getSigningEntityNameDetails(
-    signingEntityName: string,
-    companySFID: string
-  ): Observable<OrganizationModel> {
-    const url = this.getV3Endpoint(
-      '/v3/company/signing-entity-name?name=' +
-        signingEntityName +
-        '&companySFID=' +
-        companySFID
-    );
+  getSigningEntityNameDetails(signingEntityName: string, companySFID: string): Observable<OrganizationModel> {
+    const url = this.getV3Endpoint('/v3/company/signing-entity-name?name=' + signingEntityName + '&companySFID=' + companySFID);
     return this.httpClient.get<OrganizationModel>(url);
   }
 
-  postIndividualSignatureRequest(
-    data: any
-  ): Observable<IndividualRequestSignatureModel> {
+  postIndividualSignatureRequest(data: any): Observable<IndividualRequestSignatureModel> {
     const url = this.getV2Endpoint('/v2/request-individual-signature');
     return this.httpClient.post<IndividualRequestSignatureModel>(url, data);
   }
@@ -148,20 +123,13 @@ export class ClaContributorService {
     return this.httpClient.post<any>(url, data);
   }
 
-  postEmployeeSignatureRequest(
-    signatureRequest: any
-  ): Observable<EmployeeSignatureModel> {
+  postEmployeeSignatureRequest(signatureRequest: any): Observable<EmployeeSignatureModel> {
     const url = this.getV2Endpoint('/v2/request-employee-signature');
     return this.httpClient.post<EmployeeSignatureModel>(url, signatureRequest);
   }
 
-  getLastIndividualSignature(
-    userId: string,
-    projectId: string
-  ): Observable<any> {
-    const url = this.getV2Endpoint(
-      '/v2/user/' + userId + '/project/' + projectId + '/last-signature'
-    );
+  getLastIndividualSignature(userId: string, projectId: string): Observable<any> {
+    const url = this.getV2Endpoint('/v2/user/' + userId + '/project/' + projectId + '/last-signature');
     return this.httpClient.get<InviteCompanyModel>(url);
   }
 
@@ -175,23 +143,13 @@ export class ClaContributorService {
     return this.httpClient.get<ProjectModel>(url);
   }
 
-  inviteManager(
-    userLFID: string,
-    data: any
-  ): Observable<CompanyAdminDesigneeModel> {
-    const url = this.getV4Endpoint(
-      '/v4/user/' + userLFID + '/invite-company-admin'
-    );
+  inviteManager(userLFID: string, data: any): Observable<CompanyAdminDesigneeModel> {
+    const url = this.getV4Endpoint('/v4/user/' + userLFID + '/invite-company-admin');
     return this.httpClient.post<CompanyAdminDesigneeModel>(url, data);
   }
 
-  getProjectCLAManagers(
-    projectId: string,
-    companyId: string
-  ): Observable<CLAManagersModel> {
-    const url = this.getV4Endpoint(
-      '/v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers'
-    );
+  getProjectCLAManagers(projectId: string, companyId: string): Observable<CLAManagersModel> {
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/cla-group/' + projectId + '/cla-managers');
     return this.httpClient.get<CLAManagersModel>(url);
   }
 
@@ -205,35 +163,13 @@ export class ClaContributorService {
     return this.httpClient.get<CompnayAdminListModel>(url);
   }
 
-  addAsCLAManagerDesignee(
-    companyId: string,
-    projectId: string,
-    data: any
-  ): Observable<any> {
-    const url = this.getV4Endpoint(
-      '/v4/company/' +
-        companyId +
-        '/claGroup/' +
-        projectId +
-        '/cla-manager-designee'
-    );
+  addAsCLAManagerDesignee(companyId: string, projectId: string, data: any): Observable<any> {
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/claGroup/' + projectId + '/cla-manager-designee');
     return this.httpClient.post<any>(url, data);
   }
 
-  hasRoleAssigned(
-    companyId: string,
-    projectId: string,
-    userLFID: string
-  ): Observable<any> {
-    const url = this.getV4Endpoint(
-      '/v4/company/' +
-        companyId +
-        '/user/' +
-        userLFID +
-        '/claGroupID/' +
-        projectId +
-        '/is-cla-manager-designee'
-    );
+  hasRoleAssigned(companyId: string, projectId: string, userLFID: string): Observable<any> {
+    const url = this.getV4Endpoint('/v4/company/' + companyId + '/user/' + userLFID + '/claGroupID/' + projectId + '/is-cla-manager-designee');
     return this.httpClient.get<any>(url);
   }
 
@@ -255,15 +191,9 @@ export class ClaContributorService {
   }
 
   getUserLFID(): string {
-    const hasGerrit = JSON.parse(
-      this.storageService.getItem(AppSettings.HAS_GERRIT)
-    );
-    const userModel: UserModel = JSON.parse(
-      this.storageService.getItem(AppSettings.USER)
-    );
-    const gerritUserModel: GerritUserModel = JSON.parse(
-      this.storageService.getItem(AppSettings.AUTH_DATA)
-    );
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.AUTH_DATA));
     if (hasGerrit) {
       return gerritUserModel.lf_username;
     } else {
@@ -274,9 +204,7 @@ export class ClaContributorService {
   getLFXCorporateURL(): string {
     let url = '';
     // Load the CLA Group models from local storage - should only be 1 CLA Group
-    const claGroupModel: ProjectModel = JSON.parse(
-      this.storageService.getItem(AppSettings.PROJECT)
-    );
+    const claGroupModel: ProjectModel = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     // We may have zero or more SF Projects attached to this CLA Group
     const projectDetails = claGroupModel.projects;
     // TODO: figure out the github repository that was used to come here...
@@ -289,30 +217,15 @@ export class ClaContributorService {
     if (projectDetails.length === 0) {
       // No SFID associated with project so redirect at corporate console dashboard.
       url = this.corporateV2Base + 'company/dashboard';
-    } else if (
-      claGroupModel.signed_at_foundation_level &&
-      claGroupModel.foundation_sfid === project.project_sfid
-    ) {
+    } else if (claGroupModel.signed_at_foundation_level && claGroupModel.foundation_sfid === project.project_sfid) {
       // Signed at foundation level.
-      url =
-        this.corporateV2Base +
-        'foundation/' +
-        projectDetails[0].foundation_sfid +
-        '/cla';
+      url = this.corporateV2Base + 'foundation/' + projectDetails[0].foundation_sfid + '/cla';
     } else {
       if (project !== null) {
         // For standalone project we must redirect to the SFID of The Linux Foundation
-        url =
-          this.corporateV2Base +
-          'foundation/' +
-          project.foundation_sfid +
-          '/project/' +
-          project.project_sfid +
-          '/cla';
+        url = this.corporateV2Base + 'foundation/' + project.foundation_sfid + '/project/' + project.project_sfid + '/cla';
       } else {
-        this.alertService.error(
-          'Unable to find project by repository, please contact to your administrator.'
-        );
+        this.alertService.error('Unable to find project by repository, please contact to your administrator.');
       }
     }
 
@@ -320,9 +233,7 @@ export class ClaContributorService {
   }
 
   getProjectFromRepo(projects: Project[]) {
-    const repoURL = JSON.parse(
-      this.storageService.getItem(AppSettings.REDIRECT)
-    );
+    const repoURL = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     if (repoURL) {
       for (const project of projects) {
         // Checked in Github Repo
@@ -360,15 +271,9 @@ export class ClaContributorService {
   }
 
   getUserPublicEmail(): string {
-    const hasGerrit = JSON.parse(
-      this.storageService.getItem(AppSettings.HAS_GERRIT)
-    );
-    const userModel: UserModel = JSON.parse(
-      this.storageService.getItem(AppSettings.USER)
-    );
-    const gerritUserModel: GerritUserModel = JSON.parse(
-      this.storageService.getItem(AppSettings.USER)
-    );
+    const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    const userModel: UserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
+    const gerritUserModel: GerritUserModel = JSON.parse(this.storageService.getItem(AppSettings.USER));
     let emails;
     if (hasGerrit) {
       return gerritUserModel.lf_email;
@@ -391,11 +296,8 @@ export class ClaContributorService {
   }
 
   downloadFile(projectId: string, claType: string) {
-    const url = this.getV4Endpoint(
-      '/v4/template/' + projectId + '/preview?watermark=true&claType=' + claType
-    );
-    let fileName =
-      claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
+    const url = this.getV4Endpoint('/v4/template/' + projectId + '/preview?watermark=true&claType=' + claType);
+    let fileName = claType === 'icla' ? 'Individual_Contributor' : 'Corporate_Contributor';
     fileName += '_License_Agreement.pdf';
     this.saveAs(url, fileName);
   }
@@ -406,7 +308,7 @@ export class ClaContributorService {
     oReq.responseType = 'blob';
     oReq.onload = () => {
       const file = new Blob([oReq.response], {
-        type: 'application/pdf',
+        type: 'application/pdf'
       });
       FileSaver.saveAs(file, fileName);
     };

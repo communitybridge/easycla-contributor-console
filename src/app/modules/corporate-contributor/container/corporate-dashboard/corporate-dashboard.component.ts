@@ -78,7 +78,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
     this.mySubscription =
       this.claContributorService.openDialogModalEvent.subscribe((result) => {
-        console.log(result.action);
         switch (result.action) {
           case 'CLA_NOT_SIGN':
             this.openWithDismiss(this.signedCLANotFoundModal);
@@ -236,11 +235,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
               this.userId;
             this.router.navigate([url]);
           } else {
-            if (response.errors.user_id) {
-              this.alertService.error(response.errors.user_id);
-            } else {
-              this.alertService.error(response.errors.project_id);
-            }
+            this.alertService.error(response.errors.project_id);
           }
         } else {
           this.postEmployeeSignatureRequest();

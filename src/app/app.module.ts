@@ -16,13 +16,13 @@ import { AlertComponent } from './shared/components/alert/alert.component';
 import { IndividualContributorModule } from './modules/individual-contributor/individual-contributor.module';
 import { CorporateContributorModule } from './modules/corporate-contributor/corporate-contributor.module';
 import { FormsModule } from '@angular/forms';
-import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
-import { EnvConfig } from './config/cla-env-utils';
-import { AuthInterceptorService } from './shared/services/auth-interceptor.service';
-import { environment } from 'src/environments/environment';
+import { InterceptorService } from './shared/services/interceptor.service';
 
 @NgModule({
-  declarations: [AppComponent, AlertComponent],
+  declarations: [
+    AppComponent,
+    AlertComponent
+  ],
   imports: [
     HttpClientModule,
     BrowserModule,
@@ -32,42 +32,21 @@ import { environment } from 'src/environments/environment';
     DashboardModule,
     IndividualContributorModule,
     CorporateContributorModule,
-    FormsModule,
-    AuthModule.forRoot({
-      domain: EnvConfig.default['auth0-domain'],
-      clientId: EnvConfig.default['auth0-clientId'],
-      redirectUri: window.location.origin + '/#/auth',
-      audience: environment.auth0Audience,
-      // httpInterceptor: {
-      //   allowedList: [
-      //     EnvConfig.default['api-base'] + '/*',
-      //     EnvConfig.default['api-v4-base'] + '/*',
-      //   ],
-      // },
-      useRefreshTokens: true,
-      useRefreshTokensFallback: true,
-      useCookiesForTransactions: true,
-      scope: 'access:api openid email profile',
-    }),
+    FormsModule
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: LoaderInterceptorService,
-      multi: true,
+      multi: true
     },
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthHttpInterceptor,
-    //   multi: true,
-    // },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptorService,
-      multi: true,
+      useClass: InterceptorService,
+      multi: true
     },
-    AlertService,
+    AlertService
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

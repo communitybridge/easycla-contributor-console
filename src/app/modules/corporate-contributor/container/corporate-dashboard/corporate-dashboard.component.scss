@@ -41,7 +41,7 @@
       margin-top: 30px !important;
     }
 
-    i {
+    .building-icon {
       float: right;
       margin-top: -32px;
       font-size: 24px;
@@ -50,6 +50,16 @@
       color: #8492a6;
       z-index: 110;
       cursor: pointer;
+    }
+
+    .verified-ccla {
+      font-size: 12px;
+      color: white;
+      padding-right: 2px;
+
+      &.green {
+        color: #a1d683;
+      }
     }
 
     .child {
