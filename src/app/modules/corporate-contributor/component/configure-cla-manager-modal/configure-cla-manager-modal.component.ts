@@ -10,6 +10,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,8 +21,6 @@ import {
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { UserModel } from 'src/app/core/models/user';
 import { LoaderService } from 'src/app/shared/services/loader.service';
-import { AuthService } from '@auth0/auth0-angular';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -135,31 +134,23 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
-      this.authService.isAuthenticated$
-        .pipe(first())
-        .subscribe((isLoggedIn) => {
-          if (isLoggedIn) {
-            this.addContributorAsDesignee();
-          } else {
-            this.redirectToAuth0();
-          }
-        });
+      if (this.authService.loggedIn) {
+        this.addContributorAsDesignee();
+      } else {
+        this.redirectToAuth0();
+      }
     } else {
       // Handle usecase wheather LFID is not present but session already exist in browser.
-      this.authService.isAuthenticated$
-        .pipe(first())
-        .subscribe((isLoggedIn) => {
-          if (isLoggedIn) {
-            this.addContributorAsDesignee();
-          } else {
-            this.message =
-              '<p>You will need to use your LF account to access the CLA Manager console,' +
-              ' or create an LF Login account if you do not have one already.</p>' +
-              '<p>After logging in, you will be redirected to ' +
-              'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
-            this.openDialog(this.warningModal);
-          }
-        });
+      if (this.authService.loggedIn) {
+        this.addContributorAsDesignee();
+      } else {
+        this.message =
+          '<p>You will need to use your LF account to access the CLA Manager console,' +
+          ' or create an LF Login account if you do not have one already.</p>' +
+          '<p>After logging in, you will be redirected to ' +
+          'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
+        this.openDialog(this.warningModal);
+      }
     }
   }
 
@@ -171,12 +162,12 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       );
       if (authData) {
         const data = {
-          userEmail: authData.email,
+          userEmail: authData.user_email,
         };
         this.addAsCLAManagerDesignee(data);
         clearInterval(interval);
       } else {
-        this.authService.loginWithRedirect();
+        this.authService.login();
         clearInterval(interval);
       }
     }, 2000);
@@ -199,7 +190,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
             this.hasCLAManagerDesignee = true;
             this.proceedToCorporateConsole();
           } else if (exception.status === 401) {
-            this.authService.loginWithRedirect();
+            this.authService.login();
           } else {
             this.failedCount++;
             if (
@@ -233,7 +224,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       .hasRoleAssigned(
         this.company.companyExternalID,
         projectId,
-        authData.nickname
+        authData.userid
       )
       .subscribe(
         (result) => {
@@ -306,7 +297,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   redirectToAuth0() {
     this.storageService.setItem(AppSettings.ACTION_TYPE, AppSettings.SIGN_CLA);
-    this.authService.loginWithRedirect();
+    this.authService.login();
   }
 
   onClickBackBtn() {

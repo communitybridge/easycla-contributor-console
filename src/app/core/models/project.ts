@@ -21,12 +21,6 @@ export class ProjectModel {
   signed_at_foundation_level: boolean;
 }
 
-export class GerritError {
-  errors: {
-    project_id: string;
-  };
-}
-
 export class ProjectCorporateDocument {
   document_name: string;
   document_file_id: string;
@@ -112,6 +106,7 @@ export class GitlabRepository {
   repository_url: string;
   version: string;
 }
+
 
 // Gerrit Repository Model
 export class GerritRepository {

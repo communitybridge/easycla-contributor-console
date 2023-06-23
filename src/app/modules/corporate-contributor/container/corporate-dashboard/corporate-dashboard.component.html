@@ -1,165 +1,248 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<app-project-title [projectId]="projectId" [userId]="userId"></app-project-title>
+<app-project-title
+  [projectId]="projectId"
+  [userId]="userId"
+></app-project-title>
 
 <div class="col-12 corporate-dashboard">
-    <div class="container">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-xs-11 col-sm-11 col-md-11 col-lg-8 select-company-model">
-                <div class="col-12 header">
-                    Select Organization
-                </div>
+  <div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-xs-11 col-sm-11 col-md-11 col-lg-8 select-company-model">
+        <div class="col-12 header">Select Organization</div>
 
-                <div class="col-12 body">
-                    <div class="col-12">
-                        <div class="row justify-content-center align-items-center">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                <form [formGroup]="form">
-                                    <input id="msg" type="text" autocomplete="off" [value]="searchBoxValue"
-                                        formControlName="companyName" placeholder="Type Your Organization Name"
-                                        (input)="onCompanyKeypress($event)">
-                                    <i class="fas fa-building" (click)="toggleDropdown()"></i>
-                                </form>
-                            </div>
+        <div class="col-12 body">
+          <div class="col-12">
+            <div class="row justify-content-center align-items-center">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
+                <form [formGroup]="form">
+                  <input
+                    id="msg"
+                    type="text"
+                    autocomplete="off"
+                    [value]="searchBoxValue"
+                    formControlName="companyName"
+                    placeholder="Type Your Organization Name"
+                    (input)="onCompanyKeypress($event)"
+                  />
+                  <i
+                    class="building-icon fas fa-building"
+                    (click)="toggleDropdown()"
+                  ></i>
+                </form>
+              </div>
 
-                            <div *ngIf="hasShowDropdown" class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-                                <div class="col-12 dropdown-container">
-                                    <div class="companies">
-
-                                        <div class="col-12"
-                                            *ngIf="form.controls.companyName.errors  && (form.controls.companyName.dirty || form.controls.companyName.touched)">
-                                            <span *ngIf="!form.controls.companyName.errors.required"
-                                                class="error">{{minLengthValidationMsg}}
-                                            </span>
-                                        </div>
-
-                                        <!--Repeated error message but it is requirement when no search text is present-->
-                                        <div class="col-12 error" *ngIf="emptySearchError">{{minLengthValidationMsg}}
-                                        </div>
-
-                                        <div class="col-12 error" *ngIf="noCompanyFound">Could not find any matching
-                                            organization.</div>
-
-                                        <div class="col-12 item" *ngFor="let organization of organizationList.list"
-                                            (click)="onSelectCompany(organization)">
-                                            <div class="row" (click)="onSelectCompany(organization)">
-                                                <div class="col-6 ellipsis">{{organization.organization_name}}</div>
-                                                <div class="col-6 ellipsis">{{organization.organization_website}}
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="footer col-12">
-                                        <span>Organization not listed? </span>
-                                        <span class="click-here" (click)="onClickAddOrganization()">+ Click
-                                            Here</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+              <div
+                *ngIf="hasShowDropdown"
+                class="col-xs-12 col-sm-12 col-md-12 col-lg-8"
+              >
+                <div class="col-12 dropdown-container">
+                  <div class="companies">
+                    <div
+                      class="col-12"
+                      *ngIf="
+                        form.controls.companyName.errors &&
+                        (form.controls.companyName.dirty ||
+                          form.controls.companyName.touched)
+                      "
+                    >
+                      <span
+                        *ngIf="!form.controls.companyName.errors.required"
+                        class="error"
+                        >{{ minLengthValidationMsg }}
+                      </span>
                     </div>
 
-                    <div class="col-12 buttons" [ngClass]="{'mt-30':selectedCompany}">
-                        <div class="row justify-content-center align-items-center">
-                            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button tabindex="-1" type="button" class="btn" (click)="onClickBack()">
-                                    Go Back
-                                </button>
-                            </div>
-                            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
-                                <button tabindex="-1" type="button" [disabled]="selectedCompany ===''"
-                                    class="btn inactive" [ngClass]="{'active':selectedCompany!==''}"
-                                    (click)="onClickProceed()">
-                                    Proceed
-                                </button>
-                            </div>
-                        </div>
+                    <!--Repeated error message but it is requirement when no search text is present-->
+                    <div class="col-12 error" *ngIf="emptySearchError">
+                      {{ minLengthValidationMsg }}
                     </div>
-                </div>
 
+                    <div
+                      class="col-12 error"
+                      *ngIf="
+                        noCompanyFound && organizationList.list.length <= 0
+                      "
+                    >
+                      Could not find any matching organization.
+                    </div>
+
+                    <div
+                      class="col-12 item"
+                      *ngFor="let organization of organizationList.list"
+                      (click)="onSelectCompany(organization)"
+                    >
+                      <div class="row" (click)="onSelectCompany(organization)">
+                        <div class="col-6 ellipsis">
+                          <i
+                            *ngIf="organization.ccla_enabled"
+                            title="CCLA Signed"
+                            class="verified-ccla green fas fa-check-circle"
+                          ></i>
+                          <i
+                            *ngIf="!organization.ccla_enabled"
+                            class="verified-ccla fas fa-check-circle"
+                          ></i>
+                          {{ organization.organization_name }}
+                        </div>
+                        <div class="col-6 ellipsis">
+                          {{ organization.organization_website }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer col-12">
+                    <span>Organization not listed? </span>
+                    <span class="click-here" (click)="onClickAddOrganization()"
+                      >+ Click Here</span
+                    >
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div class="col-12 buttons" [ngClass]="{ 'mt-30': selectedCompany }">
+            <div class="row justify-content-center align-items-center">
+              <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <button
+                  tabindex="-1"
+                  type="button"
+                  class="btn"
+                  (click)="onClickBack()"
+                >
+                  Go Back
+                </button>
+              </div>
+              <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <button
+                  tabindex="-1"
+                  type="button"
+                  [disabled]="selectedCompany === ''"
+                  class="btn inactive"
+                  [ngClass]="{ active: selectedCompany !== '' }"
+                  (click)="onClickProceed()"
+                >
+                  Proceed
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <ng-template #addCompany let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <app-modal-header title="CREATE NEW ORGANIZATION" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
-            </app-modal-header>
-            <app-add-company-modal></app-add-company-modal>
-        </div>
+  <div class="model">
+    <div class="modal-body">
+      <app-modal-header
+        title="CREATE NEW ORGANIZATION"
+        showCloseBtn="true"
+        (closeDialogEmitter)="onClickClose()"
+      >
+      </app-modal-header>
+      <app-add-company-modal></app-add-company-modal>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #signedCLANotFoundModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <app-modal-header title="No Signed CLA Found" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
-            </app-modal-header>
-            <app-cla-not-signed-modal (yesEmitter)="openWithDismiss(configureCLAManager)"
-                (noEmitter)="openWithDismiss(identifyCLAManager)">
-            </app-cla-not-signed-modal>
-        </div>
+  <div class="model">
+    <div class="modal-body">
+      <app-modal-header
+        title="No Signed CLA Found"
+        showCloseBtn="true"
+        (closeDialogEmitter)="onClickClose()"
+      >
+      </app-modal-header>
+      <app-cla-not-signed-modal
+        (yesEmitter)="openWithDismiss(configureCLAManager)"
+        (noEmitter)="openWithDismiss(identifyCLAManager)"
+      >
+      </app-cla-not-signed-modal>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #identifyCLAManager let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <app-modal-header title="Identify CLA Manager" showCloseBtn="true" (closeDialogEmitter)="onClickClose()">
-            </app-modal-header>
-            <app-identify-cla-manager-modal></app-identify-cla-manager-modal>
-        </div>
+  <div class="model">
+    <div class="modal-body">
+      <app-modal-header
+        title="Identify CLA Manager"
+        showCloseBtn="true"
+        (closeDialogEmitter)="onClickClose()"
+      >
+      </app-modal-header>
+      <app-identify-cla-manager-modal></app-identify-cla-manager-modal>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #configureCLAManager let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <app-modal-header title="Configuring CLA Manager Settings" [showCloseBtn]="hideDialogCloseBtn"
-                (closeDialogEmitter)="onClickClose()">
-            </app-modal-header>
-            <app-configure-cla-manager-modal (showCloseBtnEmitter)="hideShowCloseBtn($event)">
-            </app-configure-cla-manager-modal>
-        </div>
+  <div class="model">
+    <div class="modal-body">
+      <app-modal-header
+        title="Configuring CLA Manager Settings"
+        [showCloseBtn]="hideDialogCloseBtn"
+        (closeDialogEmitter)="onClickClose()"
+      >
+      </app-modal-header>
+      <app-configure-cla-manager-modal
+        (showCloseBtnEmitter)="hideShowCloseBtn($event)"
+      >
+      </app-configure-cla-manager-modal>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #successModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <div class="row justify-content-center success-dialog">
-                <div class="col-auto">
-                    <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
-                    <i *ngIf="hasError" class="fas fas fa-exclamation-triangle logo red"></i>
-                </div>
-                <div class="col-12 title">{{title}}</div>
-                <p class="col-11 success-message" [innerHTML]="message"></p>
-                <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickModalSuccessBtn()">
-                        {{hasError?'Proceed':'Exit EasyCLA'}}
-                    </button>
-                </div>
-            </div>
+  <div class="model">
+    <div class="modal-body">
+      <div class="row justify-content-center success-dialog">
+        <div class="col-auto">
+          <i *ngIf="!hasError" class="fas fa-check-circle logo green"></i>
+          <i
+            *ngIf="hasError"
+            class="fas fas fa-exclamation-triangle logo red"
+          ></i>
         </div>
+        <div class="col-12 title">{{ title }}</div>
+        <p class="col-11 success-message" [innerHTML]="message"></p>
+        <div class="col-4">
+          <button
+            tabindex="-1"
+            type="button"
+            class="success-btn"
+            (click)="onClickModalSuccessBtn()"
+          >
+            {{ hasError ? 'Proceed' : 'Exit EasyCLA' }}
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </ng-template>
 
 <ng-template #warningModal let-modal>
-    <div class="model">
-        <div class="modal-body">
-            <div class="row justify-content-center success-dialog">
-                <div class="col-12 title">{{title}}</div>
-                <p class="col-11 success-message" [innerHTML]="message"></p>
-                <div class="col-4">
-                    <button tabindex="-1" type="button" class="success-btn" (click)="onClickExitCLA()">
-                        Go Back
-                    </button>
-                </div>
-            </div>
+  <div class="model">
+    <div class="modal-body">
+      <div class="row justify-content-center success-dialog">
+        <div class="col-12 title">{{ title }}</div>
+        <p class="col-11 success-message" [innerHTML]="message"></p>
+        <div class="col-4">
+          <button
+            tabindex="-1"
+            type="button"
+            class="success-btn"
+            (click)="onClickExitCLA()"
+          >
+            Go Back
+          </button>
         </div>
+      </div>
     </div>
+  </div>
 </ng-template>
