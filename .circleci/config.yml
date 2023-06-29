@@ -148,6 +148,12 @@ jobs:
             printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
             echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
       - run:
+          name: Install AWS Tools
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+      - run:
           name: Building Source
           command: |
             echo "Node version is: $(node --version)"
