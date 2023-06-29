@@ -10,6 +10,10 @@
     "lint": "./node_modules/.bin/eslint \"src/*.js\"",
     "test": "./node_modules/.bin/jasmine --config=jasmine.json"
   },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "eslint": "^7.1.0",
     "graceful-fs": "^4.2.2",
@@ -37,6 +41,7 @@
     "normalize-url": "^6.0.1",
     "pac-resolver": "^5.0.0",
     "path-parse": "^1.0.7",
+    "semver": "^7.5.3",
     "set-getter": "^0.1.1",
     "socket.io-parser": "^4.2.1",
     "tar": "^6.1.9",
