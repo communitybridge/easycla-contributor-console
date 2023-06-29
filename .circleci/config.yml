@@ -23,7 +23,7 @@ aliases:
 
 defaults: &defaults
   docker:
-    - image: circleci/node:14.18.0-browsers
+    - image: cimg/node:16.20.1-browsers
   working_directory: /tmp/workspace
 
 jobs:
@@ -176,8 +176,9 @@ jobs:
       - run:
           name: Invalidate Cache
           command: |
-            echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" "
-            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --verbose
+            # echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" "
+            # SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --verbose
+            aws --region ${AWS_REGION} --profile ${AWS_PROFILE} cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
 
   deployContributorConsoleDev:
     <<: *deployFrontendAnchor
@@ -189,6 +190,7 @@ jobs:
       STAGE: dev
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
+      DISTRIBUTION_ID: E4CMSMNLN6Y7T
 
   deployContributorConsoleProd:
     <<: *deployFrontendAnchor
@@ -200,6 +202,7 @@ jobs:
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org
+      DISTRIBUTION_ID: E2IOYBQJKK668Q
 
 workflows:
   build_and_deploy:
