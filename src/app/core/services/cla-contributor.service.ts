@@ -114,7 +114,7 @@ export class ClaContributorService {
   }
 
   postIndividualSignatureRequest(data: any): Observable<IndividualRequestSignatureModel> {
-    const url = this.getV2Endpoint('/v2/request-individual-signature');
+    const url = this.getV2Endpoint('/v4/request-individual-signature');
     return this.httpClient.post<IndividualRequestSignatureModel>(url, data);
   }
 
