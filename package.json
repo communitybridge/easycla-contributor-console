@@ -135,6 +135,8 @@
     "ua-parser-js": "^1.0.33",
     "underscore": "^1.13.1",
     "ws": "^7.5.5",
-    "xmlhttprequest-ssl": "^1.6.3"
+    "xmlhttprequest-ssl": "^1.6.3",
+    "@babel/traverse": "^7.23.2",
+    "postcss": "^8.4.31"
   }
 }
