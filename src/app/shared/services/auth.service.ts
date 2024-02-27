@@ -81,12 +81,13 @@ export class AuthService {
   async initializeApplication() {
     // On initial load, check authentication state with authorization server
     // Set up local auth streams if user is already authenticated
-    const params = this.currentHref;
-    if (params.includes('code=') && params.includes('state=')) {
-      console.log('Auth0 code and state are found.');
-      this.handleAuthCallback();
-      return;
-    }
+    // const params = this.currentHref;
+    // console.log(params)
+    // if (params.includes('code=') && params.includes('state=')) {
+    //   console.log('Auth0 code and state are found.');
+    //   this.handleAuthCallback();
+    //   return;
+    // }
 
     await this.localAuthSetup();
     this.handlerReturnToAferlogout();
@@ -102,8 +103,6 @@ export class AuthService {
         const target = this.getTargetRouteFromReturnTo(returnTo);
         this.router.navigate([target]);
       }
-    } else {
-      this.login();
     }
   }
   // When calling, options can be passed if desired
