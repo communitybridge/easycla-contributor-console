@@ -23,6 +23,10 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { ProjectModel } from 'src/app/core/models/project';
 import { AppSettings } from 'src/app/config/app-settings';
 import { Subscription } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
+import { LfxHeaderService } from 'src/app/shared/services/lfx-header.service';
+import { User } from '@auth0/auth0-spa-js';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -67,7 +71,9 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     private location: PlatformLocation,
     private storageService: StorageService,
     private formBuilder: FormBuilder,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private lfxHeaderService: LfxHeaderService,
+    private authService: AuthService,
   ) {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
@@ -78,7 +84,6 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     });
     this.mySubscription =
       this.claContributorService.openDialogModalEvent.subscribe((result) => {
-        console.log(result.action);
         switch (result.action) {
           case 'CLA_NOT_SIGN':
             this.openWithDismiss(this.signedCLANotFoundModal);
@@ -121,6 +126,15 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     this.emptySearchError = true;
     this.noCompanyFound = false;
     this.hideDialogCloseBtn = false;
+
+    this.authService.user$
+    .pipe(take(1))
+    .subscribe((sessionData: User | undefined | null) => {
+      if (sessionData) {
+        this.lfxHeaderService.setUserInLFxHeader();
+        this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
+      }
+    });
 
     this.minLengthValidationMsg =
       'Minimum 2 characters are required to search organization name';
@@ -236,11 +250,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
               this.userId;
             this.router.navigate([url]);
           } else {
-            if (response.errors.user_id) {
-              this.alertService.error(response.errors.user_id);
-            } else {
-              this.alertService.error(response.errors.project_id);
-            }
+            this.alertService.error(response.errors.project_id);
           }
         } else {
           this.postEmployeeSignatureRequest();

@@ -3,8 +3,6 @@
 
 export const environment = {
   production: false,
-  auth0RedirectUrl: `${window.location.origin}/#/auth`,
-  auth0Audience: 'https://api-gw.dev.platform.linuxfoundation.org/',
   lfxHeader: 'https://cdn.dev.platform.linuxfoundation.org',
   ACCEPTABLE_USER_POLICY:
     'https://communitybridge.dev.platform.linuxfoundation.org/acceptable-use/',

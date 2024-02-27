@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AppSettings } from './config/app-settings';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
 import { EnvConfig } from './config/cla-env-utils';
@@ -20,12 +20,17 @@ export class AppComponent {
   title = 'easycla-contributor-console';
   hasExpanded: boolean;
   links: any[];
-
   constructor(
     private lfxHeaderService: LfxHeaderService,
     private authService: AuthService,
     private storageService: StorageService
-  ) {}
+  ) {
+    this.authService.isAuthenticated$.subscribe((valid) => {
+      if (!valid) {
+        this.authService.loginWithRedirect();
+      }
+    });
+  }
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;
@@ -35,14 +40,7 @@ export class AppComponent {
     this.mountHeader();
     this.hasExpanded = true;
     this.mountFooter();
-
-    this.authService.user$
-      .pipe(take(1))
-      .subscribe((sessionData: User | undefined | null) => {
-        console.log(sessionData);
-        this.lfxHeaderService.setUserInLFxHeader(sessionData);
-        this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
-      });
+    this.auth0Login();
   }
 
   private mountHeader(): void {
@@ -56,5 +54,16 @@ export class AppComponent {
     const script = document.createElement('script');
     script.setAttribute('src', EnvConfig.default[AppSettings.LFX_FOOTER]);
     document.head.appendChild(script);
+  }
+
+  private auth0Login() {
+    this.authService.user$
+      .pipe(take(1))
+      .subscribe((sessionData: User | undefined | null) => {
+        if (sessionData) {
+          this.lfxHeaderService.setUserInLFxHeader();
+          this.storageService.setItem(AppSettings.AUTH_DATA, sessionData);
+        }
+      });
   }
 }

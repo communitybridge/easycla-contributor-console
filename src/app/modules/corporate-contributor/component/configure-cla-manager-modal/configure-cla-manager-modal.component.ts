@@ -21,7 +21,6 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { UserModel } from 'src/app/core/models/user';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { AuthService } from '@auth0/auth0-angular';
-import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-configure-cla-manager-modal',
@@ -135,31 +134,23 @@ export class ConfigureClaManagerModalComponent implements OnInit {
 
   validateUserLFID() {
     if (this.claContributorService.getUserLFID()) {
-      this.authService.isAuthenticated$
-        .pipe(first())
-        .subscribe((isLoggedIn) => {
-          if (isLoggedIn) {
-            this.addContributorAsDesignee();
-          } else {
-            this.redirectToAuth0();
-          }
-        });
+      if (this.authService.isAuthenticated$) {
+        this.addContributorAsDesignee();
+      } else {
+        this.redirectToAuth0();
+      }
     } else {
       // Handle usecase wheather LFID is not present but session already exist in browser.
-      this.authService.isAuthenticated$
-        .pipe(first())
-        .subscribe((isLoggedIn) => {
-          if (isLoggedIn) {
-            this.addContributorAsDesignee();
-          } else {
-            this.message =
-              '<p>You will need to use your LF account to access the CLA Manager console,' +
-              ' or create an LF Login account if you do not have one already.</p>' +
-              '<p>After logging in, you will be redirected to ' +
-              'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
-            this.openDialog(this.warningModal);
-          }
-        });
+      if (this.authService.isAuthenticated$) {
+        this.addContributorAsDesignee();
+      } else {
+        this.message =
+          '<p>You will need to use your LF account to access the CLA Manager console,' +
+          ' or create an LF Login account if you do not have one already.</p>' +
+          '<p>After logging in, you will be redirected to ' +
+          'the CLA Manager console where you can sign the CLA (or send it to an authorized signatory) and approve contributors on behalf of your organization.</p>';
+        this.openDialog(this.warningModal);
+      }
     }
   }
 
@@ -233,7 +224,7 @@ export class ConfigureClaManagerModalComponent implements OnInit {
       .hasRoleAssigned(
         this.company.companyExternalID,
         projectId,
-        authData.nickname
+        authData.userid
       )
       .subscribe(
         (result) => {

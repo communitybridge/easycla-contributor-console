@@ -23,7 +23,7 @@ aliases:
 
 defaults: &defaults
   docker:
-    - image: circleci/node:14.18.0-browsers
+    - image: cimg/node:16.20.1-browsers
   working_directory: /tmp/workspace
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
           command: |
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
-            yarn install --frozen-lockfile --non-interactive
+            yarn install --non-interactive
           no_output_timeout: 10m
       - run:
           name: Install Edge Dependencies
@@ -45,7 +45,7 @@ jobs:
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
             pushd edge
-            yarn install --frozen-lockfile --non-interactive
+            yarn install --non-interactive
             popd
           no_output_timeout: 10m
       - save_cache: *save-cache
@@ -148,6 +148,12 @@ jobs:
             printf "[${AWS_PROFILE}]\naws_access_key_id=${!AWS_ACCESS_KEY_ID_ENV_VAR}\naws_secret_access_key=${!AWS_SECRET_ACCESS_KEY_ENV_VAR}" > ~/.aws/credentials
             echo "export AWS_PROFILE=${AWS_PROFILE}" >> ${BASH_ENV}
       - run:
+          name: Install AWS Tools
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+      - run:
           name: Building Source
           command: |
             echo "Node version is: $(node --version)"
@@ -176,8 +182,9 @@ jobs:
       - run:
           name: Invalidate Cache
           command: |
-            echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" "
-            SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --verbose
+            # echo "Running: yarn sls cloudfrontInvalidate --stage=\"${STAGE}\" --region=\"${AWS_REGION}\" "
+            # SLS_DEBUG=* yarn sls cloudfrontInvalidate --stage="${STAGE}" --region="${AWS_REGION}" --verbose
+            aws --region ${AWS_REGION} --profile ${AWS_PROFILE} cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
 
   deployContributorConsoleDev:
     <<: *deployFrontendAnchor
@@ -189,6 +196,7 @@ jobs:
       STAGE: dev
       ROOT_DOMAIN: dev.communitybridge.org
       PRODUCT_DOMAIN: easycla.dev.communitybridge.org
+      DISTRIBUTION_ID: E4CMSMNLN6Y7T
 
   deployContributorConsoleProd:
     <<: *deployFrontendAnchor
@@ -200,6 +208,7 @@ jobs:
       STAGE: prod
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org
+      DISTRIBUTION_ID: E2IOYBQJKK668Q
 
 workflows:
   build_and_deploy:

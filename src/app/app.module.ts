@@ -48,6 +48,7 @@ import { environment } from 'src/environments/environment';
       useCookiesForTransactions: true,
       scope: 'access:api openid email profile',
     }),
+    FormsModule,
   ],
   providers: [
     {
@@ -59,6 +60,7 @@ import { environment } from 'src/environments/environment';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
       multi: true,
+      
     },
     AlertService,
   ],

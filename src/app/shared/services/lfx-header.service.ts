@@ -6,17 +6,14 @@ import { EnvConfig } from '../../config/cla-env-utils';
 import { AppSettings } from '../../config/app-settings';
 import { AuthService } from '@auth0/auth0-angular';
 
-const script = document.createElement('script');
-script.setAttribute('src', EnvConfig.default[AppSettings.LFX_HEADER]);
-document.head.appendChild(script);
-
 @Injectable({
   providedIn: 'root',
 })
 export class LfxHeaderService {
   links: any[];
 
-  constructor(private authService: AuthService) {
+  constructor(private auth: AuthService) {
+    this.setUserInLFxHeader();
     this.setLinks();
     this.setCallBackUrl();
   }
@@ -47,13 +44,15 @@ export class LfxHeaderService {
     }
   }
 
-  setUserInLFxHeader(data): void {
+  setUserInLFxHeader(): void {
     setTimeout(() => {
       const lfHeaderEl: any = document.getElementById('lfx-header-v2');
       if (lfHeaderEl) {
-        if (data) {
-          lfHeaderEl.authuser = data;
-        }
+        this.auth.user$.subscribe((data) => {
+          if (data) {
+            lfHeaderEl.authuser = data;
+          }
+        });
       }
     }, 2000);
   }

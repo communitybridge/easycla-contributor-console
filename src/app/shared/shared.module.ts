@@ -15,7 +15,6 @@ import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { LfxHeaderService } from './services/lfx-header.service';
 import { AuthComponent } from './components/auth/auth.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { AuthInterceptorService } from './services/auth-interceptor.service';
 
 @NgModule({
     declarations: [
@@ -29,7 +28,10 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
         TrimCharactersPipe,
         CheckboxComponent,
         AuthComponent,
-        FooterComponent,
+        FooterComponent
+    ],
+    imports: [
+
     ],
     exports: [
         HeaderComponent,
@@ -43,6 +45,6 @@ import { AuthInterceptorService } from './services/auth-interceptor.service';
         CheckboxComponent,
         FooterComponent
     ],
-    providers: [StorageService, LfxHeaderService, AuthInterceptorService]
+    providers: [StorageService, LfxHeaderService]
 })
 export class SharedModule { }
