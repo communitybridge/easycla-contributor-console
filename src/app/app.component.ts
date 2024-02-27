@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { AppSettings } from './config/app-settings';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
 import { EnvConfig } from './config/cla-env-utils';
