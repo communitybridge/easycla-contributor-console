@@ -47,10 +47,11 @@ export class AuthComponent implements OnInit {
     this.authService.loading$.subscribe((loading) => {
       if (!loading) {
         this.authService.isAuthenticated$.subscribe(authenticated => {
+          console.log(authenticated)
           if (authenticated) {
             this.handleRedirection();
           } else {
-            this.authService.login();
+            // this.authService.login();
           }
         });
       }
@@ -72,7 +73,7 @@ export class AuthComponent implements OnInit {
       return;
     }
 
-    this.message = 'The page you are looking for was not found.';
+    this.message = 'Wait... we are loading the screen';
   }
 
   performActionAsPerType() {
