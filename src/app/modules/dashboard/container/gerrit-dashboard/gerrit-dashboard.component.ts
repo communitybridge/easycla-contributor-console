@@ -53,6 +53,10 @@ export class GerritDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  login(){
+    this.authService.login();
+  }
+
   getGerritProjectInfo() {
     const projectId = JSON.parse(
       this.storageService.getItem(AppSettings.PROJECT_ID)
