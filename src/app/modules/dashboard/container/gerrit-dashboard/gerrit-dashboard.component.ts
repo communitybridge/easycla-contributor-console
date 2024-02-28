@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ActivatedRoute } from '@angular/router';
@@ -9,9 +9,9 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 @Component({
   selector: 'app-gerrit-dashboard',
   templateUrl: './gerrit-dashboard.component.html',
-  styleUrls: ['./gerrit-dashboard.component.scss']
+  styleUrls: ['./gerrit-dashboard.component.scss'],
 })
-export class GerritDashboardComponent implements OnInit {
+export class GerritDashboardComponent implements OnInit, AfterViewInit {
   projectId: string;
   contractType: string;
 
@@ -31,7 +31,14 @@ export class GerritDashboardComponent implements OnInit {
     this.storageService.setItem(AppSettings.HAS_GERRIT, true);
     this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
     this.storageService.setItem(AppSettings.CONTRACT_TYPE, this.contractType);
+  }
+
+  ngAfterViewInit(): void {
     this.authService.login();
   }
 
+  login() {
+    this.authService.logout();
+    this.authService.login();
+  }
 }

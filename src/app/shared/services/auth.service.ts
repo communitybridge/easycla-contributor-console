@@ -90,10 +90,10 @@ export class AuthService {
     // }
 
     await this.localAuthSetup();
-    this.handlerReturnToAferlogout();
+    this.handlerReturnToAfterLogout();
   }
 
-  handlerReturnToAferlogout() {
+  handlerReturnToAfterLogout() {
     const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     this.storageService.removeItem(AppSettings.AUTH_DATA);
     if (!hasGerrit) {
