@@ -1,6 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
-const fs = require('fs');
+//const fs = require('fs');
+import fs from 'fs';
 const RetrieveSSMValues = require('./read-ssm');
 const configVarArray = ['auth0-clientId', 'auth0-domain', 'proj-console-link', 'corp-console-link', 'lfx-header', 'lfx-footer', 'corporate-v2-base', 'api-base', 'api-v4-base', 'admin-v2-base'];
 const region = 'us-east-1';
