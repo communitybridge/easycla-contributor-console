@@ -37,9 +37,9 @@
     "deploy:cloudfront:prod": "SLS_DEBUG=* ROOT_DOMAIN=communitybridge.org PRODUCT_DOMAIN=easycla.communitybridge.org yarn sls deploy --stage='prod' --verbose",
     "deploy:frontend:prod": "SLS_DEBUG=* ROOT_DOMAIN=communitybridge.org PRODUCT_DOMAIN=easycla.communitybridge.org yarn sls client deploy --stage='prod' --no-confirm --no-policy-change --no-config-change --verbose",
     "remove:prod": "SLS_DEBUG=* yarn sls remove --stage='prod' --region='us-east-1' --verbose",
-    "prebuild:dev": "STAGE_ENV=dev node ./src/app/config/scripts/prefetch-ssm.js",
-    "prebuild:staging": "STAGE_ENV=staging node ./src/app/config/scripts/prefetch-ssm.js",
-    "prebuild:prod": "STAGE_ENV=prod node ./src/app/config/scripts/prefetch-ssm.js"
+    "prebuild:dev": "STAGE_ENV=dev node ./src/app/config/scripts/prefetch-ssm.mjs",
+    "prebuild:staging": "STAGE_ENV=staging node ./src/app/config/scripts/prefetch-ssm.mjs",
+    "prebuild:prod": "STAGE_ENV=prod node ./src/app/config/scripts/prefetch-ssm.mjs"
   },
   "private": true,
   "dependencies": {
