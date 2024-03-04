@@ -12,7 +12,7 @@ package:
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: nodejs16.x
   stage: ${opt:stage}
   region: us-east-1 # Region can't be configurable, lambda@edge is us-east-1 only.
   deploymentBucket:
