@@ -3,7 +3,8 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 //const AWS = require('aws-sdk/*');
-const AWS = require("@aws-sdk/client-ssm");
+import * as AWS from "@aws-sdk/client-ssm";
+const client = new AWS.SSM({ region: "REGION" });
    
 /**
  * @param {string[]} variables
