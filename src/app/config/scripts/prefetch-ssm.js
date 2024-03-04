@@ -1,6 +1,6 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
-
+const AWS = require('aws-sdk');
 const fs = require('fs');
 const RetrieveSSMValues = require('./read-ssm');
 const configVarArray = ['auth0-clientId', 'auth0-domain', 'proj-console-link', 'corp-console-link', 'lfx-header', 'lfx-footer', 'corporate-v2-base', 'api-base', 'api-v4-base', 'admin-v2-base'];
