@@ -37,7 +37,6 @@ jobs:
           command: |
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
-            yarn add aws-sdk
             yarn install --non-interactive
           no_output_timeout: 10m
       - run:
