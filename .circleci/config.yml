@@ -37,7 +37,7 @@ jobs:
           command: |
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
-            yarn install --non-interactive
+            yarn install --frozen-lockfile --non-interactive
           no_output_timeout: 10m
       - run:
           name: Install Edge Dependencies
@@ -45,7 +45,7 @@ jobs:
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
             pushd edge
-            yarn install --non-interactive
+            yarn install --frozen-lockfile --non-interactive
             popd
           no_output_timeout: 10m
       - save_cache: *save-cache
