@@ -37,7 +37,8 @@ jobs:
           command: |
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
-            yarn install --frozen-lockfile --non-interactive
+            yarn add aws-sdk
+            yarn install --non-interactive
           no_output_timeout: 10m
       - run:
           name: Install Edge Dependencies
@@ -45,7 +46,7 @@ jobs:
             echo "Node version is: $(node --version)"
             echo "Running top level install..."
             pushd edge
-            yarn install --frozen-lockfile --non-interactive
+            yarn install --non-interactive
             popd
           no_output_timeout: 10m
       - save_cache: *save-cache
@@ -77,7 +78,6 @@ jobs:
           command: |
             echo "Node version is: $(node --version)"
             echo "Running yarn build:${STAGE}..."
-            yarn add aws-sdk
             yarn build:${STAGE}
           no_output_timeout: 10m
       - run:
@@ -125,7 +125,6 @@ jobs:
       #- attach_workspace:
       #    at: /tmp/workspace
       - restore_cache: *restore-cache
-      - run: yarn add eslint
       - run: yarn eslint
 
   deployFrontend: &deployFrontendAnchor
