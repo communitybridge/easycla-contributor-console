@@ -118,14 +118,15 @@ jobs:
       ROOT_DOMAIN: communitybridge.org
       PRODUCT_DOMAIN: easycla.communitybridge.org
 
-#  lint:
-#    <<: *defaults
-#    steps:
-#      - checkout
-#      #- attach_workspace:
-#      #    at: /tmp/workspace
-#      - restore_cache: *restore-cache
-#      - run: yarn eslint
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      #- attach_workspace:
+      #    at: /tmp/workspace
+      - restore_cache: *restore-cache
+      - run: yarn add eslint
+      - run: yarn eslint
 
   deployFrontend: &deployFrontendAnchor
     <<: *defaults
@@ -224,16 +225,16 @@ workflows:
           filters:
             tags:
               only: /.*/
-#     - lint:
-#          requires:
-#            - buildDev
+      - lint:
+          requires:
+            - buildDev
           filters:
             tags:
               only: /.*/
       - deployContributorConsoleDev:
           requires:
             - buildDev
-#           - lint
+            - lint
           filters:
             tags:
               ignore: /.*/
