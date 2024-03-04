@@ -125,7 +125,6 @@ jobs:
       #- attach_workspace:
       #    at: /tmp/workspace
       - restore_cache: *restore-cache
-      - run: yarn global add eslint
       - run: yarn eslint
 
   deployFrontend: &deployFrontendAnchor
