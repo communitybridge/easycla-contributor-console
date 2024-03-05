@@ -33,9 +33,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-1
           role-duration-seconds: 900
+      
+      - name: Install Top Level Dependencies
+        run: yarn install
+
+      - name: Install Edge Dependencies
+        run: yarn install
 
       - name: Build prod
-        run: yarn build:${STAGE}
+        run: yarn build:prod
       
       - name: Build Edge
         run: |
@@ -66,8 +72,14 @@ jobs:
           aws-region: us-east-1
           role-duration-seconds: 900
 
+      - name: Install Top Level Dependencies
+        run: yarn install
+
+      - name: Install Edge Dependencies
+        run: yarn install
+
       - name: Build prod
-        run: yarn build:${STAGE}
+        run: yarn build:prod
       
       - name: Build Edge
         run: |
@@ -78,17 +90,21 @@ jobs:
       - name: Deploy Cloudfront and LambdaEdge
         run: |
           SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --verbose
+        env:
+          STAGE: prod
       
       - name: Deploy Frontend Bucket
         run: |
           SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose --no-confirm
+        env:
+          STAGE: prod
       
       - name: Invalidate Cloudfront Cache
         run: |
-          aws --region ${AWS_REGION} cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+          aws --region us-east-1 cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
         env:
-          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY }}
           STAGE: prod
           ROOT_DOMAIN: communitybridge.org
           PRODUCT_DOMAIN: easycla.communitybridge.org
-          DISTRIBUTION_ID: E2IOYBQJKK668Q

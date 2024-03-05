@@ -6,7 +6,7 @@ name: Dev Deployment Workflow
 on:
   push:
     branches:
-      - feat/circleci-to-gha
+      - main
 
 jobs:
   build_dev:
