@@ -1,0 +1,33 @@
+---
+# Copyright The Linux Foundation and each contributor to LFX.
+# SPDX-License-Identifier: MIT
+
+name: Cypress Yarn Dependency Audit
+
+on:
+  # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  yarn-scan-cypress-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+          cache: "yarn"
+          cache-dependency-path: "test/functional/yarn.lock"
+
+      - name: Setup
+        run: yarn install --frozen-lockfile
+        working-directory: test/functional
+
+      - name: Yarn Audit
+        run: ./yarn_audit.sh
+        working-directory: test/functional

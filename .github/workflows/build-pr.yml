@@ -1,0 +1,33 @@
+# Copyright The Linux Foundation and each contributor to LFX.
+# SPDX-License-Identifier: MIT
+
+name: Build
+
+on:
+  # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: "yarn.lock"
+
+      - name: Install Top Level Dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Install Edge Dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+
+      - name: Build Frontend
+        run: yarn build:dev

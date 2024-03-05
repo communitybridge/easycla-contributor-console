@@ -1,0 +1,83 @@
+# Copyright The Linux Foundation and each contributor to LFX.
+# SPDX-License-Identifier: MIT
+
+name: Dev Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: "yarn.lock"
+
+      - name: Build dev
+        run: yarn build:${STAGE}
+      
+      - name: Build Edge
+        run: |
+          pushd edge
+          yarn build
+          popd
+
+  deploy_dev:
+    runs-on: ubuntu-latest
+    needs: build_dev
+    environment: dev
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: "yarn.lock"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+          role-duration-seconds: 900
+      
+      - name: Build Source
+        run: yarn build:${STAGE}
+      
+      - name: Build Edge
+        run: |
+          pushd edge
+          yarn build
+          popd
+      
+      - name: Deploy Cloudfront and LambdaEdge
+        run: |
+          SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --verbose
+      
+      - name: Deploy Frontend Bucket
+        run: |
+          SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose --no-confirm
+      
+      - name: Invalidate Cloudfront Cache
+        run: |
+          aws --region ${AWS_REGION} cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+        env:
+          AWS_REGION: us-east-1
+          STAGE: dev
+          ROOT_DOMAIN: dev.communitybridge.org
+          PRODUCT_DOMAIN: easycla.dev.communitybridge.org
+          DISTRIBUTION_ID: E4CMSMNLN6Y7T

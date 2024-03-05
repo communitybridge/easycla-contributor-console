@@ -1,0 +1,42 @@
+{
+  "name": "lfx-collaboration-service-cypress-api-testing",
+  "version": "1.0.0",
+  "description": "A collection of API tests using Cypress",
+  "main": "index.js",
+  "repository": "http://github.com/LF-Engineering/acs",
+  "author": "David Deal",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "cypress:open": "./run-local-gui.sh",
+    "cypress:open:local": "./run-local-gui.sh",
+    "cypress:open:dev": "./run-dev-gui.sh",
+    "cypress:open:prod": "./run-prod-gui.sh",
+    "cypress:run": "./run-local-cli.sh",
+    "cypress:run:local": "./run-local-cli.sh",
+    "cypress:run:dev": "./run-dev-cli.sh",
+    "cypress:run:prod": "./run-prod-cli.sh",
+    "test:ci": "./node_modules/.bin/cypress run",
+    "test:ci:record": "./node_modules/.bin/cypress run --record"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@tsconfig/node16": "^1.0.3",
+    "cypress": "^12.17.1"
+  },
+  "dependencies": {
+    "@cypress/schema-tools": "^4.7.10",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.3",
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "ajv": "^8.12.0",
+    "typescript": "^5.0.2"
+  },
+  "resolutions": {
+    "is-my-json-valid": "^2.20.3",
+    "ramda": "^0.27.2",
+    "semver": "^7.5.2",
+    "tough-cookie": "^4.1.3"
+  }
+}
