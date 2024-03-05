@@ -31,8 +31,14 @@ jobs:
           aws-region: us-east-1
           role-duration-seconds: 900
 
+      - name: Install Top Level Dependencies
+        run: yarn install
+
+      - name: Install Edge Dependencies
+        run: yarn install
+
       - name: Build dev
-        run: yarn build:${STAGE}
+        run: yarn build:dev
       
       - name: Build Edge
         run: |
@@ -64,7 +70,7 @@ jobs:
           role-duration-seconds: 900
       
       - name: Build Source
-        run: yarn build:${STAGE}
+        run: yarn build:dev
       
       - name: Build Edge
         run: |
