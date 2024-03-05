@@ -68,7 +68,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-1
           role-duration-seconds: 900
-          
+
       - name: Install Top Level Dependencies
         run: yarn install
       
@@ -84,10 +84,14 @@ jobs:
       - name: Deploy Cloudfront and LambdaEdge
         run: |
           SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --verbose
+        env:
+          STAGE: dev
       
       - name: Deploy Frontend Bucket
         run: |
           SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose --no-confirm
+        env:
+          STAGE: dev
       
       - name: Invalidate Cloudfront Cache
         run: |
