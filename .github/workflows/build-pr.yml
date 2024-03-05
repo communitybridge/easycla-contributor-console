@@ -40,4 +40,10 @@ jobs:
 
       - name: Build dev
         run: yarn build:dev
+
+      - name: Build Edge
+        run: |
+          pushd edge
+          yarn build
+          popd
         
