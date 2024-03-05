@@ -38,6 +38,6 @@ jobs:
       - name: Install Edge Dependencies
         run: yarn install
 
-      - name: Build Frontend
+      - name: Build dev
         run: yarn build:dev
         
