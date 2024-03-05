@@ -6,7 +6,7 @@ name: Dev Deployment Workflow
 on:
   push:
     branches:
-      - main
+      - feat/circleci-to-gha
 
 jobs:
   build_dev:
@@ -82,10 +82,10 @@ jobs:
       
       - name: Invalidate Cloudfront Cache
         run: |
-          aws --region ${AWS_REGION} cloudfront create-invalidation --distribution-id ${DISTRIBUTION_ID} --paths "/*"
+          aws --region us-east-1 cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
         env:
-          AWS_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY
+          AWS_SECRET_KEY_ID: AWS_SECRET_KEY
           STAGE: dev
           ROOT_DOMAIN: dev.communitybridge.org
           PRODUCT_DOMAIN: easycla.dev.communitybridge.org
-          DISTRIBUTION_ID: E4CMSMNLN6Y7T
