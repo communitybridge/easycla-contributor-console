@@ -68,6 +68,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-1
           role-duration-seconds: 900
+          
+      - name: Install Top Level Dependencies
+        run: yarn install
       
       - name: Build Source
         run: yarn build:dev
