@@ -1,0 +1,14 @@
+{
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "include": [
+    "./**/*.ts"
+  ],
+  "compilerOptions": {
+    "baseUrl": "integration",
+    "types": [
+      "cypress",
+      "@percy/cypress",
+      "node"
+    ]
+  }
+}

@@ -1,0 +1,104 @@
+# Copyright The Linux Foundation and each contributor to LFX.
+# SPDX-License-Identifier: MIT
+
+name: Dev Deployment Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: "yarn.lock"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+          role-duration-seconds: 900
+
+      - name: Install Top Level Dependencies
+        run: yarn install
+
+      - name: Install Edge Dependencies
+        run: yarn install
+
+      - name: Build dev
+        run: yarn build:dev
+      
+      - name: Build Edge
+        run: |
+          pushd edge
+          yarn build
+          popd
+
+  deploy_dev:
+    runs-on: ubuntu-latest
+    needs: build_dev
+    environment: dev
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: "yarn.lock"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+          role-duration-seconds: 900
+
+      - name: Install Top Level Dependencies
+        run: yarn install
+      
+      - name: Build Source
+        run: yarn build:dev
+      
+      - name: Build Edge
+        run: |
+          pushd edge
+          yarn build
+          popd
+      
+      - name: Deploy Cloudfront and LambdaEdge
+        run: |
+          SLS_DEBUG=* yarn sls deploy --stage="${STAGE}" --verbose
+        env:
+          STAGE: dev
+      
+      - name: Deploy Frontend Bucket
+        run: |
+          SLS_DEBUG=* yarn sls client deploy --stage="${STAGE}" --verbose --no-confirm
+        env:
+          STAGE: dev
+      
+      - name: Invalidate Cloudfront Cache
+        run: |
+          aws --region us-east-1 cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY }}
+          STAGE: dev
+          ROOT_DOMAIN: dev.communitybridge.org
+          PRODUCT_DOMAIN: easycla.dev.communitybridge.org
