@@ -11,6 +11,10 @@ on:
       - v2.*
       - v3.*
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build_prod:
     runs-on: ubuntu-latest
@@ -29,10 +33,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::716487311010:role/github-actions-deploy
           aws-region: us-east-1
-          role-duration-seconds: 900
       
       - name: Install Top Level Dependencies
         run: yarn install
@@ -67,10 +70,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          audience: sts.amazonaws.com
+          role-to-assume: arn:aws:iam::716487311010:role/github-actions-deploy
           aws-region: us-east-1
-          role-duration-seconds: 900
 
       - name: Install Top Level Dependencies
         run: yarn install
@@ -103,8 +105,6 @@ jobs:
         run: |
           aws --region us-east-1 cloudfront create-invalidation --distribution-id ${{ secrets.DISTRIBUTION_ID }} --paths "/*"
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_KEY_ID: ${{ secrets.AWS_SECRET_KEY }}
           STAGE: prod
           ROOT_DOMAIN: communitybridge.org
           PRODUCT_DOMAIN: easycla.communitybridge.org
