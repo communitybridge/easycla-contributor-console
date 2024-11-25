@@ -1,11 +1,14 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
+
+// To run this project you required node version 12.0.0 or higher, yarn 1.13.0 or higher.
+
 import { Component } from '@angular/core';
 import { AppSettings } from './config/app-settings';
-import { LfxHeaderService } from './shared/services/lfx-header.service';
 import { EnvConfig } from './config/cla-env-utils';
 import { environment } from 'src/environments/environment';
+import { StorageService } from './shared/services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -15,18 +18,45 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
   title = 'easycla-contributor-console';
   hasExpanded: boolean;
+  hasTermAccepted: boolean;
+  showDashboard: boolean;
   links: any[];
-
-  constructor(private lfxHeaderService: LfxHeaderService) {}
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;
   }
 
+  constructor(private storageService: StorageService) {
+    this.showDashboard = false;
+    this.hasTermAccepted = false;
+  }
+
   ngOnInit() {
+    // const hasAleadyAcceptedTerms = JSON.parse(
+    //   this.storageService.getItem(AppSettings.ACCEPTED_TERMS)
+    // );
+    // if(hasAleadyAcceptedTerms) {
+    //   this.showDashboard = true;
+    //   this.hasTermAccepted = true;
+    // } else {
+    //   this.showDashboard = false;
+    //   this.hasTermAccepted = false;
+    // }
+
     this.mountHeader();
-    this.hasExpanded = true;
+    this.hasExpanded = true;  
     this.mountFooter();
+  }
+
+  onClickTermAccepted(event:boolean) {
+    this.hasTermAccepted = event
+    this.storageService.setItem(AppSettings.ACCEPTED_TERMS, this.hasTermAccepted);
+  }
+
+  onClickContinue() {
+    if(this.hasTermAccepted) {
+      this.showDashboard = true;
+    }
   }
 
   private mountHeader(): void {

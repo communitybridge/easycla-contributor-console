@@ -4,7 +4,28 @@
 
 <div class="fix-header-margin">
   <app-alert></app-alert>
-  <router-outlet></router-outlet>
+  <div *ngIf="!showDashboard" class="wrapper vcenter-item">
+      <div class="box">
+        <app-checkbox [checked]="hasTermAccepted" text="I hereby certify that I am not, and/or the organization I am representing is not"
+            (checkboxEmitter)="onClickTermAccepted($event)" fontSize="16px" topMargin="5px" bold="true">
+        </app-checkbox>
+        <ul class="mt-2" style="width: 800px;">
+            <li>located in Cuba, Iran, North Korea, Syria, the Crimea Region of Ukraine, or the Russian-controlled areas of the Donetsk or Luhansk regions of Ukraine;
+            </li>
+            <li>owned or controlled by, acting for or on behalf of, or an individual or entity that has in the past acted for or on behalf of the Government of Cuba, 
+                Iran, North Korea, Syria, or Venezuela; or</li>
+            <li>listed as a blocked person by the U.S. Department of the Treasury’s <a href="https://ofac.treasury.gov/sanctions-programs-and-country-information" target="_blank">Office of Foreign Assets Control (OFAC)</a> 
+                or directly or indirectly owned 50 percent or more by such a listed person
+            </li>
+          </ul>
+          <div class="d-flex flex-column">
+            <button type="button" class="button  align-self-center" [ngClass]="{'gray': !hasTermAccepted}" (click)="onClickContinue()">Continue</button>
+          </div>
+      </div>
+    </div>
+  <div *ngIf="showDashboard">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 <lfx-footer></lfx-footer>
