@@ -26,19 +26,12 @@ export class AppComponent {
   ngOnInit() {
     this.mountHeader();
     this.hasExpanded = true;
-    this.mountFooter();
   }
 
   private mountHeader(): void {
     const script = document.createElement('script');
     script.setAttribute('src', environment.lfxHeader + '/lfx-header-v2.js');
     script.setAttribute('async', 'true');
-    document.head.appendChild(script);
-  }
-
-  private mountFooter(): void {
-    const script = document.createElement('script');
-    script.setAttribute('src', EnvConfig.default[AppSettings.LFX_FOOTER]);
     document.head.appendChild(script);
   }
 }
