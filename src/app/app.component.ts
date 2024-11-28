@@ -2,9 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Component } from '@angular/core';
-import { AppSettings } from './config/app-settings';
 import { LfxHeaderService } from './shared/services/lfx-header.service';
-import { EnvConfig } from './config/cla-env-utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
