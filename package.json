@@ -139,6 +139,5 @@
     "xmlhttprequest-ssl": "^1.6.3",
     "@babel/traverse": "^7.23.2",
     "postcss": "^8.4.31"
-  },
-  "packageManager": "yarn@1.13.0"
+  }
 }
