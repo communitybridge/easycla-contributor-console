@@ -2,7 +2,10 @@
  SPDX-License-Identifier: MIT -->
 
 <label class="container">
-    <span [ngStyle]="{'font-size': fontSize, 'font-weight': bold ? 'bold' : 'normal'}">{{text}}</span>
+    <span [ngStyle]="{'font-size': fontSize, 'font-weight': bold ? 'bold' : 'normal'}">
+        <span *ngIf="required" style="color: red;padding-right: 2px;">*</span>
+        {{text}}
+    </span>
     <input type="checkbox" [checked]="checked" (click)="onCheckboxClick()">
     <span class="checkmark" [ngStyle]="{'top': topMargin}"></span>
 </label>

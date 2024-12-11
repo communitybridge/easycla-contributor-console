@@ -14,6 +14,7 @@ export class CheckboxComponent {
   @Input() fontSize: string;
   @Input() topMargin: string;
   @Input() bold: boolean;
+  @Input() required: boolean;
   @Output() checkboxEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {}
