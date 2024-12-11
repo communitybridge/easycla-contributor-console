@@ -64,7 +64,7 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   postIndividualRequestSignature() {
-    const redirectUrl = this.storageService.getItem(AppSettings.REDIRECT);
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
