@@ -15,15 +15,8 @@ import { AppSettings } from './config/app-settings';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'easycla-contributor-console';
-  hasExpanded: boolean;
   hasTermAccepted: boolean;
   showDashboard: boolean;
-  links: any[];
-
-  onToggled() {
-    this.hasExpanded = !this.hasExpanded;
-  }
 
   constructor(private storageService: StorageService) {
     this.showDashboard = false;
@@ -31,21 +24,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    // Added for future use to not show the terms page if the user has already accepted the terms
-    
-    // const hasAlreadyAcceptedTerms = JSON.parse(
-    //   this.storageService.getItem(AppSettings.ACCEPTED_TERMS)
-    // );
-    // if(hasAlreadyAcceptedTerms) {
-    //   this.showDashboard = true;
-    //   this.hasTermAccepted = true;
-    // } else {
-    //   this.showDashboard = false;
-    //   this.hasTermAccepted = false;
-    // }
-
     this.mountHeader();
-    this.hasExpanded = true;
   }
 
   onClickTermAccepted(event:boolean) {
