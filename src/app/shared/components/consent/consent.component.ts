@@ -7,7 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class ConsentComponent implements OnInit {
 
-  @Input() hasTermAccepted: boolean = false;
+  @Input() hasTermAccepted = false;
   @Output() termAccepted: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor() { }
 
