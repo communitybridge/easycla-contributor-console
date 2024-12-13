@@ -58,6 +58,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
   attempt: boolean;
+  hasTermAccepted: boolean = false;
 
   constructor(
     private route: ActivatedRoute,

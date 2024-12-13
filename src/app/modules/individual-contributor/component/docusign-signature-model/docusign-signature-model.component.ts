@@ -19,7 +19,8 @@ export class DocusignSignatureModelComponent {
 
   title: string;
   message: string;
-
+  hasTermAccepted: boolean = false;
+  
   constructor(
     private storageService: StorageService,
     private modalService: NgbModal
