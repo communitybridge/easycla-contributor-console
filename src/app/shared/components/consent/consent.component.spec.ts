@@ -1,3 +1,7 @@
+// Copyright The Linux Foundation and each contributor to CommunityBridge.
+// SPDX-License-Identifier: MIT
+
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConsentComponent } from './consent.component';
