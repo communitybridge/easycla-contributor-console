@@ -17,6 +17,8 @@ import { LfxHeaderService } from './services/lfx-header.service';
 import { InterceptorService } from './services/interceptor.service';
 import { AuthComponent } from './components/auth/auth.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { ConsentComponent } from './components/consent/consent.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
@@ -30,10 +32,11 @@ import { FooterComponent } from './components/footer/footer.component';
         TrimCharactersPipe,
         CheckboxComponent,
         AuthComponent,
-        FooterComponent
+        FooterComponent,
+        ConsentComponent
     ],
     imports: [
-
+        CommonModule
     ],
     exports: [
         HeaderComponent,
@@ -45,7 +48,8 @@ import { FooterComponent } from './components/footer/footer.component';
         ProjectTitleComponent,
         TrimCharactersPipe,
         CheckboxComponent,
-        FooterComponent
+        FooterComponent,
+        ConsentComponent
     ],
     providers: [StorageService, AuthService, LfxHeaderService, InterceptorService]
 })
