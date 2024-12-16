@@ -1,29 +1,30 @@
+// @ts-check
+
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 const AWS = require('aws-sdk');
-
-// @ts-check
-
 
 /**
  * @param {string[]} variables
  * @param {string} stage
  * @param {string} region
+ * @param {string} profile
  * @returns {Promise<{ [key:string]: string}>}
  */
-async function retrieveSSMValues(variables, stage, region) {
+async function retrieveSSMValues(variables, stage, region, profile) {
     const scopedVariables = variables.map((param) => `cla-${param}-${stage}`);
-    const result = await requestSSMParameters(scopedVariables, stage, region);
+    const result = await requestSSMParameters(scopedVariables, stage, region, profile);
     const parameters = result.Parameters;
     const error = result.$response.error;
     if (error !== null) {
         throw new Error(
-            `Couldn't retrieve SSM parameters for stage ${stage} in region ${region} - error ${error}`
+            `Couldn't retrieve SSM parameters for stage ${stage} in region ${region} using profile ${profile} - error ${error}`
         );
     }
     const scopedParams = createParameterMap(parameters, stage);
     const params = new Map();
     Object.keys(scopedParams).forEach((key) => {
+        // console.log(`processing ${key}`);
         const param = scopedParams[key];
         key = key.replace('cla-', '');
         key = key.replace(`-${stage}`, '');
@@ -33,7 +34,7 @@ async function retrieveSSMValues(variables, stage, region) {
     variables.forEach((variable) => {
         if (params[variable] === undefined) {
             throw new Error(
-                `Missing SSM parameter with name ${variable} for stage ${stage} in region ${region}`,
+                `Missing SSM parameter with name ${variable} for stage ${stage} in region ${region} using profile ${profile}`,
             );
         }
     });
@@ -46,14 +47,20 @@ async function retrieveSSMValues(variables, stage, region) {
  * @param {string[]} variables
  * @param {string} stage
  * @param {string} region
+ * @param {string} profile
  */
-async function requestSSMParameters(variables, stage, region) {
+async function requestSSMParameters(variables, stage, region, profile) {
+    console.log(`Loading AWS credentials from profile: ${profile}`)
+    AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile });
     const ssm = new AWS.SSM({ region });
     const ps = {
         Names: variables,
         WithDecryption: true
     };
+    // console.log(AWS.config.credentials);
+    // console.log(`fetching ssm parameters: ${variables}`);
     const response = await ssm.getParameters(ps).promise();
+    // console.log(response);
     return response;
 }
 

@@ -14,7 +14,7 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
-  styleUrls: ['./auth.component.scss'],
+  styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
   message: string;
@@ -31,21 +31,14 @@ export class AuthComponent implements OnInit {
     private claContributorService: ClaContributorService,
     private alertService: AlertService,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
-    this.contractType = JSON.parse(
-      this.storageService.getItem(AppSettings.CONTRACT_TYPE)
-    );
-    this.hasGerrit = JSON.parse(
-      this.storageService.getItem(AppSettings.HAS_GERRIT)
-    );
-    this.actionType = JSON.parse(
-      this.storageService.getItem(AppSettings.ACTION_TYPE)
-    );
-    this.projectId = JSON.parse(
-      this.storageService.getItem(AppSettings.PROJECT_ID)
-    );
+    this.contractType = JSON.parse(this.storageService.getItem(AppSettings.CONTRACT_TYPE));
+    this.hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
+    this.actionType = JSON.parse(this.storageService.getItem(AppSettings.ACTION_TYPE));
+    this.projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
     this.userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
     this.previousURL = decodeURIComponent(window.location.hash.split('=')[1]);
 
@@ -53,12 +46,11 @@ export class AuthComponent implements OnInit {
 
     this.authService.loading$.subscribe((loading) => {
       if (!loading) {
-        this.authService.isAuthenticated$.subscribe((authenticated) => {
-          console.log(authenticated);
+        this.authService.isAuthenticated$.subscribe(authenticated => {
           if (authenticated) {
             this.handleRedirection();
           } else {
-            // this.authService.login();
+            this.authService.login();
           }
         });
       }
@@ -71,28 +63,22 @@ export class AuthComponent implements OnInit {
 
   setMessage() {
     if (this.actionType === AppSettings.SIGN_CLA) {
-      this.message =
-        'Wait... You are being redirected to the Configure CLA Manager.';
+      this.message = 'Wait... You are being redirected to the Configure CLA Manager.';
       return;
     }
 
     if (this.hasGerrit) {
-      this.message =
-        'You are being redirected to the ' +
-        this.contractType +
-        ' contributor console.';
+      this.message = 'You are being redirected to the ' + this.contractType + ' contributor console.';
       return;
     }
 
-    this.message = 'Wait... we are loading the screen';
+    this.message = 'The page you are looking for was not found.';
   }
 
   performActionAsPerType() {
     if (this.actionType === AppSettings.SIGN_CLA) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
-      this.router.navigate([url], {
-        queryParams: { view: AppSettings.SIGN_CLA },
-      });
+      this.router.navigate([url], { queryParams: { view: AppSettings.SIGN_CLA } });
       return;
     }
 
@@ -107,13 +93,9 @@ export class AuthComponent implements OnInit {
       return;
     } else {
       // Redirect to landing page.
-      const redirectUrl = JSON.parse(
-        this.storageService.getItem(AppSettings.REDIRECT)
-      );
-      this.router.navigate(
-        ['/cla/project/' + this.projectId + '/user/' + this.userId],
-        { queryParams: { redirect: redirectUrl } }
-      );
+      const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+      this.router.navigate(['/cla/project/' + this.projectId + '/user/' + this.userId],
+        { queryParams: { redirect: redirectUrl } });
     }
 
     // *todo: handle default case
@@ -128,8 +110,7 @@ export class AuthComponent implements OnInit {
         this.redirectForGerritFlow();
       },
       (exception) => {
-        this.message =
-          'Failed to redirect on a ' + this.contractType + ' console.';
+        this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
         this.alertService.error(exception.error);
       }
     );
@@ -163,15 +144,11 @@ export class AuthComponent implements OnInit {
   getGerritProjectInfo() {
     this.claContributorService.getGerritProjectInfo(this.projectId).subscribe(
       (response: ProjectModel) => {
-        this.storageService.setItem(
-          AppSettings.PROJECT_NAME,
-          response.project_name
-        );
+        this.storageService.setItem(AppSettings.PROJECT_NAME, response.project_name);
         this.storageService.setItem(AppSettings.PROJECT, response);
       },
       (exception) => {
-        this.message =
-          'Failed to redirect on a ' + this.contractType + ' console.';
+        this.message = 'Failed to redirect on a ' + this.contractType + ' console.';
         this.claContributorService.handleError(exception);
       }
     );
@@ -188,4 +165,5 @@ export class AuthComponent implements OnInit {
       this.message = 'Contract type is invalid.';
     }
   }
+
 }

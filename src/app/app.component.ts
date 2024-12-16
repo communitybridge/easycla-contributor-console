@@ -1,10 +1,10 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-
-// To run this project you required node version 12.0.0 or higher, yarn 1.13.0 or higher.
-
 import { Component } from '@angular/core';
+import { AppSettings } from './config/app-settings';
+import { LfxHeaderService } from './shared/services/lfx-header.service';
+import { EnvConfig } from './config/cla-env-utils';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,15 +13,32 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  title = 'easycla-contributor-console';
+  hasExpanded: boolean;
+  links: any[];
+
+  constructor(private lfxHeaderService: LfxHeaderService) {}
+
+  onToggled() {
+    this.hasExpanded = !this.hasExpanded;
+  }
 
   ngOnInit() {
     this.mountHeader();
+    this.hasExpanded = true;
+    this.mountFooter();
   }
 
   private mountHeader(): void {
     const script = document.createElement('script');
     script.setAttribute('src', environment.lfxHeader + '/lfx-header-v2.js');
     script.setAttribute('async', 'true');
+    document.head.appendChild(script);
+  }
+
+  private mountFooter(): void {
+    const script = document.createElement('script');
+    script.setAttribute('src', EnvConfig.default[AppSettings.LFX_FOOTER]);
     document.head.appendChild(script);
   }
 }
