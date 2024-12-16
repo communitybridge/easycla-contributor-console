@@ -38,7 +38,7 @@ export class IndividualDashboardComponent implements OnInit {
     this.hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     this.status = 'Pending';
     if (this.hasGerrit) {
-      this.postIndividualRequestSignature();
+      this.postIndivdualRequestSignature();
     } else {
       this.findActiveSignature();
     }
@@ -49,7 +49,7 @@ export class IndividualDashboardComponent implements OnInit {
       (response) => {
         if (response) {
           this.activeSignatureModel = response;
-          this.postIndividualRequestSignature();
+          this.postIndivdualRequestSignature();
         } else {
           this.status = 'Failed';
           const error = 'Whoops, It looks like you don\'t have any signatures in progress.' +
@@ -63,13 +63,12 @@ export class IndividualDashboardComponent implements OnInit {
     );
   }
 
-  postIndividualRequestSignature() {
-    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
+  postIndivdualRequestSignature() {
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
       return_url_type: this.hasGerrit ? AppSettings.GERRIT :this.claContributorService.getTypeByUrl(),
-      return_url: this.hasGerrit ? redirectUrl || '' : this.activeSignatureModel.return_url
+      return_url: this.hasGerrit ? '' : this.activeSignatureModel.return_url
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
