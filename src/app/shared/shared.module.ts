@@ -18,6 +18,7 @@ import { InterceptorService } from './services/interceptor.service';
 import { AuthComponent } from './components/auth/auth.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { CommonModule } from '@angular/common';
+import { ConsentComponent } from './components/consent/consent.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +32,8 @@ import { CommonModule } from '@angular/common';
         TrimCharactersPipe,
         CheckboxComponent,
         AuthComponent,
-        FooterComponent
+        FooterComponent,
+        ConsentComponent
     ],
     imports: [
         CommonModule
@@ -46,7 +48,8 @@ import { CommonModule } from '@angular/common';
         ProjectTitleComponent,
         TrimCharactersPipe,
         CheckboxComponent,
-        FooterComponent
+        FooterComponent,
+        ConsentComponent
     ],
     providers: [StorageService, AuthService, LfxHeaderService, InterceptorService]
 })
