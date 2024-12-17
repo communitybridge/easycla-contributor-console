@@ -58,6 +58,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   mySubscription: Subscription;
   proccedWithExistingOrganization: Subscription;
   attempt: boolean;
+  hasTermAccepted = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -371,7 +372,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       }
       this.searchTimeout = setTimeout(() => {
         this.searchOrganization(encodeURIComponent(companyName));
-      }, 400);
+      }, 500);
     } else {
       this.selectedCompany = '';
       this.organizationList.list = [];
