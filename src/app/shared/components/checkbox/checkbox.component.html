@@ -1,8 +1,11 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<label class="container">
-    <span>{{text}}</span>
+ <label class="container">
+    <span [ngStyle]="{'font-size': fontSize, 'font-weight': bold ? 'bold' : 'normal'}">
+        <span *ngIf="required" style="color: red;">*</span>
+        {{text}}
+    </span>
     <input type="checkbox" [checked]="checked" (click)="onCheckboxClick()">
-    <span class="checkmark"></span>
+    <span class="checkmark" [ngStyle]="{'top': topMargin}"></span>
 </label>
