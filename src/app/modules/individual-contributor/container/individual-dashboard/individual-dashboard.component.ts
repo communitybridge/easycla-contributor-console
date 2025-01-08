@@ -64,11 +64,12 @@ export class IndividualDashboardComponent implements OnInit {
   }
 
   postIndivdualRequestSignature() {
+    const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
     const data = {
       project_id: this.projectId,
       user_id: this.userId,
       return_url_type: this.hasGerrit ? AppSettings.GERRIT :this.claContributorService.getTypeByUrl(),
-      return_url: this.hasGerrit ? '' : this.activeSignatureModel.return_url
+      return_url: this.hasGerrit ? (redirectUrl || '') : this.activeSignatureModel.return_url
     };
     this.claContributorService.postIndividualSignatureRequest(data).subscribe(
       (response) => {
