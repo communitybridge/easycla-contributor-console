@@ -36,6 +36,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
   @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('warningModal') warningModal: TemplateRef<any>;
+  @ViewChild('errorModal') errorModal: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -181,11 +182,19 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {
           this.organization = response;
+          if(!this.organization.isSanctioned){
           this.storageService.setItem(
             AppSettings.SELECTED_COMPANY,
             this.organization
           );
           this.checkEmployeeeSignature();
+        }else {
+          this.title = 'Restricted Organization';
+          this.message =
+            'We’re sorry, but you are currently unable to sign the Corporate Contributor License Agreement (CCLA).'+
+            ' If you believe this may be an error, please reach out to support';
+          this.openWithDismiss(this.errorModal);
+        }
         },
         () => {
           this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
