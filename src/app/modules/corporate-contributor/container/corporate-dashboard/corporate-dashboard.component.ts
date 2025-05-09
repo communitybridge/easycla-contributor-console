@@ -187,14 +187,13 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
             AppSettings.SELECTED_COMPANY,
             this.organization
           );
-          this.checkEmployeeeSignature();
+          this.checkEmployeeSignature();
         }else {
-          this.title = 'Restricted Organization';
           this.message =
-            `We're sorry, but you are currently unable to sign the Employee Contributor License Agreement (ECLA).
+            `We're sorry, but you are currently unable to acknowledge the Employee Contributor License Agreement (ECLA) for this organization.
              If you believe this may be an error, please reach out to
              <a href="https://jira.linuxfoundation.org/servicedesk/customer/portal/4" target="_blank">support</a>`;
-          this.openWithDismiss(this.errorModal);
+          this.openWithDismiss(this.warningModal);
         }
         },
         () => {
@@ -216,7 +215,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  checkEmployeeeSignature() {
+  checkEmployeeSignature() {
     this.alertService.clearAlert();
     const data = {
       project_id: this.projectId,
