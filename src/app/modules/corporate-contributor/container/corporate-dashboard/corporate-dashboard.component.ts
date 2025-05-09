@@ -191,8 +191,9 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         }else {
           this.title = 'Restricted Organization';
           this.message =
-            'We’re sorry, but you are currently unable to sign the Corporate Contributor License Agreement (CCLA).'+
-            ' If you believe this may be an error, please reach out to support';
+            `We're sorry, but you are currently unable to sign the Employee Contributor License Agreement (ECLA).
+             If you believe this may be an error, please reach out to
+             <a href="https://jira.linuxfoundation.org/servicedesk/customer/portal/4" target="_blank">support</a>`;
           this.openWithDismiss(this.errorModal);
         }
         },
