@@ -190,9 +190,9 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
           this.checkEmployeeSignature();
         }else {
           this.message =
-            `We're sorry, but you are currently unable to acknowledge the Employee Contributor License Agreement (ECLA) for this organization.
-             If you believe this may be an error, please reach out to
-             <a href="https://jira.linuxfoundation.org/servicedesk/customer/portal/4" target="_blank">support</a>`;
+            `We're sorry, you are currently unable to acknowledge the Employee Contributor License Agreement (ECLA) for this organization.
+             If you believe this may be an error, please contact
+             <a href="https://jira.linuxfoundation.org/plugins/servlet/desk/portal/4/create/143" target="_blank">EasyCLA Support</a>`;
           this.openWithDismiss(this.warningModal);
         }
         },
