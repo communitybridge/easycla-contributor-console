@@ -10,6 +10,7 @@ export class OrganizationModel {
   signingEntityName: string;
   created: string;
   updated: string;
+  isSanctioned:string;
 }
 
 export class OrganizationListModel {

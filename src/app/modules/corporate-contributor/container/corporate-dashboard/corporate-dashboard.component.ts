@@ -36,6 +36,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   @ViewChild('signedCLANotFoundModal') signedCLANotFoundModal: TemplateRef<any>;
   @ViewChild('successModal') successModal: TemplateRef<any>;
   @ViewChild('warningModal') warningModal: TemplateRef<any>;
+  @ViewChild('errorModal') errorModal: TemplateRef<any>;
 
   selectedCompany: string;
   searchBoxValue: string;
@@ -181,11 +182,19 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {
           this.organization = response;
+          if(!this.organization.isSanctioned){
           this.storageService.setItem(
             AppSettings.SELECTED_COMPANY,
             this.organization
           );
-          this.checkEmployeeeSignature();
+          this.checkEmployeeSignature();
+        }else {
+          this.message =
+            `We're sorry, you are currently unable to acknowledge the Employee Contributor License Agreement (ECLA) for this organization.
+             If you believe this may be an error, please contact
+             <a href="https://jira.linuxfoundation.org/plugins/servlet/desk/portal/4/create/143" target="_blank">EasyCLA Support</a>`;
+          this.openWithDismiss(this.warningModal);
+        }
         },
         () => {
           this.storageService.removeItem(AppSettings.SELECTED_COMPANY);
@@ -206,7 +215,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
       );
   }
 
-  checkEmployeeeSignature() {
+  checkEmployeeSignature() {
     this.alertService.clearAlert();
     const data = {
       project_id: this.projectId,
