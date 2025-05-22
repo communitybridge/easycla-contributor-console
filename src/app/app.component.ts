@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT
 
 import { Component } from '@angular/core';
-import { LfxHeaderService } from './shared/services/lfx-header.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,8 +13,6 @@ export class AppComponent {
   title = 'easycla-contributor-console';
   hasExpanded: boolean;
   links: any[];
-
-  constructor(private lfxHeaderService: LfxHeaderService) {}
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;

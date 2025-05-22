@@ -5,7 +5,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectModel } from 'src/app/core/models/project';
-import { UserModel } from 'src/app/core/models/user';
+import { UserFromSessionModel, UserFromTokenModel } from 'src/app/core/models/user';
 import { StorageService } from '../../services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 
@@ -21,8 +21,8 @@ export class ProjectTitleComponent implements OnInit {
   @Output() successEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   project = new ProjectModel();
-  user = new UserModel();
-
+  user = new UserFromTokenModel();
+  userFromSession = new UserFromSessionModel();
   constructor(
     private alertService: AlertService,
     private storageService: StorageService,
@@ -39,22 +39,12 @@ export class ProjectTitleComponent implements OnInit {
   }
 
   validateGithubFlow() {
-    if (this.projectId && this.userId) {
-      const localProjectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-      const localUserId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-      if (localProjectId !== this.projectId) {
+    if (this.projectId) {
         this.getProject();
-      } else {
-        this.successEmitter.emit('Project');
-        this.project.project_name = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_NAME));
-      }
-
-      if (localUserId !== this.userId) {
         this.getUser();
-      }
     } else {
       this.errorEmitter.emit(true);
-      this.alertService.error('Invalid project id and user id in URL');
+      this.alertService.error('Invalid project id in URL');
     }
   }
 
@@ -81,26 +71,46 @@ export class ProjectTitleComponent implements OnInit {
 
 
   getUser() {
-    if (this.userId) {
-      this.claContributorService.getUser(this.userId).subscribe(
+      this.claContributorService.getUserFromToken().subscribe(
         (response) => {
           this.user = response;
-          this.storageService.setItem(AppSettings.USER_ID, this.userId);
+          this.storageService.setItem(AppSettings.USER_ID, this.user.userID);
           this.storageService.setItem(AppSettings.USER, this.user);
           this.successEmitter.emit('User');
         },
-        (exception) => {
-          this.errorEmitter.emit(true);
-          this.claContributorService.handleError(exception);
+        () => {
+          // If user is not found in token, get user from session
+          this.getUserFromSession();
         }
       );
-    } else {
-      this.errorEmitter.emit(true);
-      this.alertService.error('Invalid user id in URL');
-    }
   }
 
-
-
-
+  getUserFromSession() {
+    this.claContributorService.getUserFromSession().subscribe(
+      (response) => {
+        console.log(response)
+        this.userFromSession = response;
+        this.storageService.setItem(AppSettings.USER_ID, this.userFromSession.user_id);
+        this.storageService.setItem(AppSettings.USER, {
+          dateCreated: this.userFromSession.date_created,
+          dateModified: this.userFromSession.date_modified,
+          emails: this.userFromSession.user_emails,
+          lfEmail: this.userFromSession.lf_email,
+          lfUsername: this.userFromSession.lf_username,
+          userID: this.userFromSession.user_id,
+          username: this.userFromSession.user_name,
+          version: this.userFromSession.version
+        });
+        this.successEmitter.emit('User');
+      },
+      (exception) => {
+        console.log(exception)
+        // window.open('https://github.com/login/oauth/authorize?response_type=code&client_id=38f6d46ff92b7ed04071&redirect_uri=https%3A%2F%2Fapi.lfcla.dev.platform.linuxfoundation.org%2Fv2%2Fgithub%2Finstallation&scope=user%3Aemail&state=4CSOmSBNwx8Oi5liEEi5wEyKy3IkWQ', '_self');
+        this.errorEmitter.emit(true);
+        // this.alertService.error('An error occurred while retrieving the GitHub user from the session. '+
+        //   'To use this feature, you must be logged in to your GitHub account and your browser must be set to accept cookies.');
+        this.claContributorService.handleError(exception);
+      }
+    );
+  }
 }

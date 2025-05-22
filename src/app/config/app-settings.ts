@@ -13,6 +13,7 @@ export class AppSettings {
     public static HAS_GERRIT = 'hasGerrit';
     public static PROJECT_NAME = 'projectName';
     public static USER = 'user';
+    public static USER_FROM_SESSION = 'userFromSession';
     public static PROJECT = 'project';
     public static USER_ID = 'userId';
     public static CONTRACT_TYPE = 'contractType';
