@@ -19,21 +19,6 @@ export class UserModel {
     version: string;
 }
 
-
-export class UpdateUserModel {
-    companyID: string;
-    dateCreated: Date;
-    dateModified: Date;
-    emails?: any;
-    githubID: string;
-    githubUsername: string;
-    lfEmail: string;
-    lfUsername: string;
-    userID: string;
-    username: string;
-    version: string;
-}
-
 export class UserFromTokenModel {
     dateCreated: string
     dateModified: string
@@ -64,3 +49,17 @@ export class UserFromTokenModel {
     user_name: string
     version: string
   }
+
+export class UpdateUserModel {
+    companyID: string;
+    dateCreated: Date;
+    dateModified: Date;
+    emails?: any;
+    githubID: string;
+    githubUsername: string;
+    lfEmail: string;
+    lfUsername: string;
+    userID: string;
+    username: string;
+    version: string;
+}

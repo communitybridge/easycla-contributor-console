@@ -1,7 +1,7 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
 
-<app-project-title [projectId]="projectId" [userId]="userId" (successEmitter)="onAPILoad($event)"
+<app-project-title [projectId]="projectId" [userId]="userId" (successEmitter)="onAPILoad($event)" (setUserIdEmitter)="setUserId($event)"
     (errorEmitter)="hasErrorPresent($event)"></app-project-title>
 
 <div class="container-fluid dashboard-container">
@@ -55,7 +55,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <ng-container>
                             <app-dashboard-contributor-buttons [type]="corporateContributor"
-                                [hasEnabled]="project.project_ccla_enabled"
+                                [hasEnabled]="project.project_ccla_enabled && !hasError"
                                 (proceedBtnEmitter)="onClickCorporateProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>
@@ -63,7 +63,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <ng-container>
                             <app-dashboard-contributor-buttons [type]="individualContributor"
-                                [hasEnabled]="project.project_icla_enabled"
+                                [hasEnabled]="project.project_icla_enabled && !hasError"
                                 (proceedBtnEmitter)="onClickIndividualProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>
