@@ -5,7 +5,7 @@ import {Injectable, isDevMode} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {Project, ProjectModel} from '../models/project';
-import {UpdateUserModel, UserFromSessionModel, UserFromTokenModel, UserModel} from '../models/user';
+import {UpdateUserModel, UserFromTokenModel, UserModel} from '../models/user';
 import {AlertService} from 'src/app/shared/services/alert.service';
 import {ActiveSignatureModel} from '../models/active-signature';
 import {IndividualRequestSignatureModel} from '../models/individual-request-signature';
@@ -60,9 +60,9 @@ export class ClaContributorService {
     return this.httpClient.get<UserFromTokenModel>(url);
   }
 
-  getUserFromSession(): Observable<UserFromSessionModel> {
+  getUserFromSession(): Observable<any> {
     const url = this.getV2Endpoint('/v2/user-from-session');
-    return this.httpClient.get<UserFromSessionModel>(url);
+    return this.httpClient.get<any>(url);
   }
 
   updateUser(data: any): Observable<UpdateUserModel> {
