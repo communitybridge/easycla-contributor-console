@@ -5,7 +5,7 @@ import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectModel } from 'src/app/core/models/project';
-import { UserModel } from 'src/app/core/models/user';
+import { UserFromSessionModel, UserFromTokenModel, UserModel } from 'src/app/core/models/user';
 import { StorageService } from '../../services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 
@@ -19,10 +19,12 @@ export class ProjectTitleComponent implements OnInit {
   @Input() userId: string;
   @Output() errorEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() successEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() setUserIdEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   project = new ProjectModel();
+  userFromToken = new UserFromTokenModel();
   user = new UserModel();
-
+  userFromSession = new UserFromSessionModel();
   constructor(
     private alertService: AlertService,
     private storageService: StorageService,
@@ -39,18 +41,12 @@ export class ProjectTitleComponent implements OnInit {
   }
 
   validateGithubFlow() {
-    if (this.projectId && this.userId) {
-      const localProjectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-      const localUserId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-      if (localProjectId !== this.projectId) {
-        this.getProject();
-      } else {
-        this.successEmitter.emit('Project');
-        this.project.project_name = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_NAME));
-      }
-
-      if (localUserId !== this.userId) {
+    if (this.projectId ) {
+      this.getProject();
+      if (this.userId) {
         this.getUser();
+      } else {
+        this.getUserFromToken();
       }
     } else {
       this.errorEmitter.emit(true);
@@ -79,7 +75,6 @@ export class ProjectTitleComponent implements OnInit {
     }
   }
 
-
   getUser() {
     if (this.userId) {
       this.claContributorService.getUser(this.userId).subscribe(
@@ -99,6 +94,51 @@ export class ProjectTitleComponent implements OnInit {
       this.alertService.error('Invalid user id in URL');
     }
   }
+
+
+  getUserFromToken() {
+    this.claContributorService.getUserFromToken().subscribe(
+      (response) => {
+        console.log('getUserFromToken response ==>', response)
+        this.userFromToken = response;
+        this.storageService.setItem(AppSettings.USER_ID, this.userFromToken.userID);
+        this.storageService.setItem(AppSettings.USER, this.userFromToken);
+        this.successEmitter.emit('User');
+        this.setUserIdEmitter.emit(this.userFromToken.userID);
+      },
+      () => {
+        // If user is not found in token, get user from session
+        this.getUserFromSession();
+      }
+    );
+}
+
+getUserFromSession() {
+  this.claContributorService.getUserFromSession().subscribe(
+    (response: any) => {
+      console.log('getUserFromSession response ==>', response)
+      this.userFromSession = response;
+      this.storageService.setItem(AppSettings.USER_ID, this.userFromSession.user_id);
+      this.storageService.setItem(AppSettings.USER, {
+        dateCreated: this.userFromSession.date_created,
+        dateModified: this.userFromSession.date_modified,
+        emails: this.userFromSession.user_emails,
+        lfEmail: this.userFromSession.lf_email,
+        lfUsername: this.userFromSession.lf_username,
+        userID: this.userFromSession.user_id,
+        username: this.userFromSession.user_name,
+        version: this.userFromSession.version
+      });
+      this.successEmitter.emit('User');
+    },
+    (exception) => {
+      console.log('getUserFromSession exception ==>', exception)
+      this.errorEmitter.emit(true);
+      this.alertService.error('An error occurred while retrieving the GitHub user from the session.');
+      this.claContributorService.handleError(exception);
+    }
+  );
+}
 
 
 

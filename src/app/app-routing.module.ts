@@ -24,6 +24,11 @@ const routes: Routes = [
     component: AuthComponent
   },
   {
+    path: 'cla/project/:projectId',
+    pathMatch: 'full',
+    component: ClaDashboardComponent
+  },
+  {
     path: 'cla/project/:projectId/user/:userId',
     pathMatch: 'full',
     component: ClaDashboardComponent
