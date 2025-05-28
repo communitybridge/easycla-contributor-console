@@ -61,9 +61,11 @@ export class ClaDashboardComponent implements OnInit {
       this.alertService.error('The Corporate CLA option is not enabled for this project. Please contact to your administrator to enable the Corporate CLA option for this project.');
       return false;
     }
-    if (!this.hasError) {
+    if (!this.hasError && this.userId) {
       const url = '/corporate-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
+    }else {
+      this.alertService.error('Unable to fetch user ID.');
     }
   }
 
@@ -72,10 +74,16 @@ export class ClaDashboardComponent implements OnInit {
       this.alertService.error('The Individual CLA option is not enabled for this project. Please to your administrator to enable the Individual CLA option for this project.');
       return false;
     }
-    if (!this.hasError) {
+    if (!this.hasError && this.userId) {
       const url = '/individual-dashboard/' + this.projectId + '/' + this.userId;
       this.router.navigate([url]);
+    }else {
+      this.alertService.error('Unable to fetch user ID.');
     }
+  }
+
+  setUserId(userId: string) {
+    this.userId = userId;
   }
 
   onAPILoad(APIType: string) {
