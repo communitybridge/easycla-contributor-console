@@ -82,10 +82,6 @@ export class ClaDashboardComponent implements OnInit {
     }
   }
 
-  setUserId(userId: string) {
-    this.userId = userId;
-  }
-
   onAPILoad(APIType: string) {
     if (APIType === 'Project') {
       this.project = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
