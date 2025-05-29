@@ -43,8 +43,7 @@ function generateCSP(env, isDevServer) {
     'https://api.lfcla.dev.platform.linuxfoundation.org/',
     'https://easycla.dev.communitybridge.org/',
     'https://easycla.lfx.linuxfoundation.org/',
-    'https://contributor.easycla.lfx.linuxfoundation.org/',
-    'https://github.com/'
+    'https://contributor.easycla.lfx.linuxfoundation.org/'
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
     'https://cdn.dev.platform.linuxfoundation.org/lfx-header-v2.js',
@@ -106,8 +105,7 @@ function generateCSP(env, isDevServer) {
       'https://linuxfoundation-dev.auth0.com',
       'https://linuxfoundation-staging.auth0.com',
       'https://linuxfoundation.auth0.com',
-      'https://sso.linuxfoundation.org/',
-      'https://github.com/'
+      'https://sso.linuxfoundation.org/'
     ],
     'child-src': [],
     'media-src': [],

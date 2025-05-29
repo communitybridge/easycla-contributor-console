@@ -38,8 +38,6 @@ export class ClaDashboardComponent implements OnInit {
     this.userId = this.route.snapshot.paramMap.get('userId');
     const redirect = this.route.snapshot.queryParamMap.get('redirect');
     this.storageService.setItem(AppSettings.REDIRECT, redirect);
-    console.log('projectId'+this.projectId)
-    console.log('userId'+this.userId)
     this.hasErrorPresent();
   }
 
@@ -82,10 +80,6 @@ export class ClaDashboardComponent implements OnInit {
     }else {
       this.alertService.error('Unable to fetch user ID.');
     }
-  }
-
-  setUserId(userId: string) {
-    this.userId = userId;
   }
 
   onAPILoad(APIType: string) {
