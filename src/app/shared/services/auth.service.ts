@@ -128,6 +128,7 @@ export class AuthService {
     // Need to increase timeout to 1500 as for slower network it gives an error
     // Cannot read property 'querySelector' of null
     // TODO: verify this still works
+    console.log('login details', EnvConfig.default['auth0-clientId'], EnvConfig.default['auth0-clientSecret'], EnvConfig.default['auth0-domain']);
     setTimeout(() => {
       const button = document
         .querySelector('#lfx-header-v2')
