@@ -1,9 +1,8 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
+ <app-project-title (successEmitter)="setProject($event)" (errorEmitter)="hasErrorPresent($event)"></app-project-title>
 
 <div class="container-fluid dashboard-container">
-    <app-project-title (successEmitter)="setProject($event)" (errorEmitter)="hasErrorPresent($event)"></app-project-title>
-
     <div class="contributor-type-container">
         <div class="container">
             <div class="row">

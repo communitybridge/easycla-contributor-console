@@ -237,16 +237,6 @@ export class AuthService {
     return '';
   }
 
-  private getTargetRouteFromAppState(appState) {
-    if (!appState) {
-      return '/';
-    }
-    const { returnTo, target, targetUrl } = appState;
-    return (
-      this.getTargetRouteFromReturnTo(returnTo) || target || targetUrl || '/'
-    );
-  }
-
   private getTargetRouteFromReturnTo(returnTo) {
     if (!returnTo) {
       return '';

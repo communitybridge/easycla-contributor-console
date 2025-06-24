@@ -17,7 +17,7 @@ export class AuthDashboardComponent implements OnInit {
     const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
     const redirectUrl = JSON.parse(this.storageService.getItem(AppSettings.REDIRECT));
 
-    this.router.navigate([`/cla/project/${projectId}/user/${userId}`], { queryParams: { redirect:redirectUrl, loggedIn: true} })
+    this.router.navigate([`/cla/project/${projectId}/user/${userId}`], { queryParams: { redirect:redirectUrl} })
   }
 
 }

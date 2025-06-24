@@ -25,7 +25,6 @@ export class AppComponent {
   ngOnInit() {
     this.mountHeader();
     this.hasExpanded = true;
-    console.log(this.isIncognito())
   }
 
   private mountHeader(): void {
@@ -33,15 +32,5 @@ export class AppComponent {
     script.setAttribute('src', environment.lfxHeader + '/lfx-header-v2.js');
     script.setAttribute('async', 'true');
     document.head.appendChild(script);
-  }
-
-  private isIncognito():boolean {
-    try {
-      localStorage.setItem('test', 'test');
-      localStorage.removeItem('test');
-      return false; // If no error, likely not incognito
-    } catch (e) {
-      return true; // If an error occurs, likely incognito
-    }
   }
 }

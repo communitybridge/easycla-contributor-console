@@ -9,6 +9,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { AppSettings } from 'src/app/config/app-settings';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { AuthService } from 'src/app/shared/services/auth.service';
+import detectIncognito from 'detectincognitojs';
 
 @Component({
   selector: 'app-cla-dashboard',
@@ -24,7 +25,9 @@ export class ClaDashboardComponent implements OnInit {
   individualContributor = 'Individual Contributor';
   exitEasyCLA = 'exitEasyCLA';
   hasError: boolean;
+  hasPrivateWindow: boolean;
   project = new ProjectModel();
+
 
   constructor(
     private route: ActivatedRoute,
@@ -55,8 +58,6 @@ export class ClaDashboardComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('projectId');
     this.userId = this.route.snapshot.paramMap.get('userId');
     const redirect = this.route.snapshot.queryParamMap.get('redirect');
-    const loggedIn = this.route.snapshot.queryParamMap.get('loggedIn');
-
 
     this.project = JSON.parse(this.storageService.getItem(AppSettings.PROJECT));
     this.storageService.setItem(AppSettings.REDIRECT, redirect);
@@ -65,11 +66,17 @@ export class ClaDashboardComponent implements OnInit {
 
     this.hasErrorPresent();
 
+    detectIncognito().then((result) => {
+      this.hasPrivateWindow = result.isPrivate;
+      if(this.hasPrivateWindow){
+        this.alertService.error('There are some features that will not work in a private window, as this site requires cookies');
+      }
+    });
+
     this.authService.loading$.subscribe((loading) => {
       if (!loading) {
         this.authService.isAuthenticated$.subscribe((authenticated) => {
-          console.log(authenticated, loggedIn);
-          if (!authenticated) {
+          if (!authenticated && !this.hasPrivateWindow) {
             this.authService.login();
           }
         });
