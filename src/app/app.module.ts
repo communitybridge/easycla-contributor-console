@@ -32,7 +32,7 @@ import { InterceptorService } from './shared/services/interceptor.service';
     DashboardModule,
     IndividualContributorModule,
     CorporateContributorModule,
-    FormsModule
+    FormsModule,
   ],
   providers: [
     {

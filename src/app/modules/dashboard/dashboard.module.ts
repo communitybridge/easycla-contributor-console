@@ -8,12 +8,14 @@ import {DashboardContributorCardComponent} from './component/dashboard-contribut
 import {SharedModule} from 'src/app/shared/shared.module';
 import {DashboardContributorButtonsComponent} from './component/dashboard-contributor-buttons/dashboard-contributor-buttons.component';
 import {GerritDashboardComponent} from './container/gerrit-dashboard/gerrit-dashboard.component';
+import { AuthDashboardComponent } from './container/auth-dashboard/auth-dashboard.component';
 
 @NgModule({
   declarations: [ClaDashboardComponent,
     DashboardContributorCardComponent,
     DashboardContributorButtonsComponent,
-    GerritDashboardComponent
+    GerritDashboardComponent,
+    AuthDashboardComponent
   ],
   imports: [
     CommonModule,
