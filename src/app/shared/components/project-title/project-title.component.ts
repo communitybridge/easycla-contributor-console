@@ -1,7 +1,7 @@
 // Copyright The Linux Foundation and each contributor to CommunityBridge.
 // SPDX-License-Identifier: MIT
 
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectModel } from 'src/app/core/models/project';
@@ -14,9 +14,7 @@ import { AppSettings } from 'src/app/config/app-settings';
   templateUrl: './project-title.component.html',
   styleUrls: ['./project-title.component.scss']
 })
-export class ProjectTitleComponent implements OnInit {
-  @Input() projectId: string;
-  @Input() userId: string;
+export class ProjectTitleComponent implements AfterViewInit {
   @Output() errorEmitter: EventEmitter<any> = new EventEmitter<any>();
   @Output() successEmitter: EventEmitter<any> = new EventEmitter<any>();
 
@@ -27,9 +25,10 @@ export class ProjectTitleComponent implements OnInit {
     private alertService: AlertService,
     private storageService: StorageService,
     private claContributorService: ClaContributorService,
-  ) { }
+  ) {
+   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     const hasGerrit = JSON.parse(this.storageService.getItem(AppSettings.HAS_GERRIT));
     if (hasGerrit) {
       this.project.project_name = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_NAME));
@@ -39,34 +38,20 @@ export class ProjectTitleComponent implements OnInit {
   }
 
   validateGithubFlow() {
-    if (this.projectId && this.userId) {
-      const localProjectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
-      const localUserId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
-      if (localProjectId !== this.projectId) {
-        this.getProject();
-      } else {
-        this.successEmitter.emit('Project');
-        this.project.project_name = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_NAME));
-      }
-
-      if (localUserId !== this.userId) {
-        this.getUser();
-      }
-    } else {
-      this.errorEmitter.emit(true);
-      this.alertService.error('Invalid project id and user id in URL');
-    }
+    this.getProject();
   }
 
   getProject() {
-    if (this.projectId) {
-      this.claContributorService.getProject(this.projectId).subscribe(
+    const projectId = JSON.parse(this.storageService.getItem(AppSettings.PROJECT_ID));
+    if (projectId) {
+      this.claContributorService.getProject(projectId).subscribe(
         (response) => {
           this.project = response;
           this.storageService.setItem(AppSettings.PROJECT_NAME, this.project.project_name);
-          this.storageService.setItem(AppSettings.PROJECT_ID, this.projectId);
+          this.storageService.setItem(AppSettings.PROJECT_ID, projectId);
           this.storageService.setItem(AppSettings.PROJECT, this.project);
-          this.successEmitter.emit('Project');
+          this.successEmitter.emit(response);
+          this.getUser();
         },
         (exception) => {
           this.errorEmitter.emit(true);
@@ -75,19 +60,19 @@ export class ProjectTitleComponent implements OnInit {
       );
     } else {
       this.errorEmitter.emit(true);
-      this.alertService.error('Invalid project id in URL');
+      this.alertService.error('There is an invalid project ID in the URL');
     }
   }
 
 
   getUser() {
-    if (this.userId) {
-      this.claContributorService.getUser(this.userId).subscribe(
+    const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
+    if (userId) {
+      this.claContributorService.getUser(userId).subscribe(
         (response) => {
           this.user = response;
-          this.storageService.setItem(AppSettings.USER_ID, this.userId);
+          this.storageService.setItem(AppSettings.USER_ID, userId);
           this.storageService.setItem(AppSettings.USER, this.user);
-          this.successEmitter.emit('User');
         },
         (exception) => {
           this.errorEmitter.emit(true);
@@ -96,7 +81,7 @@ export class ProjectTitleComponent implements OnInit {
       );
     } else {
       this.errorEmitter.emit(true);
-      this.alertService.error('Invalid user id in URL');
+      this.alertService.error('There is an invalid user ID in the URL');
     }
   }
 }

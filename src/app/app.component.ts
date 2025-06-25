@@ -3,6 +3,8 @@
 
 import { Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './shared/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +15,8 @@ export class AppComponent {
   title = 'easycla-contributor-console';
   hasExpanded: boolean;
   links: any[];
+
+  constructor(private auth:AuthService, private route: ActivatedRoute){}
 
   onToggled() {
     this.hasExpanded = !this.hasExpanded;

@@ -4,7 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, from, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
 import { catchError, concatMap, shareReplay, tap } from 'rxjs/operators';
@@ -79,16 +79,6 @@ export class AuthService {
   }
 
   async initializeApplication() {
-    // On initial load, check authentication state with authorization server
-    // Set up local auth streams if user is already authenticated
-    // const params = this.currentHref;
-    // console.log(params)
-    // if (params.includes('code=') && params.includes('state=')) {
-    //   console.log('Auth0 code and state are found.');
-    //   this.handleAuthCallback();
-    //   return;
-    // }
-
     await this.localAuthSetup();
     this.handlerReturnToAfterLogout();
   }
@@ -135,7 +125,7 @@ export class AuthService {
       if (button) {
         button.click();
       }
-    }, 1500);
+    }, 500);
   }
 
   logout() {
@@ -154,8 +144,9 @@ export class AuthService {
       client_id: this.auth0Options.clientId,
       returnTo: `${window.location.origin}${searchPart}${fragmentPart}`,
     };
-    this.auth0Client$.subscribe((client: Auth0Client) =>
-      client.logout(request)
+    this.auth0Client$.subscribe((client: Auth0Client) =>{
+        client.logout(request);
+      }
     );
   }
 
@@ -246,16 +237,6 @@ export class AuthService {
     return '';
   }
 
-  private getTargetRouteFromAppState(appState) {
-    if (!appState) {
-      return '/';
-    }
-    const { returnTo, target, targetUrl } = appState;
-    return (
-      this.getTargetRouteFromReturnTo(returnTo) || target || targetUrl || '/'
-    );
-  }
-
   private getTargetRouteFromReturnTo(returnTo) {
     if (!returnTo) {
       return '';
@@ -269,44 +250,6 @@ export class AuthService {
     const { pathname } = new Url(returnTo);
     return pathname || '/';
   }
-
-  private handleAuthCallback() {
-    // Call when app reloads after user logs in with Auth0
-    const params = this.currentHref;
-
-    if (params.includes('code=') && params.includes('state=')) {
-      let targetRoute = ''; // Path to redirect to after login processsed
-      const authComplete$ = this.handleRedirectCallback$.pipe(
-        // Have client, now call method to handle auth callback redirect
-        tap((cbRes: any) => {
-          targetRoute = this.getTargetRouteFromAppState(cbRes.appState);
-        }),
-        concatMap(() => combineLatest([this.getUser$(), this.isAuthenticated$])),
-        catchError((err) => {
-          console.log('Error occured while getting Auth0 data ', { err });
-          this.checkUserSessionByCookie();
-          return of('invalid_state');
-        })
-      );
-      // Subscribe to authentication completion observable
-      // Response will be an array of user and login status
-      authComplete$.subscribe((message: any) => {
-        this.loading$.next(false);
-        if (message === 'invalid_state') {
-          console.log('triggering login by invali_state ');
-          this.login();
-          return;
-        }
-
-        if (!targetRoute) {
-          return this.router.navigateByUrl('/auth');
-        }
-        const url = '/auth?targetRoute=' + (targetRoute || '');
-        this.router.navigateByUrl(url);
-      });
-    }
-  }
-
 
   /* Extra method added */
   private setSession(authResult): void {

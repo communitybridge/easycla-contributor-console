@@ -4214,6 +4214,11 @@ detect-node@^2.0.4:
   resolved "https://registry.yarnpkg.com/detect-node/-/detect-node-2.1.0.tgz#c9c70775a49c3d03bc2c06d9a73be550f978f8b1"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
+detectincognitojs@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/detectincognitojs/-/detectincognitojs-1.5.0.tgz#0f2691d601ed3437a8bfaa0f1fde0dfdab67e2b4"
+  integrity sha512-O4tgjDp41GnOYZNMVK0XhSeMQN7AGHez2Wz+tVf4VO0Zkn3isAxADjZBwGvL1BRw4ueNEQ6x+1gBHrWElXoBqA==
+
 dezalgo@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/dezalgo/-/dezalgo-1.0.4.tgz#751235260469084c132157dfa857f386d4c33d81"

@@ -15,7 +15,6 @@ import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { AuthService } from './services/auth.service';
 import { LfxHeaderService } from './services/lfx-header.service';
 import { InterceptorService } from './services/interceptor.service';
-import { AuthComponent } from './components/auth/auth.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ConsentComponent } from './components/consent/consent.component';
 import { CommonModule } from '@angular/common';
@@ -31,7 +30,6 @@ import { CommonModule } from '@angular/common';
         ProjectTitleComponent,
         TrimCharactersPipe,
         CheckboxComponent,
-        AuthComponent,
         FooterComponent,
         ConsentComponent
     ],

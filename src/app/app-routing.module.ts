@@ -9,19 +9,14 @@ import { IndividualDashboardComponent } from './modules/individual-contributor/c
 import { CorporateDashboardComponent } from './modules/corporate-contributor/container/corporate-dashboard/corporate-dashboard.component';
 import { ClaRequestAuthorizationComponent } from './modules/corporate-contributor/container/cla-request-authorization/cla-request-authorization.component';
 import { GerritDashboardComponent } from './modules/dashboard/container/gerrit-dashboard/gerrit-dashboard.component';
-import { AuthComponent } from './shared/components/auth/auth.component';
+import { AuthDashboardComponent } from './modules/dashboard/container/auth-dashboard/auth-dashboard.component';
 
 
 const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/cla'
-  },
-  {
-    path: 'auth',
-    pathMatch: 'full',
-    component: AuthComponent
+    component: AuthDashboardComponent
   },
   {
     path: 'cla/project/:projectId/user/:userId',

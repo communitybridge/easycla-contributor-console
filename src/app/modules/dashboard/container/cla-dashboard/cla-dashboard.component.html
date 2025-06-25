@@ -1,11 +1,8 @@
 <!-- Copyright The Linux Foundation and each contributor to CommunityBridge.
  SPDX-License-Identifier: MIT -->
-
-<app-project-title [projectId]="projectId" [userId]="userId" (successEmitter)="onAPILoad($event)"
-    (errorEmitter)="hasErrorPresent($event)"></app-project-title>
+ <app-project-title (successEmitter)="setProject($event)" (errorEmitter)="hasErrorPresent($event)"></app-project-title>
 
 <div class="container-fluid dashboard-container">
-
     <div class="contributor-type-container">
         <div class="container">
             <div class="row">
@@ -18,12 +15,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightlights"
+                    <app-dashboard-contributor-card [type]="corporateContributor" [highlights]="corporateHightLights"
                         (btnEmitter)="onClickCorporateProceed()">
                     </app-dashboard-contributor-card>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightlights"
+                    <app-dashboard-contributor-card [type]="individualContributor" [highlights]="individualHightLights"
                         (btnEmitter)="onClickIndividualProceed()">
                     </app-dashboard-contributor-card>
                 </div>
@@ -32,7 +29,7 @@
 
             <div class="row justify-content-center preview-buttons">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div *ngIf="project.project_ccla_enabled && project.project_corporate_documents.length > 0"
+                    <div *ngIf="project?.project_ccla_enabled && project?.project_corporate_documents.length > 0"
                         class="row justify-content-center">
                         <div class="col-auto preview-btn" (click)="onClickPreviewPDF('ccla')">
                             <i class="far fa-file-pdf"></i>
@@ -41,7 +38,7 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                    <div *ngIf="project.project_icla_enabled && project.project_individual_documents.length > 0"
+                    <div *ngIf="project?.project_icla_enabled && project?.project_individual_documents.length > 0"
                         class="row justify-content-center">
                         <div class="col-auto preview-btn" (click)="onClickPreviewPDF('icla')">
                             <i class="far fa-file-pdf"></i>
@@ -55,7 +52,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <ng-container>
                             <app-dashboard-contributor-buttons [type]="corporateContributor"
-                                [hasEnabled]="project.project_ccla_enabled && !hasError"
+                                [hasEnabled]="hasCclaEnabled"
                                 (proceedBtnEmitter)="onClickCorporateProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>
@@ -63,7 +60,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                         <ng-container>
                             <app-dashboard-contributor-buttons [type]="individualContributor"
-                                [hasEnabled]="project.project_icla_enabled && !hasError"
+                                [hasEnabled]="hasIclaEnabled"
                                 (proceedBtnEmitter)="onClickIndividualProceed()">
                             </app-dashboard-contributor-buttons>
                         </ng-container>
