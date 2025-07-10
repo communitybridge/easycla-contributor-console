@@ -66,7 +66,7 @@ export class ClaContributorService {
   }
 
   getProject(projectId: string): Observable<ProjectModel> {
-    const url = this.getV2Endpoint('/v2/project/' + projectId);
+    const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
@@ -139,7 +139,7 @@ export class ClaContributorService {
   }
 
   getGerritProjectInfo(projectId: string): Observable<ProjectModel> {
-    const url = this.getV2Endpoint('/v2/project/' + projectId);
+    const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
