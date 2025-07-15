@@ -5,7 +5,7 @@ import {Injectable, isDevMode} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {Project, ProjectModel} from '../models/project';
-import {UpdateUserModel, UserModel} from '../models/user';
+import {UpdateUserModel, UserModel, UserFromTokenModel} from '../models/user';
 import {AlertService} from 'src/app/shared/services/alert.service';
 import {ActiveSignatureModel} from '../models/active-signature';
 import {IndividualRequestSignatureModel} from '../models/individual-request-signature';

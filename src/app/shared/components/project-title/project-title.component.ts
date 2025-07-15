@@ -5,7 +5,7 @@ import { Component, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { AlertService } from '../../services/alert.service';
 import { ClaContributorService } from 'src/app/core/services/cla-contributor.service';
 import { ProjectModel } from 'src/app/core/models/project';
-import { UserModel } from 'src/app/core/models/user';
+import { UserModel, UserFromTokenModel } from 'src/app/core/models/user';
 import { StorageService } from '../../services/storage.service';
 import { AppSettings } from 'src/app/config/app-settings';
 
@@ -20,6 +20,7 @@ export class ProjectTitleComponent implements AfterViewInit {
 
   project = new ProjectModel();
   user = new UserModel();
+  userFromToken = new UserFromTokenModel();
 
   constructor(
     private alertService: AlertService,
@@ -67,9 +68,11 @@ export class ProjectTitleComponent implements AfterViewInit {
   getUserFromToken() {
     this.claContributorService.getUserFromToken().subscribe(
       (response) => {
-        this.user = response;
-        this.storageService.setItem(AppSettings.USER_ID, this.user.userID);
-        this.storageService.setItem(AppSettings.USER, this.user);
+        this.userFromToken = response;
+        this.storageService.setItem(AppSettings.USER_ID, this.userFromToken.userID);
+        // If we need to store all details in USER then add a helper method to
+        // copy data from UserFromTokenModel to UserModel
+        // this.storageService.setItem(AppSettings.USER, convertToUserModel(this.userFromToken));
       },
       (exception) => {
         this.errorEmitter.emit(true);
