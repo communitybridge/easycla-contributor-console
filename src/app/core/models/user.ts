@@ -19,6 +19,27 @@ export class UserModel {
     version: string;
 }
 
+export class UserFromTokenModel {
+  userID: string;
+  userExternalID?: string;
+  username?: string;
+  dateCreated?: string | Date;
+  dateModified?: string | Date;
+  lfEmail?: string;
+  lfUsername?: string;
+  companyID?: string;
+  githubID?: string;
+  githubUsername?: string;
+  gitlabID?: string;
+  gitlabUsername?: string;
+  admin?: boolean;
+  version?: string;
+  note?: string;
+  emails?: string[];
+  userCompanyID?: string;
+  isSanctioned?: boolean;
+}
+
 export class UpdateUserModel {
     companyID: string;
     dateCreated: Date;
