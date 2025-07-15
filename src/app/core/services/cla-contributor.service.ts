@@ -60,6 +60,11 @@ export class ClaContributorService {
     return this.httpClient.get<UserModel>(url);
   }
 
+  getUserFromToken(): Observable<UserFromTokenModel> {
+    const url = this.getV4Endpoint('/v4/user-from-token');
+    return this.httpClient.get<UserFromTokenModel>(url);
+  }
+
   updateUser(data: any): Observable<UpdateUserModel> {
     const url = this.getV3Endpoint('/v3/users');
     return this.httpClient.put<UpdateUserModel>(url, data);

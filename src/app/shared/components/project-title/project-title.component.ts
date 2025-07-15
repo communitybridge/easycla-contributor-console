@@ -64,6 +64,19 @@ export class ProjectTitleComponent implements AfterViewInit {
     }
   }
 
+  getUserFromToken() {
+    this.claContributorService.getUserFromToken().subscribe(
+      (response) => {
+        this.user = response;
+        this.storageService.setItem(AppSettings.USER_ID, this.user.userID);
+        this.storageService.setItem(AppSettings.USER, this.user);
+      },
+      (exception) => {
+        this.errorEmitter.emit(true);
+        this.claContributorService.handleError(exception);
+      }
+    );
+  }
 
   getUser() {
     const userId = JSON.parse(this.storageService.getItem(AppSettings.USER_ID));
