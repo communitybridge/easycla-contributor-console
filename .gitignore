@@ -71,3 +71,5 @@ Thumbs.db
 
 #mac icloude files
 .nosync
+out
+*.swp
