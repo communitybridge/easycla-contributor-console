@@ -76,7 +76,7 @@ export class ClaContributorService {
   }
 
   getUserActiveSignature(userId: string): Observable<ActiveSignatureModel> {
-    const url = this.getV4Endpoint('/v4/user/' + userId + '/active-signature');
+    const url = this.getV2Endpoint('/v2/user/' + userId + '/active-signature');
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
