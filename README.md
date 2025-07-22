@@ -29,6 +29,43 @@ Once the CLA is signed, the GitHub pull request status is updated.
 Please see our [online product documentation](https://docs.linuxfoundation.org/lfx/v/v2/easycla) for a complete product
 overview.
 
+## Prerequisites
+1. Make sure you have Node 12.x or higher, together with NPM 6.x or higher.
+2. Install `yarn` globally on your machine.
+
+   ```bash
+   $ npm install -g yarn
+   ```
+
+3. Install `angular-cli` globally. (version 11).
+
+   ```bash
+   $ npm install -g @angular/cli
+   ```
+
+## Installation
+
+From the root of the repo just run:
+
+```bash
+$ yarn install
+```
+
+## Building
+
+1. Run `yarn build` to build the project for your local environment.
+2. The build artifacts will be stored in the `dist/` directory.
+  
+## Running
+
+1. Run `yarn serve --port 8100` (You can use any port but LFX header login/logout works only on port 8100)
+2. If you face any error while running the app use `export NODE_OPTIONS=--openssl-legacy-provider` command in the terminal before `yarn serve --port 8100`
+3. Open new browser window/tab with this link `https://localhost:8100/`.
+4. The app will automatically reload if you change any of the source files.
+
+## Sample Local URL
+`http://localhost:8100/#/cla/project/projectId/user/userId?redirect=URL
+
 ## License
 
 Copyright The Linux Foundation and each contributor to the LFX platform.
