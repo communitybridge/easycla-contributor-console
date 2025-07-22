@@ -37,10 +37,10 @@ overview.
    $ npm install -g yarn
    ```
 
-3. Install `angular-cli` globally. At least we want version 13+.
+3. Install `angular-cli` globally. (version 11).
 
    ```bash
-   $ npm install -g angular-cli
+   $ npm install -g @angular/cli
    ```
 
 ## Installation
