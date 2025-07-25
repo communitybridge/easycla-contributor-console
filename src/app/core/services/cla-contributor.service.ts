@@ -56,7 +56,7 @@ export class ClaContributorService {
 
 
   getUser(userId: string): Observable<UserModel> {
-    const url = this.getV2Endpoint('/v2/user/' + userId);
+    const url = this.getV3Endpoint('/v3/user-compat/' + userId);
     return this.httpClient.get<UserModel>(url);
   }
 
