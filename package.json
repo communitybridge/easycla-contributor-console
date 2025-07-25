@@ -7,7 +7,7 @@
     "url": "https://www.linuxfoundation.org/"
   },
   "engines": {
-    "node": ">=12.0.0",
+    "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "version": "1.0.0",
@@ -17,9 +17,9 @@
     "serve": "ng serve",
     "build": "ng build",
     "serve:dev:local": "yarn prebuild:dev && ng serve --port 8100",
-    "build:dev": "yarn prebuild:dev && ng build --prod --configuration=dev",
-    "build:staging": "yarn prebuild:staging && ng build --prod --configuration=staging",
-    "build:prod": "yarn prebuild:prod && ng build --prod --configuration=production",
+    "build:dev": "yarn prebuild:dev && ng build --configuration dev",
+    "build:staging": "yarn prebuild:staging && ng build --configuration staging",
+    "build:prod": "yarn prebuild:prod && ng build --configuration production",
     "serve-local": "ng serve --port 8100",
     "test": "yarn test:unit",
     "test:unit": "ng test --watch=false --progress=false --browsers=ChromeHeadless",
@@ -43,19 +43,20 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~11.2.14",
-    "@angular/common": "~11.2.14",
-    "@angular/compiler": "~11.2.14",
-    "@angular/core": "~11.2.14",
-    "@angular/forms": "~11.2.14",
-    "@angular/localize": "~11.2.14",
-    "@angular/platform-browser": "~11.2.14",
-    "@angular/platform-browser-dynamic": "~11.2.14",
-    "@angular/router": "~11.2.14",
-    "@auth0/auth0-angular": "1.5.1",
+    "@angular/animations": "~13.4.0",
+    "@angular/common": "~13.4.0",
+    "@angular/compiler": "~13.4.0",
+    "@angular/core": "~13.4.0",
+    "@angular/forms": "~13.4.0",
+    "@angular/localize": "~13.4.0",
+    "@angular/platform-browser": "~13.4.0",
+    "@angular/platform-browser-dynamic": "~13.4.0",
+    "@angular/router": "~13.4.0",
+    "@auth0/auth0-angular": "2.2.3",
     "@fortawesome/fontawesome-free": "^6.4.0",
-    "@linuxfoundation/lfx-ui-core": "^0.0.12",
-    "@ng-bootstrap/ng-bootstrap": "^6.1.0",
+    "@linuxfoundation/lfx-ui-core": "^0.0.19",
+    "@ng-bootstrap/ng-bootstrap": "^12.1.2",
+    "@popperjs/core": "^2.11.8",
     "@silvermine/serverless-plugin-cloudfront-lambda-edge": "^2.1.1",
     "@types/node": "^18.16.0",
     "auth0-spa-js": "^1.6.5",
@@ -67,13 +68,13 @@
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "url-parse": "^1.5.0",
-    "zone.js": "~0.11.3"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1102.19",
-    "@angular/cli": "~11.2.19",
-    "@angular/compiler-cli": "~11.2.14",
-    "@angular/language-service": "~11.2.14",
+    "@angular-devkit/build-angular": "~13.3.11",
+    "@angular/cli": "~13.3.11",
+    "@angular/compiler-cli": "~13.4.0",
+    "@angular/language-service": "~13.4.0",
     "@types/jasmine": "~4.3.1",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^18.16.0",
@@ -98,7 +99,7 @@
     "serverless-prune-plugin": "^2.0.2",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.1.6"
+    "typescript": "~4.6.4"
   },
   "husky": {
     "hooks": {
@@ -114,7 +115,7 @@
     "dns-packet": "^5.4.0",
     "husky": "^8.0.3",
     "@angular/core": "^11.0.5",
-    "axios": "^0.21.2",
+    "axios": "^0.30.0",
     "cookiejar": "^2.1.4",
     "degenerator": "^3.0.1",
     "follow-redirects": "^1.14.8",
@@ -139,6 +140,17 @@
     "ws": "^7.5.5",
     "xmlhttprequest-ssl": "^1.6.3",
     "@babel/traverse": "^7.23.2",
-    "postcss": "^8.4.31"
+    "postcss": "^8.4.31",
+    "@cypress/request": "^3.0.0",
+    "form-data": "^2.5.4",
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8",
+    "cross-spawn": "^7.0.5",
+    "brace-expansion": "^1.1.12",
+    "webpack-dev-middleware": "^5.3.4",
+    "webpack": "^5.94.0",
+    "esbuild": "^0.25.0",
+    "@babel/runtime": "^7.26.10",
+    "webpack-dev-server": "^5.2.1"
   }
 }

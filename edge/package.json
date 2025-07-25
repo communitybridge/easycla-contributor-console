@@ -5,13 +5,13 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "yarn install",
-    "build": "webpack",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack",
     "pretest": "yarn install",
     "lint": "./node_modules/.bin/eslint \"src/*.js\"",
     "test": "./node_modules/.bin/jasmine --config=jasmine.json"
   },
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
   "dependencies": {
