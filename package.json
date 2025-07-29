@@ -141,16 +141,6 @@
     "xmlhttprequest-ssl": "^1.6.3",
     "@babel/traverse": "^7.23.2",
     "postcss": "^8.4.31",
-    "@cypress/request": "^3.0.0",
-    "form-data": "^2.5.4",
-    "braces": "^3.0.3",
-    "micromatch": "^4.0.8",
-    "cross-spawn": "^7.0.5",
-    "brace-expansion": "^1.1.12",
-    "webpack-dev-middleware": "^5.3.4",
-    "webpack": "^5.94.0",
-    "esbuild": "^0.25.0",
-    "@babel/runtime": "^7.26.10",
-    "webpack-dev-server": "^5.2.1"
+    "webpack-dev-middleware": "^5.3.4"
   }
 }
