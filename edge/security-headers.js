@@ -53,7 +53,8 @@ function generateCSP(env, isDevServer) {
     'https://cdn.platform.linuxfoundation.org/lfx-header-v2-no-zone.js',
     'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
-    'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js'
+    'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js',
+    'https://cmp.osano.com' // Cookie consent
   ];
 
   const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
