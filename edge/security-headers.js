@@ -43,7 +43,8 @@ function generateCSP(env, isDevServer) {
     'https://api.lfcla.dev.platform.linuxfoundation.org/',
     'https://easycla.dev.communitybridge.org/',
     'https://easycla.lfx.linuxfoundation.org/',
-    'https://contributor.easycla.lfx.linuxfoundation.org/'
+    'https://contributor.easycla.lfx.linuxfoundation.org/',
+    'https://cmp.osano.com' // Cookie consent management
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
     'https://cdn.dev.platform.linuxfoundation.org/lfx-header-v2.js',
@@ -54,7 +55,8 @@ function generateCSP(env, isDevServer) {
     'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js',
-    'https://cmp.osano.com' // Cookie consent
+    'https://cmp.osano.com', // Cookie consent
+    'https://www.googletagmanager.com' // Google Tag Manager for Osano
   ];
 
   const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/'];
@@ -106,7 +108,8 @@ function generateCSP(env, isDevServer) {
       'https://linuxfoundation-dev.auth0.com',
       'https://linuxfoundation-staging.auth0.com',
       'https://linuxfoundation.auth0.com',
-      'https://sso.linuxfoundation.org/'
+      'https://sso.linuxfoundation.org/',
+      'https://cmp.osano.com' // Cookie consent UI iframe
     ],
     'child-src': [],
     'media-src': [],
