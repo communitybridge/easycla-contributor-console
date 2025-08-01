@@ -44,7 +44,12 @@ function generateCSP(env, isDevServer) {
     'https://easycla.dev.communitybridge.org/',
     'https://easycla.lfx.linuxfoundation.org/',
     'https://contributor.easycla.lfx.linuxfoundation.org/',
-    'https://cmp.osano.com' // Cookie consent management
+    'https://cmp.osano.com', // Cookie consent management
+    'https://www.google-analytics.com', // Google Analytics beacons
+    'https://analytics.google.com', // Google Analytics 4
+    'https://www.googletagmanager.com', // GTM fetch requests
+    'https://googleads.g.doubleclick.net', // DoubleClick advertising
+    'https://stats.g.doubleclick.net' // DoubleClick stats
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
     'https://cdn.dev.platform.linuxfoundation.org/lfx-header-v2.js',
