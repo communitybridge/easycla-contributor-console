@@ -48,7 +48,6 @@ function generateCSP(env, isDevServer) {
     'https://www.google-analytics.com', // Google Analytics beacons
     'https://analytics.google.com', // Google Analytics 4
     'https://www.googletagmanager.com', // GTM fetch requests
-    'https://googleads.g.doubleclick.net', // DoubleClick advertising
     'https://stats.g.doubleclick.net' // DoubleClick stats
   ];
   let scriptSources = [SELF, UNSAFE_EVAL, UNSAFE_INLINE,
