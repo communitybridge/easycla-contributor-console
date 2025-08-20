@@ -56,7 +56,9 @@ export class ClaContributorService {
 
 
   getUser(userId: string): Observable<UserModel> {
-    const url = this.getV3Endpoint('/v3/user-compat/' + userId);
+    // LG:TODO
+    const url = this.getV2Endpoint('/v2/user/' + userId);
+    // const url = this.getV3Endpoint('/v3/user-compat/' + userId);
     return this.httpClient.get<UserModel>(url);
   }
 
@@ -71,12 +73,16 @@ export class ClaContributorService {
   }
 
   getProject(projectId: string): Observable<ProjectModel> {
-    const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
+    // LG:TODO
+    const url = this.getV2Endpoint('/v2/project/' + projectId);
+    // const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
   getUserActiveSignature(userId: string): Observable<ActiveSignatureModel> {
-    const url = this.getV4Endpoint('/v4/user/' + userId + '/active-signature');
+    // LG:TODO
+    const url = this.getV2Endpoint('/v2/user/' + userId + '/active-signature');
+    // const url = this.getV4Endpoint('/v4/user/' + userId + '/active-signature');
     return this.httpClient.get<ActiveSignatureModel>(url);
   }
 
@@ -144,7 +150,9 @@ export class ClaContributorService {
   }
 
   getGerritProjectInfo(projectId: string): Observable<ProjectModel> {
-    const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
+    // LG:TODO
+    const url = this.getV2Endpoint('/v2/project/' + projectId);
+    // const url = this.getV4Endpoint('/v4/project-compat/' + projectId);
     return this.httpClient.get<ProjectModel>(url);
   }
 
