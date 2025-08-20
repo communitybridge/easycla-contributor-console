@@ -10,4 +10,4 @@ The following versions of the LFX EasyCLA Contributor Console are supported.
 
 ## Reporting a EasyCLA Contributor Console Vulnerability
 
-To report a security vulnerability, please file a BUG REPORT as a new [GitHub Issue](https://github.com/communitybridge/easycla-contributor-console/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc).
+To report a security vulnerability, please file a BUG REPORT as a new [GitHub Issue](https://github.com/linuxfoundation/easycla-contributor-console/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc).
