@@ -13,7 +13,7 @@
 1. Fork Project into your own repository (from the UI)
 1. Clone the project from forked repository (command line).
 1. Create `upstream` remote reference
-   - Example: `git remote add upstream git@github.com:communitybridge/easycla-contributor-console.git`.
+   - Example: `git remote add upstream git@github.com:linuxfoundation/easycla-contributor-console.git`.
    The first time Pull in the latest reference from the upstream
    - Example: `git fetch upstream`
    Rebase and fix any merge conflicts
