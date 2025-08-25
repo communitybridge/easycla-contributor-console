@@ -1,0 +1,60 @@
+---
+description: This rule provides a comprehensive set of instructions tailored for Angular 13 development. It encourages the use of existing patterns in the codebase and provides best practices for development.
+globs:  ["**/*.{ts,html,scss,css}"]
+alwaysApply: true
+---
+# Angular 13 EasyCLA Contributor Console
+
+## General Guidelines
+- Follow Angular style guide and best practices for Angular 13
+- Use TypeScript strict mode patterns
+- Maintain consistent code formatting and structure
+- Follow the existing architectural patterns in the codebase
+
+## File Organization & Naming
+- Use kebab-case for file names (e.g., `add-company-modal.component.ts`)
+- Follow Angular naming conventions:
+  - Components: `*.component.ts`
+  - Services: `*.service.ts`
+  - Models: `*.ts` (in models folder)
+  - Pipes: `*.pipe.ts`
+  - Validators: `*.validator.ts`
+- Group related files in feature modules with container/component structure
+- Place shared utilities in the `shared/` module
+
+## Component Patterns
+- Use the Container/Component (Smart/Dumb) pattern:
+  - Containers handle business logic and state management
+  - Components are presentational and receive data via @Input()
+- Implement OnInit lifecycle hook for initialization logic
+- Use ViewChild for DOM element references
+- Prefer reactive forms over template-driven forms
+- Use proper TypeScript typing for all properties and methods
+
+## Service Patterns
+- Use singleton services with `providedIn: 'root'`
+- Implement proper error handling in all service methods
+- Use RxJS operators for data transformation
+- Follow the existing API versioning pattern (getV1Endpoint, getV2Endpoint, etc.)
+- Use Subject/Observable pattern for cross-component communication
+
+## Angular Module Structure
+- Follow the existing modular architecture:
+  - Feature modules (dashboard, individual-contributor, corporate-contributor)
+  - Shared module for common components
+  - Lazy loading where appropriate
+- Import only necessary modules in each feature module
+- Export components that need to be used outside the module
+
+## Styling Guidelines
+- Use SCSS for styling
+- Follow the existing Bootstrap 4 integration patterns
+- Use component-scoped styles
+- Maintain consistent spacing and layout patterns
+- Follow the existing responsive design patterns
+
+## RxJS Patterns
+- Use proper operator chaining with pipe()
+- Implement proper subscription management (unsubscribe in ngOnDestroy)
+- Use async pipe in templates where possible
+- Follow the existing observable patterns in services
