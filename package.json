@@ -142,6 +142,8 @@
     "xmlhttprequest-ssl": "^1.6.3",
     "@babel/traverse": "^7.23.2",
     "postcss": "^8.4.31",
-    "webpack-dev-middleware": "^5.3.4"
+    "webpack-dev-middleware": "^5.3.4",
+    "@linuxfoundation/lfx-ui-core/dompurify": "3.4.17",
+    "@linuxfoundation/lfx-ui-core/marked": "15.0.12"
   }
 }
