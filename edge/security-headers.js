@@ -80,7 +80,14 @@ function generateCSP(env, isDevServer) {
     'https://*.intercomcdn.com', // Intercom CDN scripts
   ];
 
-  const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/', 'https://*.intercomcdn.com'];
+  const styleSources = [
+    SELF,
+    UNSAFE_INLINE,
+    'https://use.fontawesome.com/',
+    'https://communitybridge.org/',
+    'https://*.intercomcdn.com',
+    'https://transcend-cdn.com', // Transcend cookie consent banner stylesheet
+  ];
 
   if (isDevServer) {
     connectSources = [...connectSources, 'https://localhost:8100/sockjs-node/', 'wss://localhost:8100/sockjs-node/'];
