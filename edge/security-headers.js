@@ -44,8 +44,9 @@ function generateCSP(env, isDevServer) {
     'https://easycla.dev.communitybridge.org/',
     'https://easycla.lfx.linuxfoundation.org/',
     'https://contributor.easycla.lfx.linuxfoundation.org/',
-    'https://cmp.osano.com', // Cookie consent management
-    'https://consent.api.osano.com', // Osano consent record API
+    'https://transcend-cdn.com', // Transcend cookie consent bundles
+    'https://consent.us.transcend.io', // Transcend consent record API
+    'https://telemetry.us.transcend.io', // Transcend telemetry
     'https://www.google-analytics.com', // Google Analytics beacons
     'https://analytics.google.com', // Google Analytics 4
     'https://www.googletagmanager.com', // GTM fetch requests
@@ -69,9 +70,9 @@ function generateCSP(env, isDevServer) {
     'https://cdn.dev.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.staging.platform.linuxfoundation.org/lfx-footer-no-zone.js',
     'https://cdn.platform.linuxfoundation.org/lfx-footer-no-zone.js',
-    'https://cmp.osano.com', // Cookie consent
+    'https://transcend-cdn.com', // Transcend cookie consent
     'https://www.google-analytics.com', // Google Analytics script
-    'https://www.googletagmanager.com', // Google Tag Manager for Osano
+    'https://www.googletagmanager.com', // Google Tag Manager
     'https://lfx-segment.dev.platform.linuxfoundation.org', // LFX Segments Analytics (dev)
     'https://lfx-segment.platform.linuxfoundation.org', // LFX Segments Analytics (prod)
     'https://cdn.segment.com', // Segment CDN for scripts and configurations
@@ -79,7 +80,14 @@ function generateCSP(env, isDevServer) {
     'https://*.intercomcdn.com', // Intercom CDN scripts
   ];
 
-  const styleSources = [SELF, UNSAFE_INLINE, 'https://use.fontawesome.com/', 'https://communitybridge.org/', 'https://*.intercomcdn.com'];
+  const styleSources = [
+    SELF,
+    UNSAFE_INLINE,
+    'https://use.fontawesome.com/',
+    'https://communitybridge.org/',
+    'https://*.intercomcdn.com',
+    'https://transcend-cdn.com', // Transcend cookie consent banner stylesheet
+  ];
 
   if (isDevServer) {
     connectSources = [...connectSources, 'https://localhost:8100/sockjs-node/', 'wss://localhost:8100/sockjs-node/'];
@@ -129,7 +137,7 @@ function generateCSP(env, isDevServer) {
       'https://linuxfoundation-staging.auth0.com',
       'https://linuxfoundation.auth0.com',
       'https://sso.linuxfoundation.org/',
-      'https://cmp.osano.com', // Cookie consent UI iframe
+      'https://transcend-cdn.com', // Transcend cookie consent UI iframe
       'https://*.intercom.io', // Intercom iframes
       'https://*.intercom-messenger.com', // Intercom Messenger iframes
       'https://intercom-sheets.com', // Intercom Sheets
