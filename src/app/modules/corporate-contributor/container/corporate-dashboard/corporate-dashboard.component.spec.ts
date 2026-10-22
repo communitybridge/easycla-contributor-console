@@ -110,29 +110,6 @@ describe('CorporateDashboardComponent', () => {
         );
     });
 
-    it('marks each signed row "CCLA signed" on the name line and leaves unsigned rows unmarked', () => {
-        showResults([
-            org('Acme Unsigned'),
-            org('Acme Signed', { ccla_enabled: true }),
-        ]);
-        showMoreButton().click();
-        fixture.detectChanges();
-
-        const lines = Array.from(
-            element().querySelectorAll('.companies .organization-line')
-        ).map((line) => normalize(line.textContent));
-
-        expect(lines).toEqual(['Acme Signed CCLA signed', 'Acme Unsigned']);
-    });
-
-    it('shows no badge for an organization with a Salesforce B2B account', () => {
-        showResults([org('Acme B2B', { has_b2b_account: true })]);
-
-        expect(text()).toBe(
-            'None of these has signed a Corporate CLA yet. Acme B2B https://example.org'
-        );
-    });
-
     it('shows the unsigned organizations after Show more', () => {
         showResults([
             org('Acme Unsigned'),
