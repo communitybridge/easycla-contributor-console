@@ -63,34 +63,51 @@
                       Could not find any matching organization.
                     </div>
 
+                    <ng-container
+                      *ngFor="let organization of signedOrganizations"
+                      [ngTemplateOutlet]="organizationRow"
+                      [ngTemplateOutletContext]="{ $implicit: organization }"
+                    ></ng-container>
+
                     <div
-                      class="col-12 item"
-                      *ngFor="let organization of organizationList.list"
-                      (click)="onSelectCompany(organization)"
+                      class="col-12 list-note"
+                      *ngIf="
+                        signedOrganizations.length === 0 && unsignedTotal > 0
+                      "
                     >
-                      <div class="row" (click)="onSelectCompany(organization)">
-                        <div class="col-6 ellipsis">
-                          <i
-                            *ngIf="organization.ccla_enabled"
-                            title="CCLA Signed"
-                            class="verified-ccla green fas fa-check-circle"
-                          ></i>
-                          <i
-                            *ngIf="!organization.ccla_enabled"
-                            class="verified-ccla fas fa-check-circle"
-                          ></i>
-                          {{ organization.organization_name }}
-                        </div>
-                        <div class="col-6 ellipsis">
-                          {{ organization.organization_website }}
-                        </div>
-                      </div>
+                      None of these has signed a Corporate CLA yet.
                     </div>
+
+                    <div
+                      class="col-12"
+                      *ngIf="!unsignedListVisible && unsignedTotal > 0"
+                    >
+                      <button
+                        type="button"
+                        class="show-unsigned"
+                        (click)="onShowUnsigned()"
+                      >
+                        Show {{ unsignedTotal }} more without a signed CLA
+                      </button>
+                    </div>
+
+                    <ng-container *ngIf="unsignedListVisible">
+                      <ng-container
+                        *ngFor="let organization of unsignedOrganizations"
+                        [ngTemplateOutlet]="organizationRow"
+                        [ngTemplateOutletContext]="{ $implicit: organization }"
+                      ></ng-container>
+
+                      <div class="col-12 list-note" *ngIf="hiddenUnsignedCount > 0">
+                        {{ hiddenUnsignedCount }} more. Type more of the name to
+                        narrow the list.
+                      </div>
+                    </ng-container>
                   </div>
                   <div class="footer col-12">
-                    <span>Organization not listed? </span>
+                    <span>Not listed? </span>
                     <span class="click-here" (click)="onClickAddOrganization()"
-                      >+ Click Here</span
+                      >+ Add your organization</span
                     >
                   </div>
                 </div>
@@ -135,6 +152,22 @@
     </div>
   </div>
 </div>
+
+<ng-template #organizationRow let-organization>
+  <div class="col-12 item" (click)="onSelectCompany(organization)">
+    <div class="organization-line">
+      <span class="ellipsis organization-name">{{
+        organization.organization_name
+      }}</span>
+      <span *ngIf="organization.ccla_enabled" class="ccla-signed"
+        ><i class="fas fa-check" aria-hidden="true"></i> CCLA signed</span
+      >
+    </div>
+    <div class="ellipsis organization-website">
+      {{ organization.organization_website }}
+    </div>
+  </div>
+</ng-template>
 
 <ng-template #addCompany let-modal>
   <div class="model">

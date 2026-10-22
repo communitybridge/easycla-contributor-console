@@ -19,6 +19,7 @@ export class OrganizationListModel {
 
 export class Organization {
   ccla_enabled: boolean;
+  has_b2b_account?: boolean;
   organization_id: string;
   organization_name: string;
   organization_website: string;

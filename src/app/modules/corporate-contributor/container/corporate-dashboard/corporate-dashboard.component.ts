@@ -24,6 +24,10 @@ import { ProjectModel } from 'src/app/core/models/project';
 import { AppSettings } from 'src/app/config/app-settings';
 import { IntercomService } from 'src/app/shared/services/intercom.service';
 import { Subscription } from 'rxjs';
+import {
+  groupOrganizations,
+  UNSIGNED_DISPLAY_LIMIT,
+} from './organization-ranking';
 
 @Component({
   selector: 'app-corporate-dashboard',
@@ -48,6 +52,10 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   hasShowDropdown: boolean;
   organization = new OrganizationModel();
   organizationList = new OrganizationListModel();
+  signedOrganizations: Organization[] = [];
+  unsignedOrganizations: Organization[] = [];
+  unsignedTotal = 0;
+  showUnsigned = false;
   form: FormGroup;
   noCompanyFound: boolean;
   minLengthValidationMsg: string;
@@ -430,8 +438,35 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
     } else {
       this.selectedCompany = '';
       this.organizationList.list = [];
+      this.updateOrganizationGroups();
       this.resetEmptySearchMessage();
     }
+  }
+
+  get unsignedListVisible(): boolean {
+    return this.signedOrganizations.length === 0 || this.showUnsigned;
+  }
+
+  get hiddenUnsignedCount(): number {
+    return Math.max(0, this.unsignedTotal - UNSIGNED_DISPLAY_LIMIT);
+  }
+
+  onShowUnsigned() {
+    this.showUnsigned = true;
+  }
+
+  updateOrganizationGroups() {
+    const groups = groupOrganizations(
+      this.organizationList.list,
+      this.form.controls.companyName.value
+    );
+    this.signedOrganizations = groups.signed;
+    this.unsignedOrganizations = groups.unsigned.slice(
+      0,
+      UNSIGNED_DISPLAY_LIMIT
+    );
+    this.unsignedTotal = groups.unsigned.length;
+    this.showUnsigned = false;
   }
 
   resetEmptySearchMessage() {
@@ -451,6 +486,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
   searchOrganization(companyName: string) {
     this.alertService.clearAlert();
     this.organizationList.list = [];
+    this.updateOrganizationGroups();
     this.claContributorService.searchOrganization(companyName).subscribe(
       (response) => {
         this.noCompanyFound = false;
@@ -462,6 +498,7 @@ export class CorporateDashboardComponent implements OnInit, OnDestroy {
         if (this.form.controls.companyName.value.length < 2) {
           this.organizationList.list = [];
         }
+        this.updateOrganizationGroups();
         this.resetEmptySearchMessage();
       },
       (exception) => {
