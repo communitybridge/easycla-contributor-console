@@ -52,16 +52,6 @@
       cursor: pointer;
     }
 
-    .verified-ccla {
-      font-size: 12px;
-      color: white;
-      padding-right: 2px;
-
-      &.green {
-        color: #a1d683;
-      }
-    }
-
     .child {
       padding-left: 10px;
     }
@@ -77,7 +67,6 @@
       background: #ffffff;
       border: 1px solid #8492a6;
       border-radius: 6px;
-      height: 170px;
       border-top: 0;
       margin-top: -7px;
       z-index: 50;
@@ -85,23 +74,117 @@
       box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2);
 
       .companies {
-        height: 120px;
+        max-height: 420px;
         overflow-y: auto;
         .item {
+          display: block;
+          width: 100%;
+          padding-top: 0;
+          padding-bottom: 0;
+          border: 0;
+          background: none;
+          font: inherit;
+          text-align: left;
           cursor: pointer;
           color: #424242;
           font-size: 14px;
           margin-bottom: 5px;
+
+          &:focus-visible {
+            outline: 2px solid #0077a3;
+            outline-offset: -2px;
+          }
+        }
+        .organization-line {
+          display: flex;
+          align-items: baseline;
+        }
+        .organization-name {
+          flex: 0 1 auto;
+          min-width: 0;
+        }
+        .ccla-signed {
+          flex-shrink: 0;
+          margin-left: auto;
+          padding-left: 10px;
+          color: #2e7d32;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+        .organization-website {
+          display: block;
+          color: #636e80;
+          font-size: 12px;
+        }
+        .list-note {
+          color: #636e80;
+          font-size: 12px;
+          margin: 5px 0;
+        }
+        .show-unsigned {
+          background: none;
+          border: 0;
+          padding: 0;
+          margin: 5px 0;
+          color: #0077a3;
+          font-size: 14px;
+          font-weight: bold;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+      .verified-badge {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        margin-left: 5px;
+        align-self: center;
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+        .seal {
+          fill: #0099cc;
+        }
+        .check {
+          fill: none;
+          stroke: #fff;
+          stroke-width: 2.6;
+          stroke-linecap: round;
+          stroke-linejoin: round;
         }
       }
       .footer {
-        bottom: 10px;
-        position: absolute;
-        color: #0099cc;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        color: #0077a3;
         font-size: 14px;
         font-weight: bold;
 
+        .legend {
+          display: inline-flex;
+          align-items: center;
+          color: #636e80;
+          font-size: 12px;
+          font-weight: normal;
+
+          .verified-badge {
+            margin: 0 5px 0 0;
+          }
+        }
+
         .click-here {
+          padding: 0;
+          border: 0;
+          background: none;
+          color: inherit;
+          font: inherit;
           cursor: pointer;
           text-decoration: underline;
         }
