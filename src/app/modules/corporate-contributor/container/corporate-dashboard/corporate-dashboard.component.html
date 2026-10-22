@@ -107,7 +107,7 @@
                   <div class="footer col-12">
                     <span class="legend"
                       ><span class="verified-badge" aria-hidden="true"
-                        ><i class="fas fa-check"></i
+                        ><ng-container *ngTemplateOutlet="verifiedSeal"></ng-container
                       ></span>
                       Verified organization</span
                     >
@@ -163,6 +163,16 @@
   </div>
 </div>
 
+<ng-template #verifiedSeal>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      class="seal"
+      d="M12 0.5L14.48 2.73L17.75 2.04L18.79 5.21L21.96 6.25L21.27 9.52L23.5 12L21.27 14.48L21.96 17.75L18.79 18.79L17.75 21.96L14.48 21.27L12 23.5L9.52 21.27L6.25 21.96L5.21 18.79L2.04 17.75L2.73 14.48L0.5 12L2.73 9.52L2.04 6.25L5.21 5.21L6.25 2.04L9.52 2.73Z"
+    />
+    <path class="check" d="M7.5 12.3L10.6 15.3L16.5 9.2" />
+  </svg>
+</ng-template>
+
 <ng-template #organizationRow let-organization>
   <div class="col-12 item" (click)="onSelectCompany(organization)">
     <div class="organization-line">
@@ -175,7 +185,7 @@
         role="img"
         aria-label="Verified organization"
         title="Verified organization"
-        ><i class="fas fa-check" aria-hidden="true"></i
+        ><ng-container *ngTemplateOutlet="verifiedSeal"></ng-container
       ></span>
       <span *ngIf="organization.ccla_enabled" class="ccla-signed"
         ><i class="fas fa-check" aria-hidden="true"></i> CCLA signed</span
