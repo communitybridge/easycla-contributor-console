@@ -102,12 +102,46 @@ describe('CorporateDashboardComponent', () => {
         expect(lines).toEqual(['Acme Signed CCLA signed', 'Acme Unsigned']);
     });
 
-    it('shows no badge for an organization with a Salesforce B2B account', () => {
-        showResults([org('Acme B2B', { has_b2b_account: true })]);
+    it('shows the Verified badge only on rows with a Salesforce B2B account, signed or not', () => {
+        showResults([
+            org('Acme Signed B2B', { ccla_enabled: true, has_b2b_account: true }),
+            org('Acme Signed Plain', { ccla_enabled: true, has_b2b_account: false }),
+            org('Acme Unsigned B2B', { has_b2b_account: true }),
+            org('Acme Unsigned Plain', { has_b2b_account: false }),
+            org('Acme Unsigned Missing'),
+        ]);
+        showMoreButton().click();
+        fixture.detectChanges();
 
-        expect(text()).toBe(
-            'None of these has signed a Corporate CLA yet. Acme B2B https://example.org'
-        );
+        const verifiedRows = Array.from(
+            element().querySelectorAll<HTMLElement>('.companies .item')
+        )
+            .filter((row) => row.querySelector('.verified-badge'))
+            .map((row) => normalize(row.querySelector('.organization-name').textContent));
+        const badge = element().querySelector('.companies .verified-badge');
+
+        expect(verifiedRows).toEqual(['Acme Signed B2B', 'Acme Unsigned B2B']);
+        expect(badge.getAttribute('aria-label')).toBe('Verified organization');
+        expect(badge.getAttribute('title')).toBe('Verified organization');
+    });
+
+    it('keeps the badge after the name and the CCLA signed label on the same line', () => {
+        showResults([org('Acme Signed B2B', { ccla_enabled: true, has_b2b_account: true })]);
+
+        const line = element().querySelector('.companies .organization-line');
+        const parts = Array.from(line.children).map((child) => child.className);
+
+        expect(parts).toEqual(['ellipsis organization-name', 'verified-badge', 'ccla-signed']);
+        expect(normalize(line.textContent)).toBe('Acme Signed B2B CCLA signed');
+    });
+
+    it('explains the Verified badge in the footer legend', () => {
+        showResults([org('Acme Signed', { ccla_enabled: true })]);
+
+        const legend = element().querySelector('.footer .legend');
+
+        expect(normalize(legend.textContent)).toBe('Verified organization');
+        expect(legend.querySelector('.verified-badge')).not.toBeNull();
     });
 
     it('shows the unsigned organizations after Show more', () => {

@@ -87,11 +87,12 @@
           align-items: baseline;
         }
         .organization-name {
-          flex: 1;
+          flex: 0 1 auto;
           min-width: 0;
         }
         .ccla-signed {
           flex-shrink: 0;
+          margin-left: auto;
           padding-left: 10px;
           color: #3c9a3c;
           font-size: 12px;
@@ -118,11 +119,40 @@
           cursor: pointer;
         }
       }
+      .verified-badge {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        margin-left: 5px;
+        border-radius: 50%;
+        background: #0099cc;
+        color: #fff;
+        font-size: 8px;
+        align-self: center;
+      }
       .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-top: 10px;
         color: #0099cc;
         font-size: 14px;
         font-weight: bold;
+
+        .legend {
+          display: inline-flex;
+          align-items: center;
+          color: #8492a6;
+          font-size: 12px;
+          font-weight: normal;
+
+          .verified-badge {
+            margin: 0 5px 0 0;
+          }
+        }
 
         .click-here {
           cursor: pointer;

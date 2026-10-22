@@ -105,10 +105,20 @@
                     </ng-container>
                   </div>
                   <div class="footer col-12">
-                    <span>Not listed? </span>
-                    <span class="click-here" (click)="onClickAddOrganization()"
-                      >+ Add your organization</span
+                    <span class="legend"
+                      ><span class="verified-badge" aria-hidden="true"
+                        ><i class="fas fa-check"></i
+                      ></span>
+                      Verified organization</span
                     >
+                    <span class="add-organization">
+                      <span>Not listed? </span>
+                      <span
+                        class="click-here"
+                        (click)="onClickAddOrganization()"
+                        >+ Add your organization</span
+                      >
+                    </span>
                   </div>
                 </div>
               </div>
@@ -159,6 +169,14 @@
       <span class="ellipsis organization-name">{{
         organization.organization_name
       }}</span>
+      <span
+        *ngIf="organization.has_b2b_account === true"
+        class="verified-badge"
+        role="img"
+        aria-label="Verified organization"
+        title="Verified organization"
+        ><i class="fas fa-check" aria-hidden="true"></i
+      ></span>
       <span *ngIf="organization.ccla_enabled" class="ccla-signed"
         ><i class="fas fa-check" aria-hidden="true"></i> CCLA signed</span
       >
