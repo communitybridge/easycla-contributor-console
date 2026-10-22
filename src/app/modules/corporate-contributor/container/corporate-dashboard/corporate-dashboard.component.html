@@ -113,11 +113,13 @@
                     >
                     <span class="add-organization">
                       <span>Not listed? </span>
-                      <span
+                      <button
+                        type="button"
                         class="click-here"
                         (click)="onClickAddOrganization()"
-                        >+ Add your organization</span
                       >
+                        + Add your organization
+                      </button>
                     </span>
                   </div>
                 </div>
@@ -174,8 +176,12 @@
 </ng-template>
 
 <ng-template #organizationRow let-organization>
-  <div class="col-12 item" (click)="onSelectCompany(organization)">
-    <div class="organization-line">
+  <button
+    type="button"
+    class="col-12 item"
+    (click)="onSelectCompany(organization)"
+  >
+    <span class="organization-line">
       <span class="ellipsis organization-name">{{
         organization.organization_name
       }}</span>
@@ -190,11 +196,11 @@
       <span *ngIf="organization.ccla_enabled" class="ccla-signed"
         ><i class="fas fa-check" aria-hidden="true"></i> CCLA signed</span
       >
-    </div>
-    <div class="ellipsis organization-website">
+    </span>
+    <span class="ellipsis organization-website">
       {{ organization.organization_website }}
-    </div>
-  </div>
+    </span>
+  </button>
 </ng-template>
 
 <ng-template #addCompany let-modal>

@@ -211,6 +211,36 @@ describe('CorporateDashboardComponent', () => {
         expect(component.hasShowDropdown).toBe(false);
     });
 
+    it('renders every organization row as a keyboard-operable button', () => {
+        showResults([org('Acme Unsigned'), org('Acme Signed', { ccla_enabled: true })]);
+        showMoreButton().click();
+        fixture.detectChanges();
+
+        const rows = Array.from(element().querySelectorAll<HTMLElement>('.companies .item'));
+
+        expect(rows.length).toBe(2);
+        rows.forEach((row) => {
+            expect(row.tagName).toBe('BUTTON');
+            expect(row.getAttribute('type')).toBe('button');
+            row.focus();
+            expect(document.activeElement).toBe(row);
+        });
+    });
+
+    it('renders "Add your organization" as a keyboard-operable button that opens the form', () => {
+        showResults([org('Acme Signed', { ccla_enabled: true })]);
+        const addOrganization = spyOn(component, 'onClickAddOrganization');
+
+        const action = element().querySelector<HTMLButtonElement>('.footer .click-here');
+        action.focus();
+
+        expect(action.tagName).toBe('BUTTON');
+        expect(action.getAttribute('type')).toBe('button');
+        expect(document.activeElement).toBe(action);
+        action.click();
+        expect(addOrganization).toHaveBeenCalledTimes(1);
+    });
+
     it('labels the footer link to add an organization', () => {
         showResults([org('Acme Signed', { ccla_enabled: true })]);
 
